@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vendy Marketplace</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@2"></script>
+    <link rel="stylesheet" href="output.css">
+</head>
+
+<body class="bg-gray-100">
+
+    <!-- NAVIGATION BAR  -->
+    <nav class="bg-white flex items-center px-4 pt-6 pb-2">
+        <img src="images/vendy-logo.png" class="ml-10 w-32" alt="logo">
+
+         <form action="" method="GET" class="flex flex-row-reverse gap-2 pl-20">
+            <input type="text" name="query" placeholder="Search products..." required class="px-2 py-1">
+            <button type="submit">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
+              </svg>
+            </button>              
+        </form> 
+
+        <div class="absolute float-right right-10  flex flex-col">
+            <ul class="text-text flex-col lg:flex-row  lg:gap-10 lg:flex lg:ml-48 mt-10 md:mt-0 text-center " id="nav">
+
+                <li><a href="#" class="hover:text-gray-500">
+                        Create your store</a></li>
+                <li><a href="#" class="hover:text-gray-500">
+                        Run Errands</a></li>
+                <li><a href="#" class="hover:text-gray-500">
+                        Cart</a></li>
+                <li><a href="" class="hover:text-gray-500">
+                        Contact Us</a></li>
+                <li><a href="" class="hover:text-gray-500">
+                        Log In</a></li>
+                <li><a href="" class="hover:text-gray-500">
+                        Sign Up</a></li>
+            </ul>
+        </div>
+    </nav>
+
+
+
+</body>
+
+</html>
