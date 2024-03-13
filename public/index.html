@@ -10,13 +10,13 @@
     <link rel="stylesheet" href="output.css">
 </head>
 
-<body class="bg-gray-100">
+<body class="bg-gray-100 text-gray-900">
 
     <!-- NAVIGATION BAR  -->
     <nav class="bg-white flex items-center px-4 pt-6 pb-2">
-        <img src="images/vendy-logo.png" class="ml-10 w-32" alt="logo">
+        <img src="images/vendy-logo.png" class="xl:ml-10 w-32" alt="logo">
 
-         <form action="" method="GET" class="flex flex-row-reverse gap-2 pl-20">
+         <form action="" method="GET" class="flex flex-row-reverse gap-2 xl:pl-20">
             <input type="text" name="query" placeholder="Search products..." required class="px-2 py-1">
             <button type="submit">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
@@ -44,6 +44,20 @@
         </div>
     </nav>
 
+    <!-- Sidebar -->
+    <aside class="sidebar  bg-white fixed h-full top-20 w-40">
+        <!-- Sidebar content goes here -->
+        <ul class="py-6">
+            <li><a href="#" class="block py-2 px-4 hover:bg-gray-100">Categories</a></li>
+            <li><a href="#" class="block py-2 px-4 hover:bg-gray-100">Services</a></li>
+            <li><a href="#" class="block py-2 px-4 hover:bg-gray-100">Products</a></li>
+            <!-- Add more sidebar links as needed -->
+        </ul>
+    </aside>
+
+
+
+    
 
 
 </body>
