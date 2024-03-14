@@ -13,10 +13,10 @@
 <body class="bg-gray-100 text-gray-900">
 
     <!-- NAVIGATION BAR  -->
-    <nav class="bg-white flex items-center px-4 pt-6 pb-3 fixed w-full top-0">
+    <nav class="bg-white flex items-center px-4 pt-6 pb-3  w-full top-0">
         <img src="images/vendy-logo.png" class="xl:ml-10 w-32" alt="logo">
 
-        <form action="" method="GET" class="flex flex-row-reverse gap-2 xl:pl-20">
+        <form action="" method="GET" class="hidden lg:flex flex-row-reverse gap-2 xl:pl-20">
             <input type="text" name="query" placeholder="Search products..." required class="px-2 py-1">
             <button type="submit">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
@@ -28,7 +28,7 @@
         </form>
 
         <div class="absolute float-right right-10  flex flex-col">
-            <ul class="text-text flex-col lg:flex-row  lg:gap-10 lg:flex lg:ml-48 mt-10 md:mt-0 text-center " id="nav">
+            <ul class="text-text hidden flex-col md:flex-row md:gap-4 lg:gap-10 md:flex lg:ml-48 mt-10 md:mt-0 text-center " id="nav">
 
                 <li><a href="#" class="hover:text-gray-500">
                         Create your store</a></li>
@@ -46,23 +46,14 @@
         </div>
     </nav>
 
-    <!-- Sidebar -->
-    <aside class="sidebar  bg-white fixed h-full top-20 w-40">
-        <!-- Sidebar content goes here -->
-        <ul class="py-6">
-            <li><a href="#" class="block py-2 px-4 hover:bg-gray-100">Categories</a></li>
-            <li><a href="#" class="block py-2 px-4 hover:bg-gray-100">Services</a></li>
-            <li><a href="#" class="block py-2 px-4 hover:bg-gray-100">Products</a></li>
-            <!-- Add more sidebar links as needed -->
-        </ul>
-    </aside>
+    
 
     <!-- Main content -->
-    <main class="mx-60 mt-28 w-10/12">
+    <main class="p-2 ">
         <section class="bg-gray-200 py-4 w-full pl-5 pr-5  rounded-md">
             <!-- carousel div -->
-            <div x-data="{ currentIndex: 0, visibleImages: 7, images: ['naivas-logo.png', 'bakersinn.png', 'bnd.png', 'Carrefour-Logo.jpeg', 'dormans.jpeg', 'DStv.png', 'kfc.png', 'MATHIAS.jpeg', 'QMRED.png', 'samsung.png', 'tamarind.jpeg', 'KettleHouse-logo.jpg', 'toyota.png', 'tecno.png', 'quivers.jpg'] }"
-                class="flex gap-8">
+            <div x-data="{ currentIndex: 0, visibleImages: 8, images: ['naivas-logo.png', 'bakersinn.png', 'bnd.png', 'Carrefour-Logo.jpeg', 'dormans.jpeg', 'DStv.png', 'kfc.png', 'MATHIAS.jpeg', 'QMRED.png', 'samsung.png', 'tamarind.jpeg', 'KettleHouse-logo.jpg', 'toyota.png', 'tecno.png', 'quivers.jpg'] }"
+                class="xl:flex gap-10 hidden">
 
                 <button @click="currentIndex = Math.max(currentIndex - 1, 0)" class="w-6 h-6 mt-14">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
@@ -92,7 +83,7 @@
                 </h1>
 
                 <!-- CARDS  -->
-                <div class="grid grid-cols-3 gap-4 pl-2 pr-2">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 pl-2 pr-2">
                     <!-- naivas -->
                     <div class="flex bg-gray-100 items-center gap-2 rounded-lg hover:bg-gray-300">
                         <img src="images/naivas-logo.png" alt="naivas logo" class="w-20 rounded-full">
@@ -193,41 +184,41 @@
             <h2 class="font-bold text-2xl pl-4 pb-4">
                 Our Products
             </h2>
-            <div class="grid grid-cols-3">
+            <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3">
                 <!-- starlet  -->
                 <div class="text-center">
                     <img src="images/new-starlet.png" alt="new startlet car">
-                    <h3 class="py-2 font-bold text-lg bg-white">NEW STARLET</h3>
+                    <h3 class="py-2 font-bold text-lg">NEW STARLET</h3>
                 </div>
 
                 <!-- Rumion  -->
                 <div class="text-center">
                     <img src="images/Toyota-Rumion.png" alt="Toyota Rumion Car">
-                    <h3 class="py-2 mt-6 font-bold text-lg bg-white">RUMION</h3>
+                    <h3 class="py-2 font-bold text-lg">RUMION</h3>
                 </div>
 
                 <!-- Rush  -->
                 <div class="text-center">
                     <img src="images/rush.png" alt="Rush">
-                    <h3 class="py-2 font-bold text-lg bg-white">RUSH</h3>
+                    <h3 class="py-2 font-bold text-lg">RUSH</h3>
                 </div>
 
                 <!-- Hilux  -->
                 <div class="text-center">
                     <img src="images/hilux.png" alt="Hilux" class="pt-1">
-                    <h3 class="py-2 font-bold text-lg bg-white mt-12">HILUX</h3>
+                    <h3 class="py-2 font-bold text-lg">HILUX</h3>
                 </div>
 
                 <!-- Land Cruiser 76 -->
                 <div class="text-center">
                     <img src="images/land-cruiser.png" alt="Land Cruiser 76">
-                    <h3 class="py-2 font-bold text-lg bg-white">LAND CRUISER 76</h3>
+                    <h3 class="py-2 font-bold text-lg">LAND CRUISER 76</h3>
                 </div>
 
                 <!-- Land Cruiser 76 -->
                 <div class="text-center">
                     <img src="images/land-cruiser79.png" alt="Land Cruiser 76">
-                    <h3 class="py-2 font-bold text-lg bg-white">LAND CRUISER 79</h3>
+                    <h3 class="py-2 font-bold text-lg">LAND CRUISER 79</h3>
                 </div>
 
 
@@ -239,7 +230,7 @@
             <h2 class="font-bold text-2xl pl-4 pb-4">
                 Official Brands
             </h2>
-            <div class="grid grid-cols-3 gap-2">
+            <div class="grid grid-cols-2 lg:grid-cols-3 gap-2">
                 <img src="images/UNILEVER.png" alt="unilever logo">
                 <img src="images/lg.png" alt="LG logo">
                 <img src="images/apple.png" alt="apple logo">
@@ -257,8 +248,9 @@
         </section>
 
     </main>
-    <footer class="bg-gray-200 ml-40" id="contact">
-        <div class="grid grid-cols-3">
+
+    <footer class="bg-gray-200" id="contact">
+        <div class="grid grid-cols-1  md:grid-cols-3 text-center md:text-left">
             <div class="pt-4 pl-4">
                 <a href="#home"> <img src="images/vendy-logo.png" alt="logo"> </a>
             </div>
@@ -282,6 +274,30 @@
 
             <div class="pt-4">
                 <h4 class="text-gray-900 text-lg font-bold pb-2">Get In Touch</h4>
+
+                <div class="flex flex-col gap-4 pb-4">
+                    <address>
+                        <p>Vendy Marketplace</p>
+                        <p>Waiyaki Rd, Westlands,</p>
+                        <p class="pb-2">Nairobi +254 757 387606 KE</p>
+                        <a href="mailto:vendy@marketplace.com"
+                            class="underline hover:text-primary">vendy@marketplace.com</a>
+                    </address>
+                </div>
+                <ul class="flex gap-8 lg:gap-10 ml-20 md:ml-0">
+                    <a href="">
+                        <li><img src="images/Facebook.png" alt="Facebook logo"></li>
+                    </a> 
+                    <a href="">
+                        <li><img src="images/LinkedIn.png" alt="Facebook logo"></li>
+                    </a>  
+                    <a href="">
+                        <li><img src="images/Twitter.png" alt="Facebook logo"></li>
+                    </a>  
+                    <a href="">
+                        <li><img src="images/Instagram.png" alt="Facebook logo"></li>
+                    </a>     
+                </ul>
             </div>
 
 
@@ -291,9 +307,9 @@
             <p class="">
                 Vendy Marketplace &copy; <span id="current-year">2024</span> All rights Reserved.
             </p>
-            <p class="text-gray-800">
+            <a class="text-gray-800 hover:text-red-500">
                 Terms and condtions.
-            </p>
+            </a>
         </div>
 
 
