@@ -13,17 +13,19 @@
 <body class="bg-gray-100 text-gray-900">
 
     <!-- NAVIGATION BAR  -->
-    <nav class="bg-white flex items-center px-4 pt-6 pb-2">
+    <nav class="bg-white flex items-center px-4 pt-6 pb-3 fixed w-full top-0">
         <img src="images/vendy-logo.png" class="xl:ml-10 w-32" alt="logo">
 
-         <form action="" method="GET" class="flex flex-row-reverse gap-2 xl:pl-20">
+        <form action="" method="GET" class="flex flex-row-reverse gap-2 xl:pl-20">
             <input type="text" name="query" placeholder="Search products..." required class="px-2 py-1">
             <button type="submit">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-                <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
-              </svg>
-            </button>              
-        </form> 
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                    stroke="currentColor" class="w-6 h-6">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                        d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
+                </svg>
+            </button>
+        </form>
 
         <div class="absolute float-right right-10  flex flex-col">
             <ul class="text-text flex-col lg:flex-row  lg:gap-10 lg:flex lg:ml-48 mt-10 md:mt-0 text-center " id="nav">
@@ -55,9 +57,256 @@
         </ul>
     </aside>
 
+    <!-- Main content -->
+    <main class="mx-60 mt-28 w-10/12">
+        <section class="bg-gray-200 py-4 w-full pl-5 pr-5  rounded-md">
+            <!-- carousel div -->
+            <div x-data="{ currentIndex: 0, visibleImages: 7, images: ['naivas-logo.png', 'bakersinn.png', 'bnd.png', 'Carrefour-Logo.jpeg', 'dormans.jpeg', 'DStv.png', 'kfc.png', 'MATHIAS.jpeg', 'QMRED.png', 'samsung.png', 'tamarind.jpeg', 'KettleHouse-logo.jpg', 'toyota.png', 'tecno.png', 'quivers.jpg'] }"
+                class="flex gap-8">
+
+                <button @click="currentIndex = Math.max(currentIndex - 1, 0)" class="w-6 h-6 mt-14">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" />
+                    </svg>
+                </button>
+
+                <template x-for="(image, index) in images" :key="index">
+                    <img x-show="index >= currentIndex && index < currentIndex + visibleImages" :src="`images/${image}`"
+                        alt="Image description" class="w-32 rounded-full">
+                </template>
+
+                <button @click="currentIndex = Math.min(currentIndex + 1, images.length - visibleImages)"
+                    class="w-6 h-6  mt-14">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
+                    </svg>
+                </button>
+            </div>
+
+            <div class="pt-8">
+
+                <h1 class="font-bold text-2xl pl-4 pb-4">
+                    Our Best sellers
+                </h1>
+
+                <!-- CARDS  -->
+                <div class="grid grid-cols-3 gap-4 pl-2 pr-2">
+                    <!-- naivas -->
+                    <div class="flex bg-gray-100 items-center gap-2 rounded-lg">
+                        <img src="images/naivas-logo.png" alt="naivas logo" class="w-20 rounded-full">
+                        <h2>Naivas Supermarket</h2>
+                    </div>
+
+                    <!-- bakersinn -->
+                    <div class="flex bg-gray-100 items-center gap-2 rounded-lg">
+                        <img src="images/bakersinn.png" alt="naivas logo" class="w-20 rounded-full">
+                        <h2>Naivas Supermarket</h2>
+                    </div>
+
+                    <!-- bnd -->
+                    <div class="flex bg-gray-100 items-center gap-2 rounded-lg">
+                        <img src="images/bnd.png" alt="naivas logo" class="w-20 rounded-full">
+                        <h2>Naivas Supermarket</h2>
+                    </div>
+
+                    <!-- Carrfour -->
+                    <div class="flex bg-gray-100 items-center gap-2 rounded-lg">
+                        <img src="images/Carrefour-Logo.jpeg" alt="naivas logo" class="w-20 rounded-full">
+                        <h2>Naivas Supermarket</h2>
+                    </div>
+
+                    <!-- Dormans -->
+                    <div class="flex bg-gray-100 items-center gap-2 rounded-lg">
+                        <img src="images/dormans.jpeg" alt="naivas logo" class="w-20 rounded-full">
+                        <h2>Naivas Supermarket</h2>
+                    </div>
+
+                    <!-- DStv -->
+                    <div class="flex bg-gray-100 items-center gap-2 rounded-lg">
+                        <img src="images/DStv.png" alt="naivas logo" class="w-20 rounded-full">
+                        <h2>Naivas Supermarket</h2>
+                    </div>
+
+                    <!-- KFC -->
+                    <div class="flex bg-gray-100 items-center gap-2 rounded-lg">
+                        <img src="images/kfc.png" alt="naivas logo" class="w-20 rounded-full">
+                        <h2>Naivas Supermarket</h2>
+                    </div>
+
+                    <!-- Mathias -->
+                    <div class="flex bg-gray-100 items-center gap-2 rounded-lg">
+                        <img src="images/MATHIAS.jpeg" alt="naivas logo" class="w-20 rounded-full">
+                        <h2>Naivas Supermarket</h2>
+                    </div>
+
+                    <!-- Quickmart -->
+                    <div class="flex bg-gray-100 items-center gap-2 rounded-lg">
+                        <img src="images/QMRED.png" alt="naivas logo" class="w-24 rounded-full">
+                        <h2>Naivas Supermarket</h2>
+                    </div>
+
+                    <!-- Samsung -->
+                    <div class="flex bg-gray-100 items-center gap-2 rounded-lg">
+                        <img src="images/samsung.png" alt="naivas logo" class="w-20 rounded-full">
+                        <h2>Naivas Supermarket</h2>
+                    </div>
+
+                    <!-- Tamarind -->
+                    <div class="flex bg-gray-100 items-center gap-2 rounded-lg">
+                        <img src="images/tamarind.jpeg" alt="naivas logo" class="w-20 rounded-full">
+                        <h2>Naivas Supermarket</h2>
+                    </div>
+
+                    <!-- Kettlehouse -->
+                    <div class="flex bg-gray-100 items-center gap-2 rounded-lg">
+                        <img src="images/KettleHouse-logo.jpg" alt="naivas logo" class="w-20 rounded-full">
+                        <h2>Naivas Supermarket</h2>
+                    </div>
+
+                    <!-- Toyota -->
+                    <div class="flex bg-gray-100 items-center gap-2 rounded-lg">
+                        <img src="images/toyota.png" alt="naivas logo" class="w-20 rounded-full">
+                        <h2>Naivas Supermarket</h2>
+                    </div>
+
+                    <!-- Tecno -->
+                    <div class="flex bg-gray-100 items-center gap-2 rounded-lg">
+                        <img src="images/tecno.png" alt="naivas logo" class="w-20 rounded-full">
+                        <h2>Naivas Supermarket</h2>
+                    </div>
+
+                    <!-- Quiver -->
+                    <div class="flex bg-gray-100 items-center gap-2 rounded-lg">
+                        <img src="images/quivers.jpg" alt="naivas logo" class="w-20 rounded-full">
+                        <h2>Naivas Supermarket</h2>
+                    </div>
+                </div>
 
 
-    
+            </div>
+        </section>
+
+        <!-- OUR PRODUCTS -->
+        <section class="bg-whit mt-4 pb-8">
+            <h2 class="font-bold text-2xl pl-4 pb-4">
+                Our Products
+            </h2>
+            <div class="grid grid-cols-3">
+                <!-- starlet  -->
+                <div class="text-center">
+                    <img src="images/new-starlet.png" alt="new startlet car">
+                    <h3 class="py-2 font-bold text-lg bg-white">NEW STARLET</h3>
+                </div>
+
+                <!-- Rumion  -->
+                <div class="text-center">
+                    <img src="images/Toyota-Rumion.png" alt="Toyota Rumion Car">
+                    <h3 class="py-2 mt-6 font-bold text-lg bg-white">RUMION</h3>
+                </div>
+
+                <!-- Rush  -->
+                <div class="text-center">
+                    <img src="images/rush.png" alt="Rush">
+                    <h3 class="py-2 font-bold text-lg bg-white">RUSH</h3>
+                </div>
+
+                <!-- Hilux  -->
+                <div class="text-center">
+                    <img src="images/hilux.png" alt="Hilux" class="pt-1">
+                    <h3 class="py-2 font-bold text-lg bg-white mt-12">HILUX</h3>
+                </div>
+
+                <!-- Land Cruiser 76 -->
+                <div class="text-center">
+                    <img src="images/land-cruiser.png" alt="Land Cruiser 76">
+                    <h3 class="py-2 font-bold text-lg bg-white">LAND CRUISER 76</h3>
+                </div>
+
+                <!-- Land Cruiser 76 -->
+                <div class="text-center">
+                    <img src="images/land-cruiser79.png" alt="Land Cruiser 76">
+                    <h3 class="py-2 font-bold text-lg bg-white">LAND CRUISER 79</h3>
+                </div>
+
+
+            </div>
+        </section>
+
+        <!-- OFFICIAL BRANDS  -->
+        <section class="pb-4">
+            <h2 class="font-bold text-2xl pl-4 pb-4">
+                Official Brands
+            </h2>
+            <div class="grid grid-cols-3 gap-2">
+                <img src="images/UNILEVER.png" alt="unilever logo">
+                <img src="images/lg.png" alt="LG logo">
+                <img src="images/apple.png" alt="apple logo">
+                <img src="images/hp.png" alt="hp logo">
+                <img src="images/nike-logo.png" alt="nike logo">
+                <img src="images/Hisense-logo.png" alt="Hisense logo">
+                <img src="images/tecno1.png" alt="tecno logo">
+                <img src="images/samsung2.png" alt="Samsung">
+                <img src="images/nivea.png" alt="nivea logo">
+                <img src="images/dands.png" alt="nexus logo">
+                <img src="images/ketepa.png" alt="ketepa logo">
+                <img src="images/infinix.png" alt="infinix logo">
+            </div>
+
+        </section>
+
+    </main>
+    <footer class="bg-gray-200 ml-40" id="contact">
+        <div class="grid grid-cols-3">
+            <div class="pt-4 pl-4">
+                <a href="#home"> <img src="images/vendy-logo.png" alt="logo"> </a>
+            </div>
+
+            <!-- useful links div -->
+            <div class="pt-4">
+                <h4 class="text-gray-900 text-lg font-bold pb-2">Useful Links</h4>
+                <ul class="text-gray-500">
+                    <li><a href="#" class="hover:text-gray-800 pb-4">
+                            Create your store</a></li>
+                    <li><a href="#" class="hover:text-gray-800">
+                            Run Errands</a></li>
+                    <li><a href="#" class="hover:text-gray-800">
+                            Categories</a></li>
+                    <li><a href="" class="hover:text-gray-800">
+                            Services</a></li>
+                    <li><a href="" class="hover:text-gray-800">
+                            Contact Us</a></li>
+                </ul>
+            </div>
+
+            <div class="pt-4">
+                <h4 class="text-gray-900 text-lg font-bold pb-2">Get In Touch</h4>
+            </div>
+
+
+        </div>
+
+        <div class="pt-10 text-center text-gray-500 md:flex justify-center pb-2">
+            <p class="">
+                Vendy Marketplace &copy; <span id="current-year">2024</span> All rights Reserved.
+            </p>
+            <p class="text-gray-800">
+                Terms and condtions.
+            </p>
+        </div>
+
+
+    </footer>
+
+    <!-- Dynamic Date -->
+    <script>
+        document.getElementById('current-year').textContent = new Date().getFullYear();
+    </script>
+
+
+
+
 
 
 </body>
