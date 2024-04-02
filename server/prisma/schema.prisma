@@ -1,0 +1,88 @@
+// This is your Prisma schema file
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id       Int       @id @default(autoincrement())
+  name     String
+  email    String    @unique
+  password String
+  role     Role      @default(CUSTOMER)
+  customer Customer?
+  vendor   Vendor?
+  admin    Admin?
+  orders   Order[]
+
+  @@index([email])
+}
+
+model Customer {
+  id      Int     @id @default(autoincrement())
+  user    User    @relation(fields: [userId], references: [id])
+  userId  Int     @unique
+  address String?
+  phone   String?
+  orders  Order[]
+}
+
+model Vendor {
+  id          Int       @id @default(autoincrement())
+  user        User      @relation(fields: [userId], references: [id])
+  userId      Int       @unique
+  storeName   String
+  description String?
+  products    Product[]
+  orders      Order[]   @relation(name: "VendorOrders")
+}
+
+model Admin {
+  id     Int  @id @default(autoincrement())
+  user   User @relation(fields: [userId], references: [id])
+  userId Int  @unique
+}
+
+model Product {
+  id          Int     @id @default(autoincrement())
+  vendor      Vendor  @relation(fields: [vendorId], references: [id])
+  vendorId    Int
+  name        String
+  description String?
+  price       Float
+  orders      Order[]
+}
+
+model Order {
+  id         Int         @id @default(autoincrement())
+  user       User        @relation(fields: [userId], references: [id])
+  userId     Int
+  vendor     Vendor?     @relation(name: "VendorOrders", fields: [vendorId], references: [id])
+  vendorId   Int?
+  products   Product[]
+  total      Float
+  status     OrderStatus @default(PENDING)
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime    @updatedAt
+  Customer   Customer?   @relation(fields: [customerId], references: [id])
+  customerId Int?
+}
+
+enum Role {
+  CUSTOMER
+  VENDOR
+  ADMIN
+}
+
+enum OrderStatus {
+  PENDING
+  PROCESSED
+  SHIPPED
+  DELIVERED
+  CANCELED
+}
