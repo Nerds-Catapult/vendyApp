@@ -6,11 +6,10 @@ const { hashPassword, comparePassword, generateToken } = require('../utils/helpe
 
 
 //create customer;
-
-export async function createUser(req, res) {
+async function createCustomer(req, res) {
     const { email, password, firstName, lastName, phone, address } = req.body;
     const hashedPassword = await hashPassword(password);
-    const user = await prismaClient.user.create({
+    const customer = await prismaClient.user.create({
         data: {
             email,
             password: hashedPassword,
@@ -20,5 +19,19 @@ export async function createUser(req, res) {
             address,
         },
     });
-    res.json(user);
+    res.json({
+        id: customer.id,
+        email: customer.email,
+        firstName: customer.firstName,
+        lastName: customer.lastName,
+        phone: customer.phone,
+        address: customer.address,
+    });
+}
+
+
+
+
+module.exports = {
+    createCustomer: asyncHandler(createCustomer),
 }

@@ -23,6 +23,8 @@ const server = http.createServer(app);
 
 const prisma = new PrismaClient();
 
+app.use('/',require('./routes/router'));
+
 //test prisma connection
 
 async function isDatabaseWorking() {
