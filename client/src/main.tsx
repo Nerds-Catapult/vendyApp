@@ -7,6 +7,7 @@ import Spinner from "./components/spinner/Spinner.tsx";
 import AuthLayout from "./components/auth/layout/page.tsx";
 import Login from "./components/auth/login/login.tsx";
 import Signup from "./components/auth/signup/signup.tsx";
+import Profile from './components/dashboard/profile/profile.tsx';
 
 
 const router = createBrowserRouter([
@@ -25,6 +26,10 @@ const router = createBrowserRouter([
             {
                 path: 'signup',
                 element: <Signup/>
+            },
+            {
+                path: 'profile',
+                element: <Profile/>
             }
         ]
     }
