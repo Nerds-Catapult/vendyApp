@@ -1,6 +1,7 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import 'react-toastify/dist/ReactToastify.css';
 import {useAuth} from "../../../hooks/useAuth.ts";
+import localStorageAuth from "../../../logic/localStorageAuth.ts";
 import {toast} from 'react-toastify';
 
 const Login = () => {
@@ -26,11 +27,18 @@ const Login = () => {
         try {
             await login(email, password);
             // Redirect the user to the appropriate page after a successful login
-            window.location.href = '/auth/profile';
+            window.location.href = '/profile';
         } catch (error) {
             toast.error('Invalid email or password');
         }
     };
+    const localStorageService = localStorageAuth.getInstance();
+    useEffect(()=>{
+        if(localStorageService.readAuthToken('token')){
+            console.log(localStorageService.readAuthToken('token'));
+            window.location.href = '/profile';
+        }
+    }, [localStorageService])
 
     return (
         <div className="bg-white login rounded-xl shadow-xl w-[400px] h-2/5 mx-auto p-5">

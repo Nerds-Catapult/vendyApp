@@ -20,7 +20,7 @@ async function createCustomer(req, res) {
         data: { email, password: hashedPassword, firstName, lastName, phone, address },
     });
 
-    const token = generateToken({ id: customer.id, email: customer.email });
+    const token = generateToken({ id: customer.id, role: customer.role });
     const customerResponse = {
         id: customer.id,
         email: customer.email,
@@ -28,6 +28,7 @@ async function createCustomer(req, res) {
         lastName: customer.lastName,
         phone: customer.phone,
         address: customer.address,
+        role: customer.role,
         token,
     };
 
@@ -52,7 +53,7 @@ async function customerLogin(req, res) {
         return res.status(400).json({ error: 'Invalid email or password' });
     }
 
-    const token = generateToken({ id: customer.id, email: customer.email });
+    const token = generateToken({ id: customer.id, role: customer.role });
     const customerResponse = {
         id: customer.id,
         email: customer.email,
@@ -66,7 +67,22 @@ async function customerLogin(req, res) {
     res.status(200).json(customerResponse);
 }
 
+
+async function getACustomer(req, res) {
+    const { id } = req.params;
+    if (!id) {
+        return res.status(400).json({ error: 'Customer ID is required' });
+    }
+    const customerId = parseInt(id);
+    const customer = await prisma.customer.findUnique({ where: { id: customerId } });
+    if (!customer) {
+        return res.status(404).json({ error: 'Customer not found' });
+    }
+    res.status(200).json(customer);
+}
+
 module.exports = {
     createCustomer,
     customerLogin,
+    getACustomer
 };
