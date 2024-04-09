@@ -1,42 +1,37 @@
-import React, {useEffect, useState} from "react";
+import React, {useState} from "react";
 import 'react-toastify/dist/ReactToastify.css';
-// import { ToastContainer, toast } from 'react-toastify';
-import LocalStorageService from "../../../logic/localStorageAuth.ts";
-import axios from "axios";
+import {useAuth} from "../../../hooks/useAuth.ts";
+import {toast} from 'react-toastify';
 
 const Login = () => {
-    const localStorageService = LocalStorageService.getInstance();
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const {login} = useAuth();
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const {name, value} = e.target;
-        if (name === "email") {
+        if (name === 'email') {
             setEmail(value);
         } else {
             setPassword(value);
         }
-    }
+    };
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        if(!email || !password) {
-            console.log('Please fill all the fields');
+        if (!email || !password) {
+            toast.error('Please fill all the fields');
             return;
         }
-        const data = {
-            email,
-            password,
+        try {
+            await login(email, password);
+            // Redirect the user to the appropriate page after a successful login
+            window.location.href = '/auth/profile';
+        } catch (error) {
+            toast.error('Invalid email or password');
         }
-        const response = await axios.post('http://localhost:4200/api/customer-login', data);
-        console.log(response.data)
-    }
-    useEffect(() => {
-        const token = localStorageService.readAuthToken("token");
-        console.log(token);
-        // if (token) {
-        //     window.location.href = "/auth/profile";
-        // }
-    }, [localStorageService]);
+    };
+
     return (
         <div className="bg-white login rounded-xl shadow-xl w-[400px] h-2/5 mx-auto p-5">
             <h1 className="text-center capitalize">Welcome Back</h1>

@@ -1,7 +1,8 @@
 const express = require('express');
 const http = require('http');
 const path = require('path')
-const {PrismaClient} = require('@prisma/client');
+const { PrismaClient } = require('@prisma/client');
+const cors = require('cors');
 
 
 require('dotenv').config();
@@ -9,6 +10,12 @@ require('dotenv').config();
 
 const app = express();
 
+
+//cors config 
+app.use(cors({
+    origin: process.env.CORS_ORIGIN || 'http://localhost:5173',
+    credentials: true
+}));
 
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.json());
@@ -23,7 +30,7 @@ const server = http.createServer(app);
 
 const prisma = new PrismaClient();
 
-app.use('/',require('./routes/router'));
+app.use('/api',require('./routes/router'));
 
 //test prisma connection
 

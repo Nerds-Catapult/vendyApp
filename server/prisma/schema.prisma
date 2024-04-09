@@ -11,11 +11,13 @@ generator client {
 
 model Customer {
   id       Int     @id @default(autoincrement())
-  name     String
+  firstName     String
+  lastName String
   email    String  @unique
   password String
   address  String?
   phone    String?
+  role String @default("CUSTOMER")
   orders   Order[]
 
   @@index([email])
@@ -28,6 +30,7 @@ model Vendor {
   password    String
   storeName   String
   description String?
+  role String @default("VENDOR")
   products    Product[]
   orders      Order[]
 
@@ -39,6 +42,7 @@ model Admin {
   name     String
   email    String @unique
   password String
+  role String @default("ADMIN")
 
   @@index([email])
 }
