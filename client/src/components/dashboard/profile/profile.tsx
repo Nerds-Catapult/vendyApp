@@ -1,42 +1,84 @@
 // import LocalStorageService from "../../../logic/localStorageAuth.ts";
 
 
-import React from 'react';
+import {useEffect, useState} from 'react';
+import LocalStorageService from "../../../logic/localStorageAuth.ts";
+import axios from 'axios';
+
 
 interface ProfileProps {
-  name: string;
-  email: string;
-  phone: string;
-  address: string;
-  avatar?: string;
+    firstName: string;
+    lastName: string;
+    email: string;
+    phone: string;
+    address: string;
+    avatar?: string;
+    orders?: number;
+
 }
 
-const Profile: React.FC<ProfileProps> = ({
-  name,
-  email,
-  phone,
-  address,
-  avatar = 'https://via.placeholder.com/150',
-}) => {
-  return (
-    <div className="bg-dark rounded-lg shadow-md p-6 md:p-8 lg:p-10">
-      <div className="flex flex-col md:flex-row items-center md:items-start">
-        <div className="w-32 h-32 md:mr-8 mb-4 md:mb-0">
-          <img
-            src={avatar}
-            alt={name}
-            className="w-full h-full object-cover rounded-full"
-          />
+
+const Profile = () => {
+    const localStorageService = LocalStorageService.getInstance();
+    const [profileData, setProfileData] = useState<ProfileProps | null>(null);
+
+    useEffect(() => {
+        const getProfileData = async () => {
+            const profileData = localStorageService.readProfileData('profileData');
+            if (profileData) {
+                setProfileData(JSON.parse(profileData));
+            }
+            if (!profileData) {
+                const token = localStorageService.readAuthToken('token');
+                if(token){
+                    const response = await axios.get('http://localhost:4200/api/getByToken',
+                        {
+                            headers: {
+                                Authorization: `Bearer ${token}`
+                            }
+                        }
+                        );
+                    const {firstName, lastName, email, phone, address, avatar, orders}:ProfileProps = response.data;
+                    setProfileData({firstName, lastName, email, phone, address, avatar, orders});
+                } else {
+                    console.log('No token found');
+                    window.location.href = '/auth/login';
+                }
+            }
+        };
+        getProfileData().then(r => r);
+    }, [localStorageService]);
+    return (
+        <div className="profile-container flex justify-center items-center bg-gray-700 h-[100vh]">
+            <div className="bg-slate-950 rounded-lg shadow-md p-6 md:p-8 lg:p-10 text-white w-[50%]">
+                <div className="flex flex-col md:flex-row items-center md:items-start">
+                    <div className="w-32 h-32 md:mr-8 mb-4 md:mb-0">
+                        <img
+                            src={profileData?.avatar || "https://www.gravatar.com/avatar/"}
+                            alt={"name"}
+                            className="w-full h-full object-cover rounded-full"
+                        />
+                    </div>
+                    <div className="flex-1">
+                        {
+                            profileData ? (
+                                <>
+                                    <h1 className="text-2xl font-bold">{profileData.firstName} {profileData.lastName}</h1>
+                                    <p className="text-lg">{profileData.email}</p>
+                                    <p className="text-lg">{profileData.phone}</p>
+                                    <p className="text-lg">{profileData.address}</p>
+                                    <p className="text-lg">Total Orders: {profileData.orders}</p>
+                                </>
+                            ) : (
+                                <h1>Loading...</h1>
+                            )
+
+                        }
+                    </div>
+                </div>
+            </div>
         </div>
-        <div className="flex-1">
-          <h2 className="text-2xl font-bold mb-2">{name}</h2>
-          <p className="text-gray-600 mb-2">{email}</p>
-          <p className="text-gray-600 mb-2">{phone}</p>
-          <p className="text-gray-600">{address}</p>
-        </div>
-      </div>
-    </div>
-  );
+    );
 };
 
 export default Profile;

@@ -1,5 +1,7 @@
 const { PrismaClient } = require('@prisma/client');
 const { hashPassword, comparePassword, generateToken } = require('../utils/helpers');
+const jwt = require('jsonwebtoken');
+
 
 const prisma = new PrismaClient();
 
@@ -81,8 +83,35 @@ async function getACustomer(req, res) {
     res.status(200).json(customer);
 }
 
+async function getACustomerByToken(req, res) {
+    // const token = req.header('Authorization')?.replace('Bearer ', '');
+    const decoded = jwt.verify(req.body.token || req.header('Authorization')?.replace('Bearer ', '')
+        , process.env.JWT_SECRET || 'secret');
+    // console.log(decoded)
+    const id  = decoded.id;
+    if (!id) {
+        return res.status(400).json({ error: 'Customer ID is required' });
+    }
+    const customerId = parseInt(id);
+    const customer = await prisma.customer.findUnique({ where: { id: customerId } });
+    if (!customer) {
+        return res.status(404).json({ error: 'Customer not found' });
+    }
+    res.status(200).json({
+        id: customer.id,
+        email: customer.email,
+        firstName: customer.firstName,
+        lastName: customer.lastName,
+        phone: customer.phone,
+        address: customer.address,
+        role: customer.role,
+        orders: customer.orders || 0,
+    });
+}
+
 module.exports = {
     createCustomer,
     customerLogin,
-    getACustomer
+    getACustomer,
+    getACustomerByToken
 };

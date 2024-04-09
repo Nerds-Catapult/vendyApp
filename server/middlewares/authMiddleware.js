@@ -12,7 +12,6 @@ const protectRoutes = async (req, res, next) => {
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET || 'secret');
     let user;
-    console.log(decoded)
     switch (decoded.role) {
       case 'ADMIN':
         user = await Prisma.admin.findUnique({ where: { id: decoded.id } });

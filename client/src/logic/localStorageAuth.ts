@@ -1,3 +1,13 @@
+
+
+interface profileProps{
+    name: string;
+    email: string;
+    phone: string;
+    address: string;
+    avatar?: string;
+}
+
 class LocalStorageService {
   private static instance: LocalStorageService;
 
@@ -24,6 +34,12 @@ class LocalStorageService {
 
   public clearAllTokens(): void {
     localStorage.clear();
+  }
+  public cacheProfileData(profileData: profileProps): void {
+    localStorage.setItem("profileData", JSON.stringify(profileData));
+  }
+  public readProfileData(key: string): string | null {
+    return localStorage.getItem(key);
   }
 }
 
