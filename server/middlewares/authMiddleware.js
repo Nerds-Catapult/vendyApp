@@ -19,9 +19,9 @@ const protectRoutes = async (req, res, next) => {
       case 'CUSTOMER':
         user = await Prisma.customer.findUnique({ where: { id: decoded.id } });
         break;
-      case 'VENDOR':
-        user = await Prisma.vendor.findUnique({ where: { id: decoded.id } });
-        break;
+      // case 'VENDOR':
+      //   user = await Prisma.vendor.findUnique({ where: { id: decoded.id } });
+      //   break;
       default:
         return res.status(404).json({ error: 'User not found' });
     }

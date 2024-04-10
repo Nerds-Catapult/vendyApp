@@ -1,22 +1,12 @@
 import logo from "../../assets/vendy.png";
 import {useEffect, useState} from "react";
-import {CgProfile} from "react-icons/cg";
-import {FaHome, FaHourglassEnd, FaShoppingCart} from "react-icons/fa";
+import {FaShoppingCart} from "react-icons/fa";
 import LocalStorageService from "../../logic/localStorageAuth";
+import {CgProfile} from "react-icons/cg";
 
 export default function Navbar() {
     const [profileState, setProfileState] = useState('');
     const localStorageService = LocalStorageService.getInstance();
-
-    // function checkAuthState() {
-    //     //enum "auth/login" "auth/profile"
-    //     const token = localStorageService.readAuthToken("token");
-    //     if (token) {
-    //         setProfileState('auth/profile');
-    //     } else {
-    //         setProfileState('auth/login');
-    //     }
-    // }
 
     useEffect(() => {
         const token = localStorageService.readAuthToken("token");
@@ -60,27 +50,33 @@ export default function Navbar() {
             <div className="absolute float-right right-10 flex flex-col">
                 <ul className="text-text hidden flex-col md:flex-row md:gap-4 lg:gap-10 md:flex lg:ml-48 mt-10 md:mt-0 text-center">
                     <li className="flex items-center">
-                        <FaHome className="text-2xl"/>
+                        {/*<FaHome className="text-2xl"/>*/}
                         <a href="/" className="text-lg">
                             Home
                         </a>
                     </li>
                     <li className="flex items-center">
-                        <FaShoppingCart className="text-2xl"/>
-                        <a href="/cart" className="text-lg">
-                            Cart
+                        {/*<FaHourglassEnd className="text-2xl"/>*/}
+                        <a href="/errands" className="text-lg">
+                            Errands
                         </a>
                     </li>
                     <li className="flex items-center">
-                        <FaHourglassEnd className="text-2xl"/>
-                        <a href="/orders" className="text-lg">
-                            Errands
+                        {/*<FaShoppingCart className="text-2xl"/>*/}
+                        <a href="/store" className="text-lg">
+                            Create Store
                         </a>
                     </li>
                     <li className="flex items-center">
                         <CgProfile className="text-2xl"/>
                         <a href={profileState} className="text-lg">
-                            Profile
+                            {/*Profile*/}
+                        </a>
+                    </li>
+                    <li className="flex items-center">
+                        <FaShoppingCart className="text-2xl"/>
+                        <a href="/cart" className="text-lg">
+                            {/*    cart*/}
                         </a>
                     </li>
                 </ul>

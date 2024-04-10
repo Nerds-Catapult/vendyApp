@@ -2,7 +2,7 @@
 
 
 const { Router } = require('express');
-const { createCustomer, customerLogin, getACustomer, getACustomerByToken } = require('../controllers/customers');
+const { createCustomer, customerLogin, getACustomer, getACustomerByToken } = require('../controllers/customers.api.js');
 const protectRoutes= require('../middlewares/authMiddleware');
 
 
