@@ -8,20 +8,24 @@ export default function Navbar() {
     const [profileState, setProfileState] = useState('');
     const localStorageService = LocalStorageService.getInstance();
 
+    // function checkAuthState() {
+    //     //enum "auth/login" "auth/profile"
+    //     const token = localStorageService.readAuthToken("token");
+    //     if (token) {
+    //         setProfileState('auth/profile');
+    //     } else {
+    //         setProfileState('auth/login');
+    //     }
+    // }
 
-    async function checkAuthState() {
-        //enum "auth/login" "auth/profile"
+    useEffect(() => {
         const token = localStorageService.readAuthToken("token");
         if (token) {
-            setProfileState('auth/profile');
+            setProfileState('/profile');
         } else {
             setProfileState('auth/login');
         }
-    }
-
-    useEffect(() => {
-        checkAuthState().then(r => console.log(r));
-    }, [])
+    }, [localStorageService])
     return (
         <nav className="bg-white flex items-center px-4 pt-6 pb-3 w-full top-0">
             <img src={logo} alt="logo" className="xl:ml-10 w-32"/>
