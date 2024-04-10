@@ -1,11 +1,10 @@
-
-
 import {useEffect, useState} from 'react';
 import LocalStorageService from "../../../logic/localStorageAuth.ts";
 import axios from 'axios';
 import Loading from "../../loader/loading.tsx";
 import {CiLogout} from "react-icons/ci";
 import Navbar from "../../nav/Nav.tsx";
+import {toast, ToastContainer} from "react-toastify";
 
 interface ProfileProps {
     firstName: string;
@@ -24,8 +23,13 @@ const Profile = () => {
     const [profileData, setProfileData] = useState<ProfileProps | null>(null);
 
     const onLogout = () => {
-        localStorageService.clearAllTokens();
-        // window.location.href = '/auth/login';
+        try {
+            localStorageService.clearAllTokens();
+            window.location.href = '/auth/login';
+            toast.success('Successfully logged out');
+        } catch (error) {
+            toast.error('An error occurred while logging out');
+        }
     }
     useEffect(() => {
         const getProfileData = async () => {
@@ -90,6 +94,7 @@ const Profile = () => {
                         />
                     </div>
                 </div>
+                <ToastContainer/>
             </div>
         </>
     );

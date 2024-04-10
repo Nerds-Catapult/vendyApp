@@ -17,7 +17,7 @@ export default function Navbar() {
         }
     }, [localStorageService])
     return (
-        <nav className="bg-white flex items-center px-4 pt-6 pb-3 w-full top-0">
+        <nav className="bg-white flex items-center px-4 pt-6 pb-3 w-full top-0 text-[19px]">
             <img src={logo} alt="logo" className="xl:ml-10 w-32"/>
 
             <form
@@ -58,7 +58,7 @@ export default function Navbar() {
                     <li className="flex items-center">
                         {/*<FaHourglassEnd className="text-2xl"/>*/}
                         <a href="/errands" className="text-lg">
-                            Errands
+                            Run Errands
                         </a>
                     </li>
                     <li className="flex items-center">
@@ -68,8 +68,8 @@ export default function Navbar() {
                         </a>
                     </li>
                     <li className="flex items-center">
-                        <CgProfile className="text-2xl"/>
                         <a href={profileState} className="text-lg">
+                            <CgProfile className="text-2xl"/>
                             {/*Profile*/}
                         </a>
                     </li>

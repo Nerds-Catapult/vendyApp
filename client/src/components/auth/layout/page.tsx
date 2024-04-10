@@ -1,12 +1,15 @@
 import './page.scss';
-
+import Navbar from "../../nav/Nav.tsx";
 import {Outlet} from 'react-router-dom';
 
-const AuthLayout=()=>{
-    return(
-        <div className=" bg-slate-800 layout">
-            <Outlet/>
-        </div>
+const AuthLayout = () => {
+    return (
+        <>
+            <Navbar/>
+            <div className=" bg-slate-800 layout">
+                <Outlet/>
+            </div>
+        </>
     )
 }
 

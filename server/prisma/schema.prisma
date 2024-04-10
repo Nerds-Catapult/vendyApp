@@ -24,7 +24,6 @@ model Customer {
   @@index([email])
 }
 
-
 model Admin {
   id       Int    @id @default(autoincrement())
   name     String
@@ -39,21 +38,20 @@ model Business {
   id          String   @id @default(cuid())
   name        String
   phoneNumber String?
-  userId      String?
   email       String?
   address     String
   city        String
   country     String
+  customerId  Int?
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
   confirmed   Boolean  @default(false)
   registered  Boolean  @default(false)
 
-  //relations
-  stores   Store[]   @relation("BusinessToStore")
+  // relations
+  stores Store[] @relation("BusinessToStore")
 
-  customerId Int?
-  Customer   Customer? @relation(fields: [customerId], references: [id])
+  Customer Customer? @relation(fields: [customerId], references: [id])
 
   // Composite unique constraint on the `businessName` and `country` fields
   @@unique([name, country], name: "business_identifier")
@@ -72,7 +70,7 @@ model Store {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
-  //relations
+  // relations
   business   Business    @relation("BusinessToStore", fields: [businessId], references: [id])
   billboards Billboard[] @relation("StoreToBillboard")
 
@@ -95,7 +93,7 @@ model Billboard {
   createdAt         DateTime @default(now())
   updatedAt         DateTime @updatedAt
 
-  //relations
+  // relations
   storeId String
   store   Store  @relation("StoreToBillboard", fields: [storeId], references: [id])
 
@@ -108,7 +106,7 @@ model Category {
   createdAt     DateTime      @default(now())
   updatedAt     DateTime      @updatedAt
   subcategories SubCategory[] @relation("CategoryToSubCategory")
-  //relations
+  // relations
   products      Product[]     @relation("CategoryToProduct")
 }
 
@@ -140,7 +138,7 @@ model Product {
   // Black Friday deal fields
   blackFridayStartDate DateTime?
   blackFridayEndDate   DateTime?
-  //relations
+  // relations
   storeId              String // Foreign Key to Store
   store                Store     @relation("StoreToProduct", fields: [storeId], references: [id])
 
@@ -203,7 +201,7 @@ model Size {
   storeId   String? // Foreign Key to Store
 
   store Store? @relation("StoreToSize", fields: [storeId], references: [id])
-  //relations
+  // relations
 
   products       Product[] // Relation to Product model
   productVariant ProductVariant[]
@@ -218,7 +216,7 @@ model Color {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  //relations
+  // relations
 
   storeId        String? // Foreign Key to Store
   store          Store?           @relation("StoreToColor", fields: [storeId], references: [id])
@@ -237,7 +235,7 @@ model Order {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  //relations
+  // relations
   storeId String // Foreign Key to Store
   store   Store  @relation("StoreToOrder", fields: [storeId], references: [id])
 
@@ -253,11 +251,12 @@ model Order {
 model OrderItem {
   id String @id @default(cuid())
 
-  //relations
-  orderId String // Foreign Key to Order
-  order   Order  @relation(fields: [orderId], references: [id])
+  // relations
+  orderId   String // Foreign Key to Order
+  order     Order   @relation(fields: [orderId], references: [id])
   productId String // Foreign Key to Product
   product   Product @relation(fields: [productId], references: [id])
+
   @@index([orderId])
   @@index([productId])
 }
@@ -268,7 +267,7 @@ model Image {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  //relations
+  // relations
   productId        String // Foreign Key to Product
   product          Product         @relation(fields: [productId], references: [id], onDelete: Cascade)
   productVariantId String? // Foreign Key to Product
