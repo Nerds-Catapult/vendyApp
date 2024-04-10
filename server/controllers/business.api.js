@@ -1,5 +1,4 @@
-
-
+const jwt = require('jsonwebtoken');
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 
@@ -34,13 +33,16 @@ async function createBusiness(req, res) {
     if (!business) {
         return res.status(400).json({ error: 'Business not created' });
     }
+    const token = jwt.sign({ id: business.id }, process.env.JWT_SECRET
+        || 'secret', { expiresIn: '1d' });
     res.status(201).json({
         businessName: business.name,
         businessAddress: business.address,
         businessCity: business.city,
         businessCountry: business.country,
         businessPhoneNumber: business.phoneNumber,
-        businessOwner: businessOwner
+        businessOwner: businessOwner,
+        token: token
     });
 }
 
@@ -104,4 +106,44 @@ async function updateBusiness(req, res) {
         businessCountry: business.country,
         businessPhoneNumber: business.phoneNumber
     });
+}
+
+
+
+
+async function createStore(req, res) {
+    const{name, phoneNumber, address, city, country, customerid, businessid, storeSlug} = req.body;
+    if(!name || !phoneNumber || !address || !city || !country || !customerid || !businessid || !storeSlug){
+        return res.status(400).json({error: 'All fields are required'});
+    }
+    try {
+        const isValidCustomer = await prisma.customer.findUnique({ where: { id: customerid } });
+        const isValidBusiness = await prisma.business.findUnique({ where: { id: businessid } });
+        if (!isValidCustomer || !isValidBusiness) {
+            return res.status(404).json({ error: 'Customer or Business not found' });
+        }
+        const business = await prisma.store.create({
+            data: {
+                name,
+                phoneNumber,
+                address,
+                city,
+                country,
+                customerid,
+                businessid,
+                storeSlug
+            }
+        })
+        if (business) {
+            return res.status(201).json({
+                storeName: business.name,
+                storeAddress: business.address,
+                storeCity: business.city,
+                storeCountry: business.country,
+                storePhoneNumber: business.phoneNumber
+            });
+        }
+    } catch (error) {
+        return res.status(400).json({ error: 'something went wrong' });
+    }
 }

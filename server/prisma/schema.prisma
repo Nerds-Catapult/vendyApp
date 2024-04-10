@@ -64,7 +64,7 @@ model Store {
   address     String?
   city        String?
   country     String?
-  userId      String?
+  customerId      String?
   businessId  String
   storeSlug   String?  @unique
   createdAt   DateTime @default(now())

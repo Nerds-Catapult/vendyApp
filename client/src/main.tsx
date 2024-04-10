@@ -8,7 +8,7 @@ import AuthLayout from "./components/auth/layout/page.tsx";
 import Login from "./components/auth/login/login.tsx";
 import Signup from "./components/auth/signup/signup.tsx";
 import Profile from './components/dashboard/profile/profile.tsx';
-
+import CreateStore from "./components/forms/createStore.tsx";
 
 const router = createBrowserRouter([
     {
@@ -32,6 +32,10 @@ const router = createBrowserRouter([
     {
         path: '/profile',
         element: <Profile/>
+    },
+    {
+        path: '/create-store',
+        element: <CreateStore/>
     }
 ])
 

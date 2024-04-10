@@ -63,7 +63,7 @@ export default function Navbar() {
                     </li>
                     <li className="flex items-center">
                         {/*<FaShoppingCart className="text-2xl"/>*/}
-                        <a href="/store" className="text-lg">
+                        <a href="/create-store" className="text-lg">
                             Create Store
                         </a>
                     </li>
@@ -74,8 +74,8 @@ export default function Navbar() {
                         </a>
                     </li>
                     <li className="flex items-center">
-                        <FaShoppingCart className="text-2xl"/>
                         <a href="/cart" className="text-lg">
+                        <FaShoppingCart className="text-2xl"/>
                             {/*    cart*/}
                         </a>
                     </li>
