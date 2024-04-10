@@ -108,11 +108,38 @@ async function getACustomerByToken(req, res) {
 }
 
 
+async function updateCustomer(req, res) {
+    const { id } = req.params;
+    const { firstName, lastName, email, password, address, phone, role } = req.body;
+    if (!firstName || !lastName || !email || !password || !address || !phone || !role) {
+        return res.status(400).json({ error: 'All fields are required' });
+    }
+    const hashedPassword = await hashPassword(password);
+    const customer = await prisma.customer.update({
+        where: { id: parseInt(id) },
+        data: {
+            email,
+            password: hashedPassword,
+            firstName,
+            lastName,
+            phone,
+            address,
+            role
+        }
+    });
+    if (!customer) {
+        return res.status(404).json({ error: 'Customer not found' });
+    }
+    res.status(200).json(customer);
+}
+
+
 
 
 module.exports = {
     createCustomer,
     customerLogin,
     getACustomer,
-    getACustomerByToken
+    getACustomerByToken,
+    updateCustomer
 };

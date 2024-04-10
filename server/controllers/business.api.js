@@ -68,3 +68,40 @@ async function getABusiness(req, res) {
 };
 
 
+async function getBusinesses(req, res) {
+    const businesses = await prisma.business.findMany();
+    if (!businesses) {
+        return res.status(404).json({ error: 'Businesses not found' });
+    }
+    res.status(200).json(businesses);
+}
+
+
+
+async function updateBusiness(req, res) {
+    const { id } = req.params;
+    const { name, phoneNumber, address, city, country } = req.body;
+    if (!name || !phoneNumber || !address || !city || !country) {
+        return res.status(400).json({ error: 'All fields are required' });
+    }
+    const business = await prisma.business.update({
+        where: { id: parseInt(id) },
+        data: {
+            name,
+            phoneNumber,
+            address,
+            city,
+            country
+        }
+    });
+    if (!business) {
+        return res.status(400).json({ error: 'Business not updated' });
+    }
+    res.status(200).json({
+        businessName: business.name,
+        businessAddress: business.address,
+        businessCity: business.city,
+        businessCountry: business.country,
+        businessPhoneNumber: business.phoneNumber
+    });
+}
