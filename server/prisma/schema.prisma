@@ -49,8 +49,7 @@ model Business {
   registered   Boolean  @default(false)
 
   // relations
-  stores Store[] @relation("BusinessToStore")
-
+  stores   Store[]   @relation("BusinessToStore")
   Customer Customer? @relation(fields: [customerId], references: [id])
 
   // Composite unique constraint on the `businessName` and `country` fields

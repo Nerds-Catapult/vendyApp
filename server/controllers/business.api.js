@@ -1,149 +1,118 @@
 const jwt = require('jsonwebtoken');
-const { PrismaClient } = require('@prisma/client');
+const {PrismaClient} = require('@prisma/client');
 const prisma = new PrismaClient();
-
+const expressAsyncHandler = require('express-async-handler');
 
 
 async function createBusiness(req, res) {
-    const { name, phoneNumber, address, city, country, } = req.body;
-    const { customerId } = req.body || req.params
+    const {businessName, phoneNumber, email, address, city, country} = req.body;
+    if(!businessName || !phoneNumber || !email || !address || !city || !country) return res.status(400).json({message: 'All fields are required'});
+    if(req.header('Authorization') === undefined|| null) return res.status(400).json({message: 'Unauthorized'});
+    const decoded = jwt.verify(req.header('Authorization')?.replace('Bearer ', ''), process.env.JWT_SECRET);
+    const customerId = decoded.id;
+    const isValidCustomer = await prisma.customer.findFirst({
+        where: {
+            id: customerId
+        }
+    });
 
-    if (!name || !phoneNumber || !address || !city || !country || !customerId) {
-        return res.status(400).json({ error: 'All fields are required' });
-    }
-
-    const validName = await prisma.business.findUnique({ where: { name } });
-    if (validName) {
-        return res.status(400).json({ error: 'Business already exists, Please specify another name' });
-    }
-    const businessOwner = await prisma.customer.findUnique({ where: id });
-    if (!businessOwner) {
-        return res.status(400).json({ error: 'Business owner not found' });
-    }
+    if (!isValidCustomer) return res.status(400).json({message: 'Invalid customer'});
     const business = await prisma.business.create({
         data: {
-            name,
+            businessName,
             phoneNumber,
+            email,
             address,
             city,
             country,
-            customerId
+            customer: {
+                connect: {
+                    id: customerId
+                }
+            }
         }
-    })
-    if (!business) {
-        return res.status(400).json({ error: 'Business not created' });
-    }
-    const token = jwt.sign({ id: business.id }, process.env.JWT_SECRET
-        || 'secret', { expiresIn: '1d' });
-    res.status(201).json({
-        businessName: business.name,
-        businessAddress: business.address,
-        businessCity: business.city,
-        businessCountry: business.country,
-        businessPhoneNumber: business.phoneNumber,
-        businessOwner: businessOwner,
-        token: token
+    });
+    if (!business) return res.status(400).json({message: 'Failed to create business'});
+    const businessToken = jwt.sign({businessId: business?.id, customerId}, process.env.JWT_SECRET);
+    return res.status(200).json({
+        message: 'Business created successfully',
+        businessId: business.id,
+        businessName: business.businessName,
+        phoneNumber: business.phoneNumber,
+        email: business.email,
+        address: business.address,
+        city: business.city,
+        country: business.country,
+        businessToken: businessToken
     });
 }
-
-async function getABusiness(req, res) {
-    const { id } = req.params;
-    const decoded = jwt.verify(req.body.token || req.header('Authorization')?.replace('Bearer ', '')
-        , process.env.JWT_SECRET || 'secret');
-    const customerId = decoded.id;
-    const customer = await prisma.customer.findUnique({ where: { id: customerId } });
-    if (!customer) {
-        return res.status(404).json({ error: 'Customer not found' });
-    }
-    const business = await prisma.business.findUnique({ where: { id } });
-    if (!business) {
-        return res.status(404).json({ error: 'Business not found' });
-    }
-    res.status(200).json({
-        businessName: business.name,
-        businessAddress: business.address,
-        businessCity: business.city,
-        businessCountry: business.country,
-        businessPhoneNumber: business.phoneNumber,
-        businessOwner: customer
-    });
-};
-
 
 async function getBusinesses(req, res) {
-    const businesses = await prisma.business.findMany();
-    if (!businesses) {
-        return res.status(404).json({ error: 'Businesses not found' });
-    }
-    res.status(200).json(businesses);
+    const decoded = jwt.verify(req.header('Authorization')?.replace('Bearer ', ''), process.env.JWT_SECRET);
+    const customerId = decoded.id;
+    const businesses = await prisma.business.findMany({
+        where: {
+            customerId
+        }
+    });
+    if (!businesses) return res.status(400).json({message: 'Failed to fetch businesses'});
+    return res.status(200).json(businesses);
 }
 
+async function getBusinessById(req, res) {
+    const decoded = jwt.verify(req.header('Authorization')?.replace('Bearer ', ''), process.env.JWT_SECRET);
+    const customerId = decoded.id;
+    const businessId = req.params.id;
+    const business = await prisma.business.findFirst({
+        where: {
+            id: businessId,
+            customerId
+        }
+    });
+    if (!business) return res.status(400).json({message: 'Failed to fetch business'});
+    return res.status(200).json(business);
+}
 
+async function getBusinessByToken(req, res) {
+    const decoded = jwt.verify(req.header('Authorization')?.replace('Bearer ', ''), process.env.JWT_SECRET);
+    const customerId = decoded.id;
+    const businessId = decoded.businessId;
+    const business = await prisma.business.findFirst({
+        where: {
+            id: businessId,
+            customerId
+        }
+    });
+    if (!business) return res.status(400).json({message: 'Failed to fetch business'});
+    return res.status(200).json(business);
+}
 
 async function updateBusiness(req, res) {
-    const { id } = req.params;
-    const { name, phoneNumber, address, city, country } = req.body;
-    if (!name || !phoneNumber || !address || !city || !country) {
-        return res.status(400).json({ error: 'All fields are required' });
-    }
+    const decoded = jwt.verify(req.header('Authorization')?.replace('Bearer ', ''), process.env.JWT_SECRET);
+    const customerId = decoded.id;
+    const businessId = req.params.id;
+    const {businessName, phoneNumber, email, address, city, country} = req.body;
     const business = await prisma.business.update({
-        where: { id: parseInt(id) },
+        where: {
+            id: businessId
+        },
         data: {
-            name,
+            businessName,
             phoneNumber,
+            email,
             address,
             city,
             country
         }
     });
-    if (!business) {
-        return res.status(400).json({ error: 'Business not updated' });
-    }
-    res.status(200).json({
-        businessName: business.name,
-        businessAddress: business.address,
-        businessCity: business.city,
-        businessCountry: business.country,
-        businessPhoneNumber: business.phoneNumber
-    });
+    if (!business) return res.status(400).json({message: 'Failed to update business'});
+    return res.status(200).json({message: 'Business updated successfully'});
 }
 
-
-
-
-async function createStore(req, res) {
-    const{name, phoneNumber, address, city, country, customerid, businessid, storeSlug} = req.body;
-    if(!name || !phoneNumber || !address || !city || !country || !customerid || !businessid || !storeSlug){
-        return res.status(400).json({error: 'All fields are required'});
-    }
-    try {
-        const isValidCustomer = await prisma.customer.findUnique({ where: { id: customerid } });
-        const isValidBusiness = await prisma.business.findUnique({ where: { id: businessid } });
-        if (!isValidCustomer || !isValidBusiness) {
-            return res.status(404).json({ error: 'Customer or Business not found' });
-        }
-        const business = await prisma.store.create({
-            data: {
-                name,
-                phoneNumber,
-                address,
-                city,
-                country,
-                customerid,
-                businessid,
-                storeSlug
-            }
-        })
-        if (business) {
-            return res.status(201).json({
-                storeName: business.name,
-                storeAddress: business.address,
-                storeCity: business.city,
-                storeCountry: business.country,
-                storePhoneNumber: business.phoneNumber
-            });
-        }
-    } catch (error) {
-        return res.status(400).json({ error: 'something went wrong' });
-    }
+module.exports = {
+    createBusiness: expressAsyncHandler(createBusiness),
+    getBusinesses: expressAsyncHandler(getBusinesses),
+    getBusinessById: expressAsyncHandler(getBusinessById),
+    getBusinessByToken: expressAsyncHandler(getBusinessByToken),
+    updateBusiness: expressAsyncHandler(updateBusiness)
 }
