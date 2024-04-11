@@ -41,6 +41,14 @@ class LocalStorageService {
   public readProfileData(key: string): string | null {
     return localStorage.getItem(key);
   }
+
+
+  public cacheBusinessToken(businessToken: string ): void {
+    localStorage.setItem("businessToken", JSON.stringify(businessToken));
+  }
+  public readBusinessToken(key: string): string | null {
+    return localStorage.getItem(key);
+  }
 }
 
 export default LocalStorageService;
