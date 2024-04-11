@@ -35,18 +35,18 @@ model Admin {
 }
 
 model Business {
-  id          String   @id @default(cuid())
-  name        String
-  phoneNumber String?
-  email       String?
-  address     String
-  city        String
-  country     String
-  customerId  Int?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  confirmed   Boolean  @default(false)
-  registered  Boolean  @default(false)
+  id           String   @id @default(cuid())
+  businessName String
+  phoneNumber  String?
+  email        String?
+  address      String
+  city         String
+  country      String
+  customerId   Int?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  confirmed    Boolean  @default(false)
+  registered   Boolean  @default(false)
 
   // relations
   stores Store[] @relation("BusinessToStore")
@@ -54,7 +54,7 @@ model Business {
   Customer Customer? @relation(fields: [customerId], references: [id])
 
   // Composite unique constraint on the `businessName` and `country` fields
-  @@unique([name, country], name: "business_identifier")
+  @@unique([businessName, country], name: "business_identifier")
 }
 
 model Store {
@@ -62,11 +62,11 @@ model Store {
   name        String
   phoneNumber String?
   address     String?
-  city        String?
+  location    String?
   country     String?
-  customerId      String?
-  businessId  String
   storeSlug   String?  @unique
+  customerId  String?
+  businessId  String
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
@@ -134,13 +134,9 @@ model Product {
   isArchived      Boolean  @default(false)
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
-
-  // Black Friday deal fields
-  blackFridayStartDate DateTime?
-  blackFridayEndDate   DateTime?
   // relations
-  storeId              String // Foreign Key to Store
-  store                Store     @relation("StoreToProduct", fields: [storeId], references: [id])
+  storeId         String // Foreign Key to Store
+  store           Store    @relation("StoreToProduct", fields: [storeId], references: [id])
 
   categoryId String // Foreign Key to Category
   category   Category @relation("CategoryToProduct", fields: [categoryId], references: [id])

@@ -1,53 +1,74 @@
-import React, { useState, useEffect } from 'react';
-import Spinner from '../spinner/Spinner';
+import React, {useEffect, useState} from 'react';
 import LocalStorageService from "../../logic/localStorageAuth.ts";
+import Spinner from '../spinner/Spinner';
+import * as axios from 'axios';
 
 
 const CreateStore: React.FC = () => {
-  const [businessToken, setBusinessToken] = useState<string | null>(null);
-  const [showCreateStore, setShowCreateStore] = useState(false);
-  const [loading, setLoading] = useState(true);
-  const localStorageService = LocalStorageService.getInstance();
-
-  useEffect(() => {
-    const fetchBusinessToken = async () => {
-      const token = localStorageService.readBusinessToken('businessToken');
-      setBusinessToken(token);
-      setShowCreateStore(!!token);
-      setLoading(false);
-    };
-    fetchBusinessToken().then(r => r);
-  }, [localStorageService]);
+    const localStorageService = LocalStorageService.getInstance();
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState('');
+    const [success, setSuccess] = useState('');
+    const [showCreateStore, setShowCreateStore] = useState(false);
+    const [returnedBusinessString, setReturnedBusinessString] = useState('');
 
 
+    //check Authentication
+    useEffect(() => {
+        const token = localStorageService.readAuthToken('token');
+        /**
+         * TODO: check if token is valid or expired
+         */
+        if (!token) {
+            window.location.href = '/auth/login';
+        }
+    }, [localStorageService]);
 
 
+    //when business is created then show the create store form
+    useEffect(() => {
+        if (returnedBusinessString) {
+            setShowCreateStore(true);
+        }
+    }, [returnedBusinessString]);
+
+    const registerBusiness= async (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        setLoading(true);
+        try {
+            //setLoading(false);
+            //setReturnedBusinessString(response.data);
+        } catch (err) {
+            setLoading(false);
+            setError(err as unknown as string);
+        }
+    }
     const createStore = () => {
-            return(
-                <div>
-                    <h1>Register Your Business</h1>
-                    <form>
-                        <label htmlFor="storeName">Business Name</label>
-                        <input type="text" id="storeName" name="storeName" required/>
-                        <label htmlFor="description">Business Description</label>
-                        <textarea id="description" name="description" required/>
-                        <label htmlFor="address">Business Address</label>
-                        <input type="text" id="address" name="address" required/>
-                        <label htmlFor="phone">Business Phone</label>
-                        <input type="tel" id="phone" name="phone" required/>
-                        <label htmlFor="email">Business Email</label>
-                        <input type="email" id="email" name="email" required/>
-                        <label htmlFor="country">Country</label>
-                        <input type="text" id="country" name="country" required/>
-                        <label htmlFor="city">City</label>
-                        <input type="text" id="city" name="city" required/>
-                        <button type="submit">Register Business</button>
-                    </form>
-                </div>
-            )
+        return (
+            <div>
+                <h1>Register Your Business</h1>
+                <form>
+                    <label htmlFor="storeName">Business Name</label>
+                    <input type="text" id="storeName" name="storeName" required/>
+                    <label htmlFor="description">Business Description</label>
+                    <textarea id="description" name="description" required/>
+                    <label htmlFor="address">Business Address</label>
+                    <input type="text" id="address" name="address" required/>
+                    <label htmlFor="phone">Business Phone</label>
+                    <input type="tel" id="phone" name="phone" required/>
+                    <label htmlFor="email">Business Email</label>
+                    <input type="email" id="email" name="email" required/>
+                    <label htmlFor="country">Country</label>
+                    <input type="text" id="country" name="country" required/>
+                    <label htmlFor="city">City</label>
+                    <input type="text" id="city" name="city" required/>
+                    <button type="submit">Register Business</button>
+                </form>
+            </div>
+        )
     }
 
-    const createBusiness=()=>{
+    const createBusiness = () => {
         return (
             <div className="flex justify-center items-center h-screen bg-gray-100">
                 <form className="bg-white shadow-lg rounded-lg p-8 w-full max-w-md">
@@ -142,7 +163,10 @@ const CreateStore: React.FC = () => {
 
     return (
         <div>
-            {showCreateStore ? createStore() : createBusiness()}
+            {
+                loading ? <Spinner/> : error ? <div>{error}</div> : success ?
+                    <div>{success}</div> : showCreateStore ? createStore() : createBusiness()
+            }
         </div>
     );
 };

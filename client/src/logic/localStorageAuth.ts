@@ -41,8 +41,9 @@ class LocalStorageService {
   public readProfileData(key: string): string | null {
     return localStorage.getItem(key);
   }
-
-
+    public deleteProfileData(key: string): void {
+        localStorage.removeItem(key);
+    }
   public cacheBusinessToken(businessToken: string ): void {
     localStorage.setItem("businessToken", JSON.stringify(businessToken));
   }
