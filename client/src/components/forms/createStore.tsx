@@ -1,7 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import LocalStorageService from "../../logic/localStorageAuth.ts";
 import Spinner from '../spinner/Spinner';
-import * as axios from 'axios';
 
 
 const CreateStore: React.FC = () => {
@@ -9,7 +8,7 @@ const CreateStore: React.FC = () => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
-    const [showCreateStore, setShowCreateStore] = useState(false);
+    const [showCreateStore, setShowCreateStore] = useState(true);
     const [returnedBusinessString, setReturnedBusinessString] = useState('');
 
 
@@ -32,7 +31,7 @@ const CreateStore: React.FC = () => {
         }
     }, [returnedBusinessString]);
 
-    const registerBusiness= async (e: React.FormEvent<HTMLFormElement>) => {
+    const registerBusiness = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         setLoading(true);
         try {
@@ -46,24 +45,82 @@ const CreateStore: React.FC = () => {
     const createStore = () => {
         return (
             <div>
-                <h1>Register Your Business</h1>
-                <form>
-                    <label htmlFor="storeName">Business Name</label>
-                    <input type="text" id="storeName" name="storeName" required/>
-                    <label htmlFor="description">Business Description</label>
-                    <textarea id="description" name="description" required/>
-                    <label htmlFor="address">Business Address</label>
-                    <input type="text" id="address" name="address" required/>
-                    <label htmlFor="phone">Business Phone</label>
-                    <input type="tel" id="phone" name="phone" required/>
-                    <label htmlFor="email">Business Email</label>
-                    <input type="email" id="email" name="email" required/>
-                    <label htmlFor="country">Country</label>
-                    <input type="text" id="country" name="country" required/>
-                    <label htmlFor="city">City</label>
-                    <input type="text" id="city" name="city" required/>
-                    <button type="submit">Register Business</button>
-                </form>
+                <div className="flex justify-center items-center h-screen bg-gray-100">
+                    <form className="bg-white shadow-lg rounded-lg p-8 w-full max-w-md">
+                        <h1 className="text-2xl font-bold text-center mb-6">Create Your Store</h1>
+                        <div className="grid grid-cols-1 gap-6">
+                            <div>
+                                <label htmlFor="storeName" className="block font-medium text-gray-700 mb-1">
+                                    Store Name
+                                </label>
+                                <input
+                                    type="text"
+                                    name="storeName"
+                                    id="storeName"
+                                    required
+                                    className="w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                                />
+                            </div>
+                            <div>
+                                <label htmlFor="address" className="block font-medium text-gray-700 mb-1">
+                                    Store Address
+                                </label>
+                                <input
+                                    type="text"
+                                    name="address"
+                                    id="address"
+                                    required
+                                    className="w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                                />
+                            </div>
+                            <div>
+                                <label htmlFor="location" className="block font-medium text-gray-700 mb-1">
+                                    Store Location
+                                </label>
+                                <input
+                                    type="location"
+                                    name="location"
+                                    id="location"
+                                    required
+                                    className="w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                                />
+                            </div>
+
+                            <div>
+                                <label htmlFor="country" className="block font-medium text-gray-700 mb-1">
+                                    Country
+                                </label>
+                                <input
+                                    type="text"
+                                    name="country"
+                                    id="country"
+                                    required
+                                    className="w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                                />
+                            </div>
+                            <div>
+                                <label htmlFor="slug" className="block font-medium text-gray-700 mb-1">
+                                    Store Slug
+                                </label>
+                                <input
+                                    type="text"
+                                    name="slug"
+                                    id="slug"
+                                    required
+                                    className="w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                                />
+                            </div>
+                        </div>
+                        <div className="flex justify-end mt-6">
+                            <button
+                                type="submit"
+                                className="bg-blue-500 text-white font-medium py-2 px-4 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                            >
+                                Register Business
+                            </button>
+                        </div>
+                    </form>
+                </div>
             </div>
         )
     }
