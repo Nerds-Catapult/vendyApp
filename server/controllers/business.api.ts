@@ -5,6 +5,14 @@ const prisma = new PrismaClient();
 
 import {Request, Response } from 'express'
 
+interface newJwtPayload  {
+    id: number
+}
+
+
+declare interface jwtPayload extends newJwtPayload {
+    businessid: string;
+}
 
 export const createBusiness = async (req:Request, res:Response) => {
     const { businessName, phoneNumber, email, address, city, country } = req.body;
@@ -23,7 +31,7 @@ export const createBusiness = async (req:Request, res:Response) => {
     let customerId;
     try {
         const token = authorizationHeader.replace("Bearer ", "");
-        const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
+        const decodedToken = jwt.verify(token, process.env.JWT_SECRET) as jwtPayload;
         customerId = decodedToken?.id;
     } catch (error) {
         return res.status(401).json({ error: "Unauthorized: Invalid token" });
