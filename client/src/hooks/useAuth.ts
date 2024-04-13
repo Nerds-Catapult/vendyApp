@@ -67,9 +67,9 @@ export const useAuth = () => {
                 Authorization: `Bearer ${userAuth}`
             }
         });
-        const {token} = response.data;
+        const token = response.data.businessToken
         localStorageService.writeBusinessToken('businessToken', token);
-        // console.log(response);
+        return response;
     }
 
     const persistentFunction = () => {

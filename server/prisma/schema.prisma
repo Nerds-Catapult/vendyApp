@@ -38,7 +38,7 @@ model Business {
   id           String   @id @default(cuid())
   businessName String   @unique
   phoneNumber  String?
-  email        String?  @unique
+  email        String?  
   address      String
   city         String
   country      String
@@ -53,7 +53,6 @@ model Business {
   stores   Store[]   @relation("BusinessToStore")
   Customer Customer? @relation(fields: [customerId], references: [id])
 
-  // Composite unique constraint on the `businessName` and `country` fields
 }
 
 model Store {

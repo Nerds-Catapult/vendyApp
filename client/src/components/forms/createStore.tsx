@@ -4,13 +4,13 @@ import {useAuth} from "../../hooks/useAuth.ts";
 import LocalStorageService from "../../logic/localStorageAuth.ts";
 import Spinner from '../spinner/Spinner';
 import 'react-toastify/dist/ReactToastify.css';
+import Navbar from "../nav/Nav.tsx";
+
 
 const CreateStore: React.FC = () => {
     const localStorageService = LocalStorageService.getInstance();
     const [loading, setLoading] = useState(false);
     const [showCreateStore, setShowCreateStore] = useState(false);
-    const [returnedBusinessString, setReturnedBusinessString] = useState('');
-    const [returnedStoreString, setReturnedStoreString] = useState('');
     const {CreateBusiness} = useAuth();
 
     const [businessName, setBusinessName] = useState('');
@@ -51,12 +51,13 @@ const CreateStore: React.FC = () => {
 
 
     //when business is created then show the create store form
-    // useEffect(() => {
-    //     //check error and success
-    //     if (returnedBusinessString) {
-    //         setShowCreateStore(true);
-    //     }
-    // }, [returnedBusinessString]);
+    useEffect(() => {
+        //check error and success
+        const businessToken = localStorageService.readBusinessToken('businessToken');
+        if (businessToken) {
+            setShowCreateStore(true);
+        }
+    }, [localStorageService]);
 
     async function registerBusiness(e: React.FormEvent) {
         e.preventDefault();
@@ -75,9 +76,9 @@ const CreateStore: React.FC = () => {
                 city,
                 country
             });
-            console.log(response)
+            setLoading(false);
+            console.log(response.data)
         } catch (err) {
-            console.log(err.response.data)
             toast.error('Error occurred while registering business');
             setLoading(false);
         }
@@ -269,6 +270,7 @@ const CreateStore: React.FC = () => {
 
     return (
         <div>
+            <Navbar/>
             {
                 loading ? <div className="flex justify-center items-center h-screen"><Spinner/>
                 </div> : showCreateStore ? createStore() : createBusiness()
