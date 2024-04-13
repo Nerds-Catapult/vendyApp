@@ -18,5 +18,9 @@ export const comparePassword = async(password:string, hashedPassword:string)=> {
 }
 
 export const  generateToken=async({id, role}: userInterface) =>{
-    return jwt.sign({ id: id, role: role }, process.env.JWT_SECRET || 'secret', { expiresIn: '30d' });
+    try {
+        return jwt.sign({ id: id, role: role }, process.env.JWT_SECRET || 'secret', { expiresIn: '30d' });
+    } catch (error) {
+        console.log(error)
+    }
 }

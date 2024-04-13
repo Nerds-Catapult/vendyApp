@@ -1,23 +1,16 @@
-//router
-
-
-// const { Router } = require('express');
-// const { createCustomer, customerLogin, getACustomer, getACustomerByToken } = require('../controllers/customers.api.js');
-// const { createBusiness, getBusinessWithCustomerDetails, registerStore   }=require('../controllers/business.api.js');
-// const protectRoutes= require('../middlewares/authMiddleware');
 
 
 import { Router } from 'express';
 import { createCustomer, customerLogin, getACustomer, getACustomerByToken } from '../controllers/customers.api';
-import { createBusiness, } from '../controllers/business.api';
-import protectRoutes from '../middlewares/authMiddleware';
+// import { createBusiness, } from '../controllers/business.api';
+// import protectRoutes from '../middlewares/authMiddleware';
 
 
 const router = Router();
 
 router.post('/create-customer', createCustomer);
 router.post('/customer-login', customerLogin);
-router.get('/get-customer/:id', protectRoutes, getACustomer);
+// router.get('/get-customer/:id', protectRoutes, getACustomer);
 router.get('/getByToken',  getACustomerByToken);
 
 

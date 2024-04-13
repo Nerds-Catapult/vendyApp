@@ -14,7 +14,8 @@ interface jwtPayload {
 }
 
 
-async function createCustomer(req: Request, res:Response) {
+export const createCustomer = async (req: Request, res: Response) => {
+    console.log(req.body)
     const { firstName, lastName, email, password, address, phone, role } = req.body;
 
     if (!firstName || !lastName || !email || !password || !address || !phone || !role) {
@@ -31,7 +32,8 @@ async function createCustomer(req: Request, res:Response) {
         data: { email, password: hashedPassword, firstName, lastName, phone, address },
     });
 
-    const token = generateToken({ id: customer.id, role: customer.role });
+    const token = await generateToken({ id: customer.id, role: customer.role });
+    console.log("token", token)
     const customerResponse = {
         id: customer.id,
         email: customer.email,
@@ -40,13 +42,13 @@ async function createCustomer(req: Request, res:Response) {
         phone: customer.phone,
         address: customer.address,
         role: customer.role,
-        token,
+        token: token,
     };
 
     res.status(201).json(customerResponse);
 }
 
-async function customerLogin(req:Request, res:Response) {
+export const  customerLogin=async(req:Request, res:Response)=>{
     console.log(req.body)
     const { email, password } = req.body;
 
@@ -92,7 +94,7 @@ export const  getACustomer= async (req:Request, res:Response)=>{
     res.status(200).json(customer);
 }
 
-async function getACustomerByToken(req:Request, res:Response) {
+export const  getACustomerByToken=async(req:Request, res:Response)=>{
     const decoded = jwt.verify(req.body.token || req.header('Authorization')?.replace('Bearer ', '')
         , process.env.JWT_SECRET || 'secret') as jwtPayload;
     const id = decoded.id;
