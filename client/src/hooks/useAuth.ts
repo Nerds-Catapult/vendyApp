@@ -5,13 +5,22 @@ import axios from "axios";
 import LocalStorageService from "../logic/localStorageAuth.ts";
 
 
-interface createUserInterface{
+interface createUserInterface {
     firstName: string;
     lastName: string;
     email: string;
     password: string;
     address: string;
     phone: string;
+}
+
+interface createBusinessInterface {
+    businessName: string;
+    phoneNumber: string;
+    email: string;
+    address: string;
+    city: string;
+    country: string;
 }
 
 export const useAuth = () => {
@@ -30,17 +39,42 @@ export const useAuth = () => {
         localStorageService.clearAllTokens();
         setUser(null);
     }
-    const createUser = async({firstName, lastName, email, password, address, phone}:createUserInterface)=>{
-        const response = await axios.post('http://localhost:4200/api/customer-signup', {firstName, lastName, email, password, address, phone});
+    const createUser = async ({firstName, lastName, email, password, address, phone}: createUserInterface) => {
+        const response = await axios.post('http://localhost:4200/api/customer-signup', {
+            firstName,
+            lastName,
+            email,
+            password,
+            address,
+            phone
+        });
         const {token} = response.data;
         localStorageService.writeAuthToken('token', token);
         setUser(response.data.user);
         console.log(response);
     }
+    const CreateBusiness = async ({businessName, phoneNumber, email, address,city, country}:createBusinessInterface) => {
+        const userAuth =  localStorageService.readAuthToken('token');
+        const response = await axios.post('http://localhost:4200/api/create-business', {
+            businessName,
+            phoneNumber,
+            email,
+            address,
+            city,
+            country,
+        }, {
+            headers: {
+                Authorization: `Bearer ${userAuth}`
+            }
+        });
+        const {token} = response.data;
+        localStorageService.writeBusinessToken('businessToken', token);
+        // console.log(response);
+    }
 
     const persistentFunction = () => {
         const token = localStorageService.readAuthToken('token');
-        if(token){
+        if (token) {
             axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
         }
 
@@ -48,5 +82,5 @@ export const useAuth = () => {
 
     const isAuthenticated = () => !!localStorageService.readAuthToken('token');
 
-    return {login, logOut, isAuthenticated, createUser, persistentFunction, user};
+    return {login, logOut, isAuthenticated, createUser, persistentFunction, CreateBusiness, user};
 }

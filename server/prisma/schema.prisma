@@ -36,13 +36,14 @@ model Admin {
 
 model Business {
   id           String   @id @default(cuid())
-  businessName String
+  businessName String   @unique
   phoneNumber  String?
-  email        String?
+  email        String?  @unique
   address      String
   city         String
   country      String
-  customerId   Int?
+  customerId   Int
+  name         String?
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
   confirmed    Boolean  @default(false)
@@ -53,7 +54,6 @@ model Business {
   Customer Customer? @relation(fields: [customerId], references: [id])
 
   // Composite unique constraint on the `businessName` and `country` fields
-  @@unique([businessName, country], name: "business_identifier")
 }
 
 model Store {

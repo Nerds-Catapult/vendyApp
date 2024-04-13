@@ -3,6 +3,7 @@
 
 const { Router } = require('express');
 const { createCustomer, customerLogin, getACustomer, getACustomerByToken } = require('../controllers/customers.api.js');
+const { createBusiness,  }=require('../controllers/business.api.js');
 const protectRoutes= require('../middlewares/authMiddleware');
 
 
@@ -14,5 +15,7 @@ router.post('/customer-login', customerLogin);
 router.get('/get-customer/:id', protectRoutes, getACustomer);
 router.get('/getByToken',  getACustomerByToken);
 
+
+router.post('/create-business', protectRoutes, createBusiness);
 
 module.exports = router;

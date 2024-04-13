@@ -63,7 +63,7 @@ async function customerLogin(req, res) {
         lastName: customer.lastName,
         phone: customer.phone,
         address: customer.address,
-        token,
+        token: token
     };
 
     res.status(200).json(customerResponse);

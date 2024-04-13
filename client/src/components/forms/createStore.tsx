@@ -1,17 +1,43 @@
 import React, {useEffect, useState} from 'react';
+import {toast, ToastContainer} from "react-toastify";
+import {useAuth} from "../../hooks/useAuth.ts";
 import LocalStorageService from "../../logic/localStorageAuth.ts";
 import Spinner from '../spinner/Spinner';
-
+import 'react-toastify/dist/ReactToastify.css';
 
 const CreateStore: React.FC = () => {
     const localStorageService = LocalStorageService.getInstance();
     const [loading, setLoading] = useState(false);
-    const [error, setError] = useState('');
-    const [success, setSuccess] = useState('');
-    const [showCreateStore, setShowCreateStore] = useState(true);
+    const [showCreateStore, setShowCreateStore] = useState(false);
     const [returnedBusinessString, setReturnedBusinessString] = useState('');
+    const [returnedStoreString, setReturnedStoreString] = useState('');
+    const {CreateBusiness} = useAuth();
 
+    const [businessName, setBusinessName] = useState('');
+    const [address, setAddress] = useState('');
+    const [phoneNumber, setphoneNumber] = useState('');
+    const [email, setEmail] = useState('');
+    const [country, setCountry] = useState('');
+    const [city, setCity] = useState('');
 
+    // eslint-disable-next-line no-debugger
+    // debugger
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const {name, value} = e.target;
+        if (name === 'businessName') {
+            setBusinessName(value);
+        } else if (name === 'address') {
+            setAddress(value);
+        } else if (name === 'phoneNumber') {
+            setphoneNumber(value);
+        } else if (name === 'email') {
+            setEmail(value);
+        } else if (name === 'country') {
+            setCountry(value);
+        } else {
+            setCity(value);
+        }
+    }
     //check Authentication
     useEffect(() => {
         const token = localStorageService.readAuthToken('token');
@@ -25,23 +51,38 @@ const CreateStore: React.FC = () => {
 
 
     //when business is created then show the create store form
-    useEffect(() => {
-        if (returnedBusinessString) {
-            setShowCreateStore(true);
-        }
-    }, [returnedBusinessString]);
+    // useEffect(() => {
+    //     //check error and success
+    //     if (returnedBusinessString) {
+    //         setShowCreateStore(true);
+    //     }
+    // }, [returnedBusinessString]);
 
-    const registerBusiness = async (e: React.FormEvent<HTMLFormElement>) => {
+    async function registerBusiness(e: React.FormEvent) {
         e.preventDefault();
-        setLoading(true);
         try {
-            //setLoading(false);
-            //setReturnedBusinessString(response.data);
+            setLoading(true);
+            if (!businessName || !address || !phoneNumber || !email || !country || !city) {
+                toast.error('Please fill in all fields');
+                setLoading(false);
+                return;
+            }
+            const response = await CreateBusiness({
+                businessName,
+                phoneNumber,
+                email,
+                address,
+                city,
+                country
+            });
+            console.log(response)
         } catch (err) {
+            console.log(err.response.data)
+            toast.error('Error occurred while registering business');
             setLoading(false);
-            setError(err as unknown as string);
         }
     }
+
     const createStore = () => {
         return (
             <div>
@@ -116,7 +157,7 @@ const CreateStore: React.FC = () => {
                                 type="submit"
                                 className="bg-blue-500 text-white font-medium py-2 px-4 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
                             >
-                                Register Business
+                                Create Store
                             </button>
                         </div>
                     </form>
@@ -126,21 +167,23 @@ const CreateStore: React.FC = () => {
     }
 
     const createBusiness = () => {
+
         return (
             <div className="flex justify-center items-center h-screen bg-gray-100">
                 <form className="bg-white shadow-lg rounded-lg p-8 w-full max-w-md">
                     <h1 className="text-2xl font-bold text-center mb-6">Register Your Business</h1>
                     <div className="grid grid-cols-1 gap-6">
                         <div>
-                            <label htmlFor="storeName" className="block font-medium text-gray-700 mb-1">
+                            <label htmlFor="businessName" className="block font-medium text-gray-700 mb-1">
                                 Business Name
                             </label>
                             <input
                                 type="text"
-                                name="storeName"
-                                id="storeName"
+                                name="businessName"
+                                id="businessName"
                                 required
                                 className="w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                                onChange={handleChange}
                             />
                         </div>
                         <div>
@@ -153,18 +196,20 @@ const CreateStore: React.FC = () => {
                                 id="address"
                                 required
                                 className="w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                                onChange={handleChange}
                             />
                         </div>
                         <div>
-                            <label htmlFor="phone" className="block font-medium text-gray-700 mb-1">
+                            <label htmlFor="phoneNumber" className="block font-medium text-gray-700 mb-1">
                                 Business Phone
                             </label>
                             <input
                                 type="tel"
-                                name="phone"
-                                id="phone"
+                                name="phoneNumber"
+                                id="phoneNumber"
                                 required
                                 className="w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                                onChange={handleChange}
                             />
                         </div>
                         <div>
@@ -177,6 +222,7 @@ const CreateStore: React.FC = () => {
                                 id="email"
                                 required
                                 className="w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                                onChange={handleChange}
                             />
                         </div>
                         <div>
@@ -189,6 +235,7 @@ const CreateStore: React.FC = () => {
                                 id="country"
                                 required
                                 className="w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                                onChange={handleChange}
                             />
                         </div>
                         <div>
@@ -201,6 +248,7 @@ const CreateStore: React.FC = () => {
                                 id="city"
                                 required
                                 className="w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                                onChange={handleChange}
                             />
                         </div>
 
@@ -209,6 +257,7 @@ const CreateStore: React.FC = () => {
                         <button
                             type="submit"
                             className="bg-blue-500 text-white font-medium py-2 px-4 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                            onClick={registerBusiness}
                         >
                             Register Business
                         </button>
@@ -221,9 +270,10 @@ const CreateStore: React.FC = () => {
     return (
         <div>
             {
-                loading ? <Spinner/> : error ? <div>{error}</div> : success ?
-                    <div>{success}</div> : showCreateStore ? createStore() : createBusiness()
+                loading ? <div className="flex justify-center items-center h-screen"><Spinner/>
+                </div> : showCreateStore ? createStore() : createBusiness()
             }
+            <ToastContainer/>
         </div>
     );
 };
