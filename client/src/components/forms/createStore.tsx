@@ -20,8 +20,30 @@ const CreateStore: React.FC = () => {
     const [country, setCountry] = useState('');
     const [city, setCity] = useState('');
 
-    // eslint-disable-next-line no-debugger
-    // debugger
+    const [storeName, setStoreName] = useState('');
+    const [storeAddress, setStoreAddress] = useState('');
+    const [storeLocation, setStoreLocation] = useState('');
+    const [storeCountry, setStoreCountry] = useState('');
+    const [storeSlug, setStoreSlug] = useState('');
+
+
+    const handleStoreChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const {name, value} = e.target;
+        if (name === 'storeName') {
+            setStoreName(value);
+        } else if (name === 'storeAddress') {
+            setStoreAddress(value);
+        } else if (name === 'storeLocation') {
+            setStoreLocation(value);
+        } else if (name === 'storeCountry') {
+            setStoreCountry(value);
+        } else {
+            setStoreSlug(value);
+        }
+    }
+
+
+
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const {name, value} = e.target;
         if (name === 'businessName') {
@@ -38,7 +60,6 @@ const CreateStore: React.FC = () => {
             setCity(value);
         }
     }
-    //check Authentication
     useEffect(() => {
         const token = localStorageService.readAuthToken('token');
         /**
@@ -101,6 +122,7 @@ const CreateStore: React.FC = () => {
                                     id="storeName"
                                     required
                                     className="w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                                    onChange={handleStoreChange}
                                 />
                             </div>
                             <div>
@@ -113,6 +135,7 @@ const CreateStore: React.FC = () => {
                                     id="address"
                                     required
                                     className="w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                                    onChange={handleStoreChange}
                                 />
                             </div>
                             <div>
@@ -125,6 +148,7 @@ const CreateStore: React.FC = () => {
                                     id="location"
                                     required
                                     className="w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                                    onChange={handleStoreChange}
                                 />
                             </div>
 
@@ -138,6 +162,7 @@ const CreateStore: React.FC = () => {
                                     id="country"
                                     required
                                     className="w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                                    onChange={handleStoreChange}
                                 />
                             </div>
                             <div>
@@ -150,6 +175,7 @@ const CreateStore: React.FC = () => {
                                     id="slug"
                                     required
                                     className="w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                                    onChange={handleStoreChange}
                                 />
                             </div>
                         </div>

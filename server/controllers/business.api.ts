@@ -1,9 +1,12 @@
-const jwt = require('jsonwebtoken');
-const { PrismaClient } = require('@prisma/client');
+import expressAsyncHandler from 'express-async-handler';
+import jwt from 'jsonwebtoken';
+import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
-const expressAsyncHandler = require('express-async-handler');
 
-const createBusiness = expressAsyncHandler(async (req, res) => {
+import {Request, Response } from 'express'
+
+
+export const createBusiness = async (req:Request, res:Response) => {
     const { businessName, phoneNumber, email, address, city, country } = req.body;
     
     // Validate request fields
@@ -21,7 +24,7 @@ const createBusiness = expressAsyncHandler(async (req, res) => {
     try {
         const token = authorizationHeader.replace("Bearer ", "");
         const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
-        customerId = decodedToken.id;
+        customerId = decodedToken?.id;
     } catch (error) {
         return res.status(401).json({ error: "Unauthorized: Invalid token" });
     }
@@ -75,22 +78,4 @@ const createBusiness = expressAsyncHandler(async (req, res) => {
         console.error("Error creating business:", error);
         return res.status(500).json({ error: "Failed to create business" });
     }
-});
-
-
-
-async function deleteBusiness(req, res) {
-    const { businessId } = req.body;
-
-    await prisma.business.delete({
-        where: {
-            id: businessId
-        }
-    });
-    return res.status(200).json({ message: "Business deleted successfully" });
 }
-
-module.exports = {
-    createBusiness,
-    deleteBusiness
-};

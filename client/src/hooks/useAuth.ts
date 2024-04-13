@@ -23,6 +23,15 @@ interface createBusinessInterface {
     country: string;
 }
 
+interface registerStoreInterface {
+    name: string;
+    phoneNumber: string;
+    address: string;
+    location: string;
+    country: string;
+    storeSlug: string
+}
+
 export const useAuth = () => {
     const localStorageService = LocalStorageService.getInstance();
     const [user, setUser] = useState(null);
@@ -72,6 +81,9 @@ export const useAuth = () => {
         return response;
     }
 
+    const registerStore =  async({name, phoneNumber,address,location,country,storeSlug}:registerStoreInterface) => {
+
+    }
     const persistentFunction = () => {
         const token = localStorageService.readAuthToken('token');
         if (token) {
