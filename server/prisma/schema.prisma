@@ -13,7 +13,7 @@ model Admin {
   name     String
   email    String @unique
   password String
-  role     String @default("ADMIN")
+  role     String @default("OVERALL_ADMIN")
 
 }
 // Model: Customer
@@ -36,6 +36,7 @@ model BusinessAdmin {
   id        Int      @id @default(autoincrement())
   name      String
   email     String   @unique
+  phone     String @unique
   password  String
   role      String   @default("BUSINESS_ADMIN")
 

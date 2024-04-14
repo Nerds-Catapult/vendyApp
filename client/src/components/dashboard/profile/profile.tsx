@@ -46,7 +46,7 @@ const Profile = () => {
                 const token = localStorageService.readAuthToken('token');
                 if (token) {
                     try {
-                        const response = await axios.get('http://localhost:4200/api/getByToken', {
+                        const response = await axios.get('http://localhost:4200/api/get-customer-by-token', {
                             headers: {
                                 Authorization: `Bearer ${token}`,
                             },
