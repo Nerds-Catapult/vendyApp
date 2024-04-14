@@ -44,7 +44,7 @@ const Login = () => {
 
     return (
         <>
-            <div className="bg-white login rounded-xl shadow-xl w-[400px] h-2/5 mx-auto p-5">
+            <div className="bg-white login rounded-xl shadow-xl w-[400px] h-fit mx-auto p-5">
                 <h1 className="text-center capitalize">Welcome Back</h1>
                 <form className="bg-gray-100 p-10">
                     <div className="mb-5">
