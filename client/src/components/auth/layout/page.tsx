@@ -6,7 +6,7 @@ const AuthLayout = () => {
     return (
         <>
             <Navbar/>
-            <div className=" bg-slate-800 layout">
+            <div className=" bg-slate-800 ">  {/* TODO:potential ui break */}
                 <Outlet/>
             </div>
         </>
