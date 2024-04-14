@@ -21,22 +21,6 @@ interface createBusinessInterface {
     country: string;
 }
 
-interface createBusinessAdminInterface {
-    name: string;
-    email: string;
-    phone: string;
-    password: string;
-}
-
-// interface registerStoreInterface {
-//     name: string;
-//     phoneNumber: string;
-//     address: string;
-//     location: string;
-//     country: string;
-//     storeSlug: string
-// }
-
 export const useAuth = () => {
     const localStorageService = LocalStorageService.getInstance();
 
@@ -65,17 +49,6 @@ export const useAuth = () => {
         localStorageService.writeAuthToken('token', token);
         console.log(response);
     }
-    const createBusinessAdmin = async ({name, email, phone, password}: createBusinessAdminInterface) => {
-        const response = await axios.post('http://localhost:4200/api/create-business-admin', {
-            name,
-            email,
-            phone,
-            password
-        });
-        const {token} = response.data;
-        localStorageService.writeBusinessAdminToken('businessAdminToken', token);
-        console.log(response);
-    }
 
 
     const CreateBusiness = async ({businessName, phoneNumber, email, address,city, country}:createBusinessInterface) => {
@@ -97,14 +70,20 @@ export const useAuth = () => {
         return response;
     }
 
+    const loginAdmin = async (email: string, password: string) => {
+        const response = await axios.post('http://localhost:4200/api/login-business-admin', {email, password});
+        const {token} = response.data;
+        localStorageService.writeAuthToken('token', token);
+    }
 
     const isAuthenticated = () => !!localStorageService.readAuthToken('token');
 
-    return {login,
+    return {
+        login,
         logOut,
         isAuthenticated,
         createCustomer,
         CreateBusiness,
-        createBusinessAdmin
+        loginAdmin
     };
 }

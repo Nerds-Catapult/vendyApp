@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {ToastContainer} from "react-toastify";
+import {toast, ToastContainer} from "react-toastify";
 import LocalStorageService from "../../../logic/localStorageAuth.ts";
 import Spinner from '../../spinner/Spinner';
 import 'react-toastify/dist/ReactToastify.css';
@@ -9,26 +9,91 @@ const BusinessAdmin: React.FC = () => {
     const [loading, setLoading] = useState(false);
     const [showLogin, setShowLogin] = useState(false);
 
+    //registration values
+    const [name, setName] = useState("")
+    const [email, setEmail] = useState("")
+    const [phone, setPhone] = useState("")
+    const [password, setPassword] = useState("")
+    const [password2, setPassword2] = useState("")
+    const [passwordError, setPasswordError] = useState("")
+
+    const handleRegistrationHTMLChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const {name, value} = e.target;
+        if (name === 'name') {
+            setName(value);
+        } else if (name === 'email') {
+            setEmail(value);
+        } else if (name === 'phone') {
+            setPhone(value);
+        } else if (name === 'password') {
+            setPassword(value);
+        } else {
+            setPassword2(value);
+        }
+    }
+
     useEffect(() => {
-        const token = localStorageService.readAuthToken('token');
+        const businessToken = localStorageService.readBusinessToken('BusinessToken')
+        if (businessToken) {
+            window.location.href = '/business-dashboard';
+        }
+
         /**
          * TODO: check if token is valid or expired
          */
-        if (!token) {
-            window.location.href = '/auth/login';
-        }
     }, [localStorageService]);
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    useEffect(() => {
+        if (password.length == 0) {
+            setPasswordError("");
+        } else if (password !== password2) {
+            setPasswordError("Passwords do not match");
+        } else {
+            setPasswordError("password match");
+        }
+    }, [password, password2]);
+
+
+    const createAdmin = async(e:React.FormEvent) => {
+        e.preventDefault()
+        try{
+            if(!name || !email || !phone || !password || !password2){
+                toast.error("Please fill all the fields")
+                return
+            }
+            const response = await fetch('http://localhost:4200/api/create-business-admin', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({name, email, phone, password})
+            })
+            if(response.ok) {
+                const data = await response.json()
+                localStorageService.writeBusinessAdminToken("BusinessToken", data.token)
+                toast.success("Admin created successfully")
+
+                // window.location.href = '/business-dashboard'
+            } else if(response.status === 400){
+                toast.error("Admin with the same email exists, please specify a different one")
+            }
+
+        }catch (error){
+            console.log(error)
+            toast.error("failed to create entity, please try again later")
+        }
+    }
+
+
+    const handleLoginChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const {name, value} = e.target;
         console.log(name, value);
     }
-
-    const createAdmin = () => {
+    const loginAdmin = () =>{
+        setLoading(true)
     }
 
-
-    const createBusinessAdmin = () => {
+    const CreateBusinessAdmin = () => {
         return (
             <div className="flex justify-center items-center h-screen bg-gray-100">
                 <form className="bg-white shadow-lg rounded-lg p-8 w-full max-w-md">
@@ -40,11 +105,11 @@ const BusinessAdmin: React.FC = () => {
                             </label>
                             <input
                                 type="text"
-                                name="businessName"
+                                name="name"
                                 id="name"
                                 required
                                 className="w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                                onChange={handleChange}
+                                onChange={handleRegistrationHTMLChange}
                             />
                         </div>
                         <div>
@@ -57,7 +122,7 @@ const BusinessAdmin: React.FC = () => {
                                 id="email"
                                 required
                                 className="w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                                onChange={handleChange}
+                                onChange={handleRegistrationHTMLChange}
                             />
                         </div>
                         <div>
@@ -70,7 +135,7 @@ const BusinessAdmin: React.FC = () => {
                                 id="phone"
                                 required
                                 className="w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                                onChange={handleChange}
+                                onChange={handleRegistrationHTMLChange}
                             />
                         </div>
                         <div>
@@ -83,7 +148,7 @@ const BusinessAdmin: React.FC = () => {
                                 id="password"
                                 required
                                 className="w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                                onChange={handleChange}
+                                onChange={handleRegistrationHTMLChange}
                             />
                         </div>
                         <div>
@@ -96,14 +161,18 @@ const BusinessAdmin: React.FC = () => {
                                 id="confirmPassword"
                                 required
                                 className="w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                                onChange={handleChange}
+                                onChange={handleRegistrationHTMLChange}
                             />
+                            <div>
+                            <span className={
+                                passwordError === "Passwords do not match" ? "text-red-500" : "text-green-500"}>{passwordError}</span>
                         </div>
                     </div>
-                    <div className="flex justify-end mt-6">
-                        <button
-                            type="submit"
-                            className="bg-blue-500 text-white font-medium py-2 px-4 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+            </div>
+        <div className="flex justify-end mt-6">
+            <button
+                type="submit"
+                className="bg-blue-500 text-white font-medium py-2 px-4 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
                             onClick={createAdmin}
                         >
                             Create Your Admin Account
@@ -119,7 +188,7 @@ const BusinessAdmin: React.FC = () => {
         )
     }
 
-    const loginBusinessAdmin = () => {
+    const LoginBusinessAdmin = () => {
         return (
             <div className="flex justify-center items-center h-screen bg-gray-100">
                 <form className="bg-white shadow-lg rounded-lg p-8 w-full max-w-md">
@@ -135,7 +204,7 @@ const BusinessAdmin: React.FC = () => {
                                 id="email"
                                 required
                                 className="w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                                onChange={handleChange}
+                                onChange={handleLoginChange}
                             />
                         </div>
                         <div>
@@ -148,7 +217,7 @@ const BusinessAdmin: React.FC = () => {
                                 id="password"
                                 required
                                 className="w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                                onChange={handleChange}
+                                onChange={handleLoginChange}
                             />
                         </div>
                     </div>
@@ -156,10 +225,15 @@ const BusinessAdmin: React.FC = () => {
                         <button
                             type="submit"
                             className="bg-blue-500 text-white font-medium py-2 px-4 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-                            onClick={createAdmin}
+                            onClick={loginAdmin}
                         >
                             Login
                         </button>
+                    </div>
+                    <div className="mt-7 flex w-full justify-center">
+                    <span className="text-center text-purple-700">
+                        Already Have an account?
+                        <button className="text-blue-500" onClick={() => setShowLogin(false)}>Login </button></span>
                     </div>
                 </form>
             </div>
@@ -170,7 +244,7 @@ const BusinessAdmin: React.FC = () => {
     return (
         <div>
             {
-                loading ? <Spinner/> : showLogin ? loginBusinessAdmin() : createBusinessAdmin()
+                loading ? <Spinner/> : showLogin ? LoginBusinessAdmin() : CreateBusinessAdmin()
             }
             <ToastContainer/>
         </div>
