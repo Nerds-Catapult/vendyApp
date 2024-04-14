@@ -1,6 +1,4 @@
-import jwt from "jsonwebtoken";
 import { PrismaClient } from "@prisma/client";
-import bcrypt from "bcryptjs";
 import { Request, Response } from "express";
 const prisma = new PrismaClient();
 import { hashPassword, comparePassword, generateToken } from "../utils/helpers";
@@ -80,6 +78,54 @@ export const getBusinessAdmin = async (req: Request, res: Response) => {
       return res.status(404).json({ error: "Admin not found" });
     }
     return res.status(200).json(admin);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ error: "Something went wrong" });
+  }
+};
+
+export const updateBusinessAdmin = async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const { name, email, phone } = req.body;
+  try {
+    const admin = await prisma.businessAdmin.update({
+      where: { id: Number(id) },
+      data: {
+        name,
+        email,
+        phone,
+      },
+    });
+    return res.status(200).json(admin);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ error: "Something went wrong" });
+  }
+};
+
+export const loginBusinessAdmin = async (req: Request, res: Response) => {
+  const { email, password } = req.body;
+  try {
+    const admin = await prisma.businessAdmin.findUnique({
+      where: { email },
+    });
+    if (!admin) {
+      return res.status(404).json({ error: "Admin not found" });
+    }
+    const isPasswordValid = await comparePassword(password, admin.password);
+    if (!isPasswordValid) {
+      return res.status(400).json({ error: "Invalid password" });
+    }
+    const token = await generateToken({ id: admin.id, role: admin.role });
+    const adminResponse = {
+      id: admin.id,
+      name: admin.name,
+      email: admin.email,
+      phone: admin.phone,
+      role: admin.role,
+      token: token,
+    };
+    return res.status(200).json(adminResponse);
   } catch (error) {
     console.log(error);
     return res.status(500).json({ error: "Something went wrong" });

@@ -4,6 +4,7 @@ import {FaShoppingCart} from "react-icons/fa";
 import LocalStorageService from "../../logic/localStorageAuth";
 import {CgProfile} from "react-icons/cg";
 
+
 export default function Navbar() {
     const [profileState, setProfileState] = useState('');
     const localStorageService = LocalStorageService.getInstance();
@@ -18,7 +19,11 @@ export default function Navbar() {
     }, [localStorageService])
     return (
         <nav className="bg-white flex items-center px-4 pt-6 pb-3 w-full top-0 text-[19px]">
-            <img src={logo} alt="logo" className="xl:ml-10 w-32"/>
+            <a href="/" className="flex items-center">
+                <img src={logo} alt="logo" className="xl:ml-10 w-32 cursor-pointer"
+                />
+            </a>
+
 
             <form
                 action=""
@@ -63,7 +68,7 @@ export default function Navbar() {
                     </li>
                     <li className="flex items-center">
                         {/*<FaShoppingCart className="text-2xl"/>*/}
-                        <a href="/create-store" className="text-lg">
+                        <a href="/auth/create-admin" className="text-lg">
                             Create Store
                         </a>
                     </li>

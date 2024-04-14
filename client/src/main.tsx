@@ -9,6 +9,7 @@ import Login from "./components/auth/login/login.tsx";
 import Signup from "./components/auth/signup/signup.tsx";
 import Profile from './components/dashboard/profile/profile.tsx';
 import CreateStore from "./components/forms/createStore.tsx";
+import BusinessAdmin from "./components/auth/businessAdmin/BusinessAdmin.tsx";
 
 const router = createBrowserRouter([
     {
@@ -27,6 +28,10 @@ const router = createBrowserRouter([
                 path: 'signup',
                 element: <Signup/>
             },
+            {
+                path: 'create-admin',
+                element: <BusinessAdmin/>
+            }
         ]
     },
     {

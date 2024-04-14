@@ -1,11 +1,10 @@
 //hooks/useAuth
 
-import {useState} from 'react';
 import axios from "axios";
 import LocalStorageService from "../logic/localStorageAuth.ts";
 
 
-interface createUserInterface {
+interface createCustomerRequest {
     firstName: string;
     lastName: string;
     email: string;
@@ -13,7 +12,6 @@ interface createUserInterface {
     address: string;
     phone: string;
 }
-
 interface createBusinessInterface {
     businessName: string;
     phoneNumber: string;
@@ -23,33 +21,32 @@ interface createBusinessInterface {
     country: string;
 }
 
-interface registerStoreInterface {
-    name: string;
-    phoneNumber: string;
-    address: string;
-    location: string;
-    country: string;
-    storeSlug: string
-}
+// interface registerStoreInterface {
+//     name: string;
+//     phoneNumber: string;
+//     address: string;
+//     location: string;
+//     country: string;
+//     storeSlug: string
+// }
 
 export const useAuth = () => {
     const localStorageService = LocalStorageService.getInstance();
-    const [user, setUser] = useState(null);
+
 
     const login = async (email: string, password: string) => {
-        const response = await axios.post('http://localhost:4200/api/customer-login', {email, password});
+        const response = await axios.post('http://localhost:4200/api/login-customer', {email, password});
         const {token} = response.data;
         console.log(token)
         localStorageService.writeAuthToken('token', token);
-        setUser(response.data.user);
     }
 
     const logOut = () => {
         localStorageService.clearAllTokens();
-        setUser(null);
+        // localStorageService.
     }
-    const createUser = async ({firstName, lastName, email, password, address, phone}: createUserInterface) => {
-        const response = await axios.post('http://localhost:4200/api/customer-signup', {
+    const createCustomer = async ({firstName, lastName, email, password, address, phone}: createCustomerRequest) => {
+        const response = await axios.post('http://localhost:4200/api/create-customer', {
             firstName,
             lastName,
             email,
@@ -59,7 +56,6 @@ export const useAuth = () => {
         });
         const {token} = response.data;
         localStorageService.writeAuthToken('token', token);
-        setUser(response.data.user);
         console.log(response);
     }
     const CreateBusiness = async ({businessName, phoneNumber, email, address,city, country}:createBusinessInterface) => {
@@ -81,9 +77,9 @@ export const useAuth = () => {
         return response;
     }
 
-    const registerStore =  async({name, phoneNumber,address,location,country,storeSlug}:registerStoreInterface) => {
-
-    }
+    // const registerStore =  async({name, phoneNumber,address,location,country,storeSlug}:registerStoreInterface) => {
+    //
+    // }
     const persistentFunction = () => {
         const token = localStorageService.readAuthToken('token');
         if (token) {
@@ -94,5 +90,5 @@ export const useAuth = () => {
 
     const isAuthenticated = () => !!localStorageService.readAuthToken('token');
 
-    return {login, logOut, isAuthenticated, createUser, persistentFunction, CreateBusiness, user};
+    return {login, logOut, isAuthenticated, createCustomer, persistentFunction, CreateBusiness};
 }

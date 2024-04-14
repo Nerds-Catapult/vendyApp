@@ -6,7 +6,6 @@ import { CiLogout } from "react-icons/ci";
 import Navbar from "../../nav/Nav.tsx";
 import { toast, ToastContainer } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
-// import './Profile.scss'; // Add a CSS file for custom styles
 
 // Define the structure of the profile data
 interface ProfileProps {
@@ -38,11 +37,6 @@ const Profile = () => {
     // Fetch profile data on component mount
     useEffect(() => {
         const getProfileData = async () => {
-            const profileData = localStorageService.readProfileData('profileData');
-            if (profileData) {
-                setProfileData(JSON.parse(profileData));
-                setLoading(false);
-            } else {
                 const token = localStorageService.readAuthToken('token');
                 if (token) {
                     try {
@@ -63,10 +57,9 @@ const Profile = () => {
                     window.location.href = '/auth/login';
                 }
             }
-        };
 
-        getProfileData();
-    }, [localStorageService]);
+        getProfileData().then(r => r);
+    }, [localStorageService, profileData]);
 
     // UI rendering
     return (

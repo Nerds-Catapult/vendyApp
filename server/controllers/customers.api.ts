@@ -9,12 +9,11 @@ interface jwtPayload {
     id: number;
 }
 
-
 export const createCustomer = async (req: Request, res: Response) => {
     console.log(req.body)
-    const { firstName, lastName, email, password, address, phone, role } = req.body;
+    const { firstName, lastName, email, password, address, phone } = req.body;
 
-    if (!firstName || !lastName || !email || !password || !address || !phone || !role) {
+    if (!firstName || !lastName || !email || !password || !address || !phone ) {
         return res.status(400).json({ error: 'All fields are required' });
     }
 
@@ -37,12 +36,12 @@ export const createCustomer = async (req: Request, res: Response) => {
         lastName: customer.lastName,
         phone: customer.phone,
         address: customer.address,
-        role: customer.role,
         token: token,
     };
 
     res.status(201).json(customerResponse);
 }
+
 
 export const  customerLogin=async(req:Request, res:Response)=>{
     console.log(req.body)
@@ -116,28 +115,32 @@ export const  getACustomer= async (req:Request, res:Response)=>{
     res.status(200).json(customer);
 }
 
-export const  getACustomerByToken=async(req:Request, res:Response)=>{
-    const decoded = jwt.verify(req.body.token || req.header('Authorization')?.replace('Bearer ', '')
-        , process.env.JWT_SECRET || 'secret') as jwtPayload;
-    const id = decoded.id;
-    if (!id) {
-        return res.status(400).json({ error: 'Customer ID is required' });
+export const getACustomerByToken = async (req: Request, res: Response) => {
+    try {
+        const decoded = jwt.verify(req.body.token || req.header('Authorization')?.replace('Bearer ', ''), process.env.JWT_SECRET || 'secret') as jwtPayload;
+        console.log({deocode: decoded})
+        const id = decoded.id;
+        if (!id) {
+            return res.status(400).json({ error: 'Customer ID is required' });
+        }
+        const customerId = id;
+        const customer = await prisma.customer.findUnique({ where: { id: customerId }, include: { orders: true } });
+        if (!customer) {
+            return res.status(404).json({ error: 'Customer not found' });
+        }
+        res.status(200).json({
+            id: customer.id,
+            email: customer.email,
+            firstName: customer.firstName,
+            lastName: customer.lastName,
+            phone: customer.phone,
+            address: customer.address,
+            role: customer.role,
+            orders: customer.orders || 0,
+        });
+    } catch (error) {
+        return res.status(400).json({ error: 'Invalid token' });
     }
-    const customerId = id;
-    const customer = await prisma.customer.findUnique({ where: { id: customerId }, include:{orders: true} });
-    if (!customer) {
-        return res.status(404).json({ error: 'Customer not found' });
-    }
-    res.status(200).json({
-        id: customer.id,
-        email: customer.email,
-        firstName: customer.firstName,
-        lastName: customer.lastName,
-        phone: customer.phone,
-        address: customer.address,
-        role: customer.role,
-        orders: customer.orders || 0,
-    });
 }
 
 export const  updateCustomer=async(req:Request, res:Response)=>{
