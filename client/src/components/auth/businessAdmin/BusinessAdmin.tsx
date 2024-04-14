@@ -33,11 +33,13 @@ const BusinessAdmin: React.FC = () => {
     }
 
     useEffect(() => {
-        const businessToken = localStorageService.readBusinessToken('BusinessToken')
-        if (businessToken) {
-            window.location.href = '/business-dashboard';
+        const checkTokenExists = () => {
+            const businessToken = localStorageService.readBusinessToken('BusinessToken')
+            if (businessToken) {
+                window.location.href = '/business-dashboard';
+            }
         }
-
+        checkTokenExists()
         /**
          * TODO: check if token is valid or expired
          */
@@ -54,10 +56,10 @@ const BusinessAdmin: React.FC = () => {
     }, [password, password2]);
 
 
-    const createAdmin = async(e:React.FormEvent) => {
+    const createAdmin = async (e: React.FormEvent) => {
         e.preventDefault()
-        try{
-            if(!name || !email || !phone || !password || !password2){
+        try {
+            if (!name || !email || !phone || !password || !password2) {
                 toast.error("Please fill all the fields")
                 return
             }
@@ -68,17 +70,17 @@ const BusinessAdmin: React.FC = () => {
                 },
                 body: JSON.stringify({name, email, phone, password})
             })
-            if(response.ok) {
+            if (response.ok) {
                 const data = await response.json()
                 localStorageService.writeBusinessAdminToken("BusinessToken", data.token)
                 toast.success("Admin created successfully")
 
                 // window.location.href = '/business-dashboard'
-            } else if(response.status === 400){
+            } else if (response.status === 400) {
                 toast.error("Admin with the same email exists, please specify a different one")
             }
 
-        }catch (error){
+        } catch (error) {
             console.log(error)
             toast.error("failed to create entity, please try again later")
         }
@@ -87,10 +89,33 @@ const BusinessAdmin: React.FC = () => {
 
     const handleLoginChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const {name, value} = e.target;
-        console.log(name, value);
+        if (name === 'email') {
+            setEmail(value);
+        } else {
+            setPassword(value);
+        }
     }
-    const loginAdmin = () =>{
-        setLoading(true)
+    const loginAdmin = async (e: React.FormEvent) => {
+        e.preventDefault()
+        try {
+            setLoading(true)
+            if (!email || !password) {
+                toast.error("please input all fields")
+            }
+            const response = await fetch('http://localhost:4200/api/login-business-admin', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({email, password})
+            })
+            const data = await response.json()
+            localStorageService.writeBusinessAdminToken("BusinessToken", data.token)
+            console.log(data)
+        } catch (error) {
+            setLoading(false)
+            toast.error("failed to login, please try again later")
+        }
     }
 
     const CreateBusinessAdmin = () => {
@@ -166,13 +191,13 @@ const BusinessAdmin: React.FC = () => {
                             <div>
                             <span className={
                                 passwordError === "Passwords do not match" ? "text-red-500" : "text-green-500"}>{passwordError}</span>
+                            </div>
                         </div>
                     </div>
-            </div>
-        <div className="flex justify-end mt-6">
-            <button
-                type="submit"
-                className="bg-blue-500 text-white font-medium py-2 px-4 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                    <div className="flex justify-end mt-6">
+                        <button
+                            type="submit"
+                            className="bg-blue-500 text-white font-medium py-2 px-4 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
                             onClick={createAdmin}
                         >
                             Create Your Admin Account
@@ -244,7 +269,8 @@ const BusinessAdmin: React.FC = () => {
     return (
         <div>
             {
-                loading ? <Spinner/> : showLogin ? LoginBusinessAdmin() : CreateBusinessAdmin()
+                loading ? <div className="flex justify-center items-center h-screen"><Spinner/>
+                </div> : showLogin ? LoginBusinessAdmin() : CreateBusinessAdmin()
             }
             <ToastContainer/>
         </div>
