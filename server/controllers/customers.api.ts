@@ -1,11 +1,17 @@
-const { PrismaClient } = require('@prisma/client');
-const { hashPassword, comparePassword, generateToken } = require('../utils/helpers');
-const jwt = require('jsonwebtoken');
-
+import jwt from 'jsonwebtoken';
+import { PrismaClient } from '@prisma/client';
+import { hashPassword, comparePassword, generateToken } from '../utils/helpers';
+import { Request, Response } from 'express';
 
 const prisma = new PrismaClient();
 
-async function createCustomer(req, res) {
+interface jwtPayload {
+    id: number;
+}
+
+
+export const createCustomer = async (req: Request, res: Response) => {
+    console.log(req.body)
     const { firstName, lastName, email, password, address, phone, role } = req.body;
 
     if (!firstName || !lastName || !email || !password || !address || !phone || !role) {
@@ -22,7 +28,8 @@ async function createCustomer(req, res) {
         data: { email, password: hashedPassword, firstName, lastName, phone, address },
     });
 
-    const token = generateToken({ id: customer.id, role: customer.role });
+    const token = await generateToken({ id: customer.id, role: customer.role });
+    console.log("token", token)
     const customerResponse = {
         id: customer.id,
         email: customer.email,
@@ -31,13 +38,13 @@ async function createCustomer(req, res) {
         phone: customer.phone,
         address: customer.address,
         role: customer.role,
-        token,
+        token: token,
     };
 
     res.status(201).json(customerResponse);
 }
 
-async function customerLogin(req, res) {
+export const  customerLogin=async(req:Request, res:Response)=>{
     console.log(req.body)
     const { email, password } = req.body;
 
@@ -63,14 +70,14 @@ async function customerLogin(req, res) {
         lastName: customer.lastName,
         phone: customer.phone,
         address: customer.address,
-        token,
+        token: token
     };
 
     res.status(200).json(customerResponse);
 }
 
 
-async function getACustomer(req, res) {
+export const  getACustomer= async (req:Request, res:Response)=>{
     const { id } = req.params;
     if (!id) {
         return res.status(400).json({ error: 'Customer ID is required' });
@@ -83,15 +90,15 @@ async function getACustomer(req, res) {
     res.status(200).json(customer);
 }
 
-async function getACustomerByToken(req, res) {
+export const  getACustomerByToken=async(req:Request, res:Response)=>{
     const decoded = jwt.verify(req.body.token || req.header('Authorization')?.replace('Bearer ', '')
-        , process.env.JWT_SECRET || 'secret');
+        , process.env.JWT_SECRET || 'secret') as jwtPayload;
     const id = decoded.id;
     if (!id) {
         return res.status(400).json({ error: 'Customer ID is required' });
     }
-    const customerId = parseInt(id);
-    const customer = await prisma.customer.findUnique({ where: { id: customerId } });
+    const customerId = id;
+    const customer = await prisma.customer.findUnique({ where: { id: customerId }, include:{orders: true} });
     if (!customer) {
         return res.status(404).json({ error: 'Customer not found' });
     }
@@ -108,7 +115,7 @@ async function getACustomerByToken(req, res) {
 }
 
 
-async function updateCustomer(req, res) {
+async function updateCustomer(req:Request, res:Response) {
     const { id } = req.params;
     const { firstName, lastName, email, password, address, phone, role } = req.body;
     if (!firstName || !lastName || !email || !password || !address || !phone || !role) {
@@ -132,14 +139,3 @@ async function updateCustomer(req, res) {
     }
     res.status(200).json(customer);
 }
-
-
-
-
-module.exports = {
-    createCustomer,
-    customerLogin,
-    getACustomer,
-    getACustomerByToken,
-    updateCustomer
-};

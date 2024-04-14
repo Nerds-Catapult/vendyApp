@@ -1,6 +1,4 @@
-
-
-interface profileProps{
+interface profileProps {
     name: string;
     email: string;
     phone: string;
@@ -9,38 +7,53 @@ interface profileProps{
 }
 
 class LocalStorageService {
-  private static instance: LocalStorageService;
+    private static instance: LocalStorageService;
 
-  private constructor() {}
-
-  public static getInstance(): LocalStorageService {
-    if (!LocalStorageService.instance) {
-      LocalStorageService.instance = new LocalStorageService();
+    private constructor() {
     }
-    return LocalStorageService.instance;
-  }
 
-  public writeAuthToken(tokenKey: string, tokenValue: string): void {
-    localStorage.setItem(tokenKey, tokenValue);
-  }
+    public static getInstance(): LocalStorageService {
+        if (!LocalStorageService.instance) {
+            LocalStorageService.instance = new LocalStorageService();
+        }
+        return LocalStorageService.instance;
+    }
 
-  public readAuthToken(tokenKey: string): string | null {
-    return localStorage.getItem(tokenKey);
-  }
+    public writeAuthToken(tokenKey: string, tokenValue: string): void {
+        localStorage.setItem(tokenKey, tokenValue);
+    }
 
-  public deleteAuthToken(tokenKey: string): void {
-    localStorage.removeItem(tokenKey);
-  }
+    public readAuthToken(tokenKey: string): string | null {
+        return localStorage.getItem(tokenKey);
+    }
 
-  public clearAllTokens(): void {
-    localStorage.clear();
-  }
-  public cacheProfileData(profileData: profileProps): void {
-    localStorage.setItem("profileData", JSON.stringify(profileData));
-  }
-  public readProfileData(key: string): string | null {
-    return localStorage.getItem(key);
-  }
+    public deleteAuthToken(tokenKey: string): void {
+        localStorage.removeItem(tokenKey);
+    }
+
+    public clearAllTokens(): void {
+        localStorage.clear();
+    }
+
+    public cacheProfileData(profileData: profileProps): void {
+        localStorage.setItem("profileData", JSON.stringify(profileData));
+    }
+
+    public readProfileData(key: string): string | null {
+        return localStorage.getItem(key);
+    }
+
+    public deleteProfileData(key: string): void {
+        localStorage.removeItem(key);
+    }
+
+    public writeBusinessToken(tokenKey: string, businessToken: string): void {
+        localStorage.setItem(tokenKey, JSON.stringify(businessToken));
+    }
+
+    public readBusinessToken(key: string): string | null {
+        return localStorage.getItem(key);
+    }
 }
 
 export default LocalStorageService;

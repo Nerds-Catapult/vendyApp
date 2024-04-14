@@ -1,16 +1,23 @@
-const jwt = require('jsonwebtoken');
-const { PrismaClient } = require('@prisma/client');
+import jwt from 'jsonwebtoken';
+import { PrismaClient } from '@prisma/client';
+import { Request, Response, NextFunction } from 'express';
+
 
 const Prisma = new PrismaClient();
 
-const protectRoutes = async (req, res, next) => {
+interface jwtPayload {
+  id: number;
+  role: string;
+}
+
+const protectRoutes = async (req:Request, res:Response, next:NextFunction) => {
   try {
     const token = req.header('Authorization')?.replace('Bearer ', '');
     if (!token) {
       return res.status(401).json({ error: 'Not authorized, no token found' });
     }
 
-    const decoded = jwt.verify(token, process.env.JWT_SECRET || 'secret');
+    const decoded = jwt.verify(token, process.env.JWT_SECRET || 'secret') as jwtPayload;
     let user;
     switch (decoded.role) {
       case 'ADMIN':
