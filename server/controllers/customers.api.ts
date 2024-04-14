@@ -1,7 +1,3 @@
-// const { PrismaClient } = require('@prisma/client');
-// const { hashPassword, comparePassword, generateToken } = require('../utils/helpers');
-// const jwt = require('jsonwebtoken');
-
 import jwt from 'jsonwebtoken';
 import { PrismaClient } from '@prisma/client';
 import { hashPassword, comparePassword, generateToken } from '../utils/helpers';

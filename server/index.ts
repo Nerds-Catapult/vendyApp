@@ -3,10 +3,11 @@ import http from 'http';
 import path from 'path'
 import { PrismaClient } from '@prisma/client';
 import cors from 'cors';
+import dotenv from 'dotenv';
+import router from './routes/router';
 
 
-require('dotenv').config();
-
+dotenv.config();
 
 const app = express();
 
@@ -30,7 +31,7 @@ const server = http.createServer(app);
 
 const prisma = new PrismaClient();
 
-app.use('/api',require('./routes/router'));
+app.use('/api', router());
 
 //test prisma connection
 
