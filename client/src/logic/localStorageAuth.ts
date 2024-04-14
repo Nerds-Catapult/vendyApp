@@ -1,11 +1,4 @@
-interface profileProps {
-    name: string;
-    email: string;
-    phone: string;
-    address: string;
-    avatar?: string;
-}
-
+// Date: 14/04/2024
 class LocalStorageService {
     private static instance: LocalStorageService;
 
@@ -27,24 +20,8 @@ class LocalStorageService {
         return localStorage.getItem(tokenKey);
     }
 
-    public deleteAuthToken(tokenKey: string): void {
-        localStorage.removeItem(tokenKey);
-    }
-
     public clearAllTokens(): void {
         localStorage.clear();
-    }
-
-    public cacheProfileData(profileData: profileProps): void {
-        localStorage.setItem("profileData", JSON.stringify(profileData));
-    }
-
-    public readProfileData(key: string): string | null {
-        return localStorage.getItem(key);
-    }
-
-    public deleteProfileData(key: string): void {
-        localStorage.removeItem(key);
     }
 
     public writeBusinessToken(tokenKey: string, businessToken: string): void {
@@ -52,6 +29,14 @@ class LocalStorageService {
     }
 
     public readBusinessToken(key: string): string | null {
+        return localStorage.getItem(key);
+    }
+
+    //------------------------businessAdmin profile------------------------
+    public writeBusinessAdminToken(tokenKey: string, businessAdminToken: string): void {
+        localStorage.setItem(tokenKey, JSON.stringify(businessAdminToken));
+    }
+    public readBusinessAdminToken(key: string): string | null {
         return localStorage.getItem(key);
     }
 }

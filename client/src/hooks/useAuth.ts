@@ -21,6 +21,13 @@ interface createBusinessInterface {
     country: string;
 }
 
+interface createBusinessAdminInterface {
+    name: string;
+    email: string;
+    phone: string;
+    password: string;
+}
+
 // interface registerStoreInterface {
 //     name: string;
 //     phoneNumber: string;
@@ -58,6 +65,19 @@ export const useAuth = () => {
         localStorageService.writeAuthToken('token', token);
         console.log(response);
     }
+    const createBusinessAdmin = async ({name, email, phone, password}: createBusinessAdminInterface) => {
+        const response = await axios.post('http://localhost:4200/api/create-business-admin', {
+            name,
+            email,
+            phone,
+            password
+        });
+        const {token} = response.data;
+        localStorageService.writeBusinessAdminToken('businessAdminToken', token);
+        console.log(response);
+    }
+
+
     const CreateBusiness = async ({businessName, phoneNumber, email, address,city, country}:createBusinessInterface) => {
         const userAuth =  localStorageService.readAuthToken('token');
         const response = await axios.post('http://localhost:4200/api/create-business', {
@@ -77,18 +97,14 @@ export const useAuth = () => {
         return response;
     }
 
-    // const registerStore =  async({name, phoneNumber,address,location,country,storeSlug}:registerStoreInterface) => {
-    //
-    // }
-    const persistentFunction = () => {
-        const token = localStorageService.readAuthToken('token');
-        if (token) {
-            axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-        }
-
-    }
 
     const isAuthenticated = () => !!localStorageService.readAuthToken('token');
 
-    return {login, logOut, isAuthenticated, createCustomer, persistentFunction, CreateBusiness};
+    return {login,
+        logOut,
+        isAuthenticated,
+        createCustomer,
+        CreateBusiness,
+        createBusinessAdmin
+    };
 }
