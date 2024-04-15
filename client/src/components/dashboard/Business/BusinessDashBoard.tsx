@@ -7,6 +7,9 @@ import {VscLibrary} from "react-icons/vsc";
 import {MdCollections, MdShoppingCartCheckout} from "react-icons/md";
 import {IoPeopleSharp} from "react-icons/io5";
 import {TiUserDeleteOutline} from "react-icons/ti";
+import { RiLogoutCircleLine } from "react-icons/ri";
+import { GrDocumentUpdate } from "react-icons/gr";
+import { CgProfile } from "react-icons/cg";
 
 
 const BusinessDashBoard = () => {
@@ -32,7 +35,7 @@ const BusinessDashBoard = () => {
             <nav className="p-4">
                 <div className="container mx-auto flex justify-between items-center">
                     {/* Logo or brand */}
-                    <a href="#" className="text-white font-bold hidden">Vendy Admin</a>
+                    <a href="/" className="text-white font-bold hidden">Vendy Admin</a>
 
                     <div className="hidden lg:flex space-x-4">
                         <a href="#" className="text-white">DashBoard</a>
@@ -73,7 +76,7 @@ const BusinessDashBoard = () => {
                     <div className="flex">
                         <div
                             className={`fixed top-0 left-0 h-screen z-10 bg-slate-900 w-80 p-4 transition-transform duration-300 ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0 lg:block`}>
-                            <a href="#" className="text-white font-bold block mb-6 p-8">Vendy Admin</a>
+                            <a href="/" className="text-white font-bold block mb-6 p-8">Vendy Admin</a>
                             <div className="space-y-12">
                                 < div className="space-y-4 pl-8 ">
                                     <h1 className="font-bold font-serif">Catalogue</h1>
@@ -83,15 +86,22 @@ const BusinessDashBoard = () => {
                                     <a href="#" className="flex text-white mb-2 gap-5 items-center p-3"><MdCollections/>Collections</a>
                                 </div>
 
-                                < div className="space-y-4 pl-8 ">
+                                <div className="space-y-4 pl-8 ">
                                     <h1 className="font-bold font-serif">CUSTOMERS</h1>
                                     <a href="#" className="flex text-white mb-2 gap-5 items-center p-3"><IoPeopleSharp/>Products</a>
                                     <a href="#"
-                                       className="flex text-white mb-2 gap-5 items-center p-3"><FaRegAddressCard/>Add
-                                        Customers</a>
+                                       className="flex text-white mb-2 gap-5 items-center p-3"><FaRegAddressCard/>Add Customers</a>
                                     <a href="#"
-                                       className="flex text-white mb-2 gap-5 items-center p-3"><TiUserDeleteOutline/>Delete
-                                        Customer</a>
+                                       className="flex text-white mb-2 gap-5 items-center p-3"><TiUserDeleteOutline/>Delete Customer</a>
+                                </div>
+
+                                <div className="space-y-4 pl-8 ">
+                                    <h1 className="font-bold font-serif">Account</h1>
+                                    <a href="#" className="flex text-white mb-2 gap-5 items-center p-3"><RiLogoutCircleLine />LogOut</a>
+                                    <a href="#"
+                                       className="flex text-white mb-2 gap-5 items-center p-3"><GrDocumentUpdate />Update Admin</a>
+                                    <a href="#"
+                                       className="flex text-white mb-2 gap-5 items-center p-3"><CgProfile />Profile</a>
                                 </div>
                             </div>
                         </div>
