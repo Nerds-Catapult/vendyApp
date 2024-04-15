@@ -2,10 +2,10 @@ import { PrismaClient } from "@prisma/client";
 import { Request, Response } from "express";
 const prisma = new PrismaClient();
 import { hashPassword, comparePassword, generateToken } from "../utils/helpers";
+import * as fs from "fs";
 
 export const createBusinessAdmin = async (req: Request, res: Response) => {
-  console.log(req.body);
-  const { name, email, phone, password } = req.body;
+  const { name, email, phone, password, image } = req.body;
   try {
     if (!name || !email || !phone || !password) {
       return res.status(400).json({ error: "All fields are required" });
@@ -17,12 +17,19 @@ export const createBusinessAdmin = async (req: Request, res: Response) => {
       return res.status(400).json({ error: "Admin already exists" });
     }
     const hashedPassword = await hashPassword(password);
+    const imagePath = fs.readFileSync(image);
     const admin = await prisma.businessAdmin.create({
       data: {
         name,
         email,
         phone,
         password: hashedPassword,
+      },
+    });
+    const createImage = await prisma.image.create({
+      data: {
+        fileName: "Avatar",
+        imageData: imagePath,
       },
     });
     const token = await generateToken({ id: admin.id, role: admin.role });
@@ -73,6 +80,12 @@ export const getBusinessAdmin = async (req: Request, res: Response) => {
             slug: true,
           },
         },
+        Image: {
+          select: {
+            fileName: true,
+            imageData: true,
+          },
+        },
       },
     });
     if (!admin) {
@@ -105,36 +118,36 @@ export const updateBusinessAdmin = async (req: Request, res: Response) => {
 };
 
 export const loginBusinessAdmin = async (req: Request, res: Response) => {
- console.log(req.body);
+  console.log(req.body);
   const { email, password } = req.body;
 
   try {
-      const admin = await prisma.businessAdmin.findUnique({ where: { email } });
-      
-      if (!admin) {
-          return res.status(404).json({ error: "Admin not found" });
-      }
+    const admin = await prisma.businessAdmin.findUnique({ where: { email } });
 
-      const isPasswordValid = await comparePassword(password, admin.password);
-      if (!isPasswordValid) {
-          return res.status(400).json({ error: "Invalid password" });
-      }
+    if (!admin) {
+      return res.status(404).json({ error: "Admin not found" });
+    }
 
-      const token = await generateToken({ id: admin.id, role: admin.role });
+    const isPasswordValid = await comparePassword(password, admin.password);
+    if (!isPasswordValid) {
+      return res.status(400).json({ error: "Invalid password" });
+    }
 
-      const adminResponse = {
-          id: admin.id,
-          name: admin.name,
-          email: admin.email,
-          phone: admin.phone,
-          role: admin.role,
-          token,
-      };
+    const token = await generateToken({ id: admin.id, role: admin.role });
 
-      // Send success response
-      return res.status(200).json(adminResponse);
+    const adminResponse = {
+      id: admin.id,
+      name: admin.name,
+      email: admin.email,
+      phone: admin.phone,
+      role: admin.role,
+      token,
+    };
+
+    // Send success response
+    return res.status(200).json(adminResponse);
   } catch (error) {
-      console.error("Login error:", error);
-      return res.status(500).json({ error: "Something went wrong" });
+    console.error("Login error:", error);
+    return res.status(500).json({ error: "Something went wrong" });
   }
 };

@@ -14,8 +14,8 @@ model Admin {
   email    String @unique
   password String
   role     String @default("OVERALL_ADMIN")
-
 }
+
 // Model: Customer
 model Customer {
   id        Int        @id @default(autoincrement())
@@ -30,40 +30,42 @@ model Customer {
   business  Business[]
 }
 
-
 // Model: BusinessAdmin
 model BusinessAdmin {
-  id        Int      @id @default(autoincrement())
-  name      String
-  email     String   @unique
-  phone     String 
-  password  String
-  role      String   @default("BUSINESS_ADMIN")
+  id       Int    @id @default(autoincrement())
+  name     String
+  email    String @unique
+  phone    String
+  password String
+  role     String @default("BUSINESS_ADMIN")
 
   // relations
   businesses Business[] @relation("BusinessToAdmin")
   stores     Store[]    @relation("StoreToAdmin")
+  Image      Image[]
 }
+
 // Model: Business
 model Business {
-  id           String   @id @default(cuid())
-  name         String   @unique
-  phoneNumber  String?
-  email        String?
-  address      String
-  city         String
-  country      String
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
-  confirmed    Boolean  @default(false)
-  registered   Boolean  @default(false)
+  id          String   @id @default(cuid())
+  name        String   @unique
+  phoneNumber String?
+  email       String?
+  address     String
+  city        String
+  country     String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  confirmed   Boolean  @default(false)
+  registered  Boolean  @default(false)
+  image       String?
 
   // relations
-  admins   BusinessAdmin[] @relation("BusinessToAdmin")
-  stores   Store[]        @relation("BusinessToStore")
+  admins    BusinessAdmin[] @relation("BusinessToAdmin")
+  stores    Store[]         @relation("BusinessToStore")
   customers Customer[]
+  Image     Image[]
 }
-
 
 // Model: Store
 model Store {
@@ -82,10 +84,12 @@ model Store {
   // relations
   // business Business @relation("BusinessToStore", fields: [businessId], references: [id])
 
-  products      Product[]       @relation("StoreToProduct")
-  orders        Order[]         @relation("StoreToOrder")
-    businesses Business[]     @relation("BusinessToStore")
+  products   Product[]       @relation("StoreToProduct")
+  orders     Order[]         @relation("StoreToOrder")
+  businesses Business[]      @relation("BusinessToStore")
   admins     BusinessAdmin[] @relation("StoreToAdmin")
+  Image      Image[]
+
   @@index([businessId])
 }
 
@@ -104,10 +108,10 @@ model Product {
   updatedAt       DateTime @updatedAt
 
   // relations
-  storeId    String // Foreign Key to Store
-  store      Store    @relation("StoreToProduct", fields: [storeId], references: [id])
-  colorId    String // Foreign Key to Color
-  images     Image[]
+  storeId String // Foreign Key to Store
+  store   Store   @relation("StoreToProduct", fields: [storeId], references: [id])
+  colorId String // Foreign Key to Color
+  images  Image[]
 
   orderItems OrderItem[]
 
@@ -150,13 +154,19 @@ model OrderItem {
 // Model: Image
 model Image {
   id        String   @id @default(cuid())
-  url       String // URL of the image
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  fileName  String
+  imageData Bytes
+  createdAt DateTime @default(now()) 
 
   // relations
-  productId String // Foreign Key to Product
-  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  productId      String
+  businessAdminId Int
+  businessId      String
+  storeId         String
 
-  @@index([productId])
+  // Foreign Keys
+  product         Product?       @relation(fields: [productId], references: [id])
+  businessAdmin   BusinessAdmin? @relation(fields: [businessAdminId], references: [id])
+  business        Business?      @relation(fields: [businessId], references: [id])
+  store           Store?         @relation(fields: [storeId], references: [id])
 }
