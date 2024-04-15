@@ -60,7 +60,9 @@ const BusinessDashBoard = () => {
                     </div>
                 )}
             </nav>
-           <section className="sm:rounded"></section>
+           <section className="sm:rounded">
+
+           </section>
         </div>
     );
 }
