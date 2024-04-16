@@ -2,10 +2,10 @@
 
 import express from 'express';
 import protectRoutes from '../middlewares/authMiddleware';
-import { createBusiness } from '../controllers/business.api';
+import { createBusiness, getBusiness } from '../controllers/business.api';
+// import {protectBusinessRoutes} from "../middlewares/business.guards";
 import { createCustomer, getACustomer , getACustomerByToken, loginCustomer} from '../controllers/customers.api';
 import { createBusinessAdmin, getBusinessAdmin, loginBusinessAdmin } from '../controllers/admins.api';
-
 
 export default (router: express.Router) => {
     router.post('/create-customer', createCustomer);
@@ -19,6 +19,6 @@ export default (router: express.Router) => {
 
 
 
-    router.post('/create-business', createBusiness);
+    router.post('/create-business',  createBusiness); //TODO: protectBusinessRoutes
     return router;
 }

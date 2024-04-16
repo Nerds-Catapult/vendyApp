@@ -29,7 +29,6 @@ const protectRoutes = async (
       process.env.JWT_SECRET || "secret"
     ) as JwtPayload;
     let user;
-    console.log(decoded);
     switch (decoded.role) {
       case "OVERALL_ADMIN":
         user = await prisma.admin.findUnique({ where: { id: decoded.id } });

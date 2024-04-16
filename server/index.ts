@@ -24,7 +24,12 @@ app.use(express.urlencoded({ extended: true }));
 
 app.get('/', (req, res) => {
     // res.sendFile(path.join(__dirname, 'public', 'index.html'));
-    res.send('Welcome to the API');
+    // res.send('Welcome to the API');
+    if(req.accepts("json")){
+        res.json({message: 'Welcome to the API'});
+    } else {
+        res.sendFile(path.join(__dirname, 'public', 'index.html'));
+    }
 });
 
 const server = http.createServer(app);

@@ -47,7 +47,7 @@ model BusinessAdmin {
 
 // Model: Business
 model Business {
-  id          String   @id @default(cuid())
+  id          Int      @id @default(autoincrement())
   name        String   @unique
   phoneNumber String?
   email       String?
@@ -69,7 +69,7 @@ model Business {
 
 // Model: Store
 model Store {
-  id          String   @id @default(cuid())
+  id          Int      @id @default(autoincrement())
   name        String
   phoneNumber String?
   address     String?
@@ -95,7 +95,7 @@ model Store {
 
 // Model: Product
 model Product {
-  id              String   @id @default(cuid())
+  id              Int      @id @default(autoincrement())
   name            String
   slug            String?  @unique
   description     String?  @db.VarChar(500)
@@ -108,7 +108,7 @@ model Product {
   updatedAt       DateTime @updatedAt
 
   // relations
-  storeId String // Foreign Key to Store
+  storeId Int // Foreign Key to Store
   store   Store   @relation("StoreToProduct", fields: [storeId], references: [id])
   colorId String // Foreign Key to Color
   images  Image[]
@@ -127,7 +127,7 @@ model Order {
   address   String   @default("")
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  storeId   String
+  storeId   Int
 
   store      Store       @relation("StoreToOrder", fields: [storeId], references: [id])
   orderItems OrderItem[] // Relation to OrderItem model
@@ -144,7 +144,7 @@ model OrderItem {
   // relations
   orderId   String // Foreign Key to Order
   order     Order   @relation(fields: [orderId], references: [id])
-  productId String // Foreign Key to Product
+  productId Int // Foreign Key to Product
   product   Product @relation(fields: [productId], references: [id])
 
   @@index([orderId])
@@ -156,17 +156,17 @@ model Image {
   id        String   @id @default(cuid())
   fileName  String
   imageData Bytes
-  createdAt DateTime @default(now()) 
+  createdAt DateTime @default(now())
 
   // relations
-  productId      String
+  productId       Int
   businessAdminId Int
-  businessId      String
-  storeId         String
+  businessId      Int
+  storeId         Int
 
   // Foreign Keys
-  product         Product?       @relation(fields: [productId], references: [id])
-  businessAdmin   BusinessAdmin? @relation(fields: [businessAdminId], references: [id])
-  business        Business?      @relation(fields: [businessId], references: [id])
-  store           Store?         @relation(fields: [storeId], references: [id])
+  product       Product?       @relation(fields: [productId], references: [id])
+  businessAdmin BusinessAdmin? @relation(fields: [businessAdminId], references: [id])
+  business      Business?      @relation(fields: [businessId], references: [id])
+  store         Store?         @relation(fields: [storeId], references: [id])
 }
