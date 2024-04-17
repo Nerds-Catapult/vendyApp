@@ -47,18 +47,19 @@ model BusinessAdmin {
 
 // Model: Business
 model Business {
-  id          Int      @id @default(autoincrement())
-  name        String   @unique
+  id          Int     @id @default(autoincrement())
+  name        String  @unique
   phoneNumber String?
   email       String?
   address     String
   city        String
   country     String
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  confirmed   Boolean  @default(false)
-  registered  Boolean  @default(false)
-  image       String?
+
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  confirmed  Boolean  @default(false)
+  registered Boolean  @default(false)
+  image      String?
 
   // relations
   admins    BusinessAdmin[] @relation("BusinessToAdmin")
@@ -155,7 +156,7 @@ model OrderItem {
 model Image {
   id        String   @id @default(cuid())
   fileName  String
-  imageData Bytes
+  imageUrl  String
   createdAt DateTime @default(now())
 
   // relations

@@ -1,12 +1,10 @@
-import jwt from 'jsonwebtoken';
-import { PrismaClient } from '@prisma/client';
-import { Request, Response } from 'express';
-import * as fs from 'fs';
-import path from 'path';
+import jwt, {JwtPayload} from 'jsonwebtoken';
+import {PrismaClient} from '@prisma/client';
+import {Request, Response} from 'express';
 
 const prisma = new PrismaClient();
 
-interface JwtPayload {
+interface jwtPayload extends JwtPayload {
     id: number;
     role: string;
 }
@@ -18,47 +16,25 @@ interface ExpectedBusinessRequest {
     address: string;
     city: string;
     country: string;
-    image?: string | any;
 }
 
+
 export const createBusiness = async (req: Request, res: Response) => {
-    const { name, phoneNumber, email, address, city, country, image }: ExpectedBusinessRequest = req.body;
-
-    // Validate request data
+    const {name, phoneNumber, email, address, city, country,}: ExpectedBusinessRequest = req.body;
     if (!name || !phoneNumber || !email || !address || !city || !country) {
-        return res.status(400).json({ error: 'Please provide all required fields' });
+        return res.status(400).json("empty fields")
     }
-
     try {
-        // Get and verify the token
-        const tokenIdentifier = req.header('Authorization')?.replace('Bearer ', '');
-        if (!tokenIdentifier) {
-            return res.status(401).json({ error: 'Not authorized, no token found' });
-        }
-        const decoded = jwt.verify(tokenIdentifier, process.env.JWT_SECRET || 'secret') as JwtPayload;
+        const token = req.headers.authorization?.split(' ')[1];
+        const decoded = jwt.verify(token!, process.env.JWT_SECRET!) as jwtPayload;
+
         if (decoded.role !== 'BUSINESS_ADMIN') {
-            return res.status(401).json({ error: 'Not authorized, token failed' });
+            return res.status(401).json({error: 'insufficient permission'});
         }
-
-        // Find the business admin
-        const businessAdmin = await prisma.businessAdmin.findUnique({
-            where: { id: decoded.id },
-        });
-        if (!businessAdmin) {
-            return res.status(404).json({ error: 'Business Admin not found' });
+        const imageUrl = req.file;
+        if (!imageUrl) {
+            return res.status(500).json("image string not found")
         }
-
-        // Handle image file if provided
-        let imageData = null;
-        if (image) {
-            // Ensure the image file path is valid and exists
-            if (!fs.existsSync(image)) {
-                return res.status(400).json({ error: 'Image file not found' });
-            }
-            imageData = fs.readFileSync(image);
-        }
-
-        // Create a new business with the image data (if provided)
         const business = await prisma.business.create({
             data: {
                 name,
@@ -67,62 +43,75 @@ export const createBusiness = async (req: Request, res: Response) => {
                 address,
                 city,
                 country,
-                admins: {
-                    connect: {
-                        id: businessAdmin.id,
-                    },
-                },
-                ...(imageData && {
-                    Image: {
-                        create: {
-                            fileName: path.basename(image),
-                            imageData,
-                        },
-                    },
-                }),
-            },
+                Image: {
+                    create: {
+                        fileName: "avatar",
+                        //@ts-ignore
+                        imageUrl: imageUrl
+                    }
+                }
+            }
         });
-
-        // Respond with the created business object
-        return res.status(201).json(business);
+        if (!business) {
+            return res.status(400).json("failed to create business");
+        }
+        return res.status(200).json({
+            name: business.name,
+            phoneNumber: business.phoneNumber,
+            email: business.email,
+            address: business.address,
+            city: business.city,
+            avatar: business.image
+        })
     } catch (error) {
-        console.error('Error creating business:', error);
-        return res.status(500).json({ error: 'Something went wrong' });
-    } finally {
-        // Disconnect Prisma Client when the request is complete
-        await prisma.$disconnect();
+        return res.status(500).json("something went wrong")
     }
 };
 
 
 export const getBusiness = async (req: Request, res: Response) => {
-    const { id } = req.params;
-    try {
-        const business = await prisma.business.findUnique({
-            where: { id: Number(id) },
-            select: {
-                id: true,
-                name: true,
-                phoneNumber: true,
-                email: true,
-                address: true,
-                city: true,
-                country: true,
-                Image: {
-                    select: {
-                        fileName: true,
-                    },
-                },
-            },
-        });
-
-        // Respond with the business object
-        return res.status(200).json(business);
-    } catch (error) {
-        console.error('Error fetching business:', error);
-        return res.status(500).json({ error: 'Something went wrong' });
-    } finally {
-        // Disconnect Prisma Client when the request is complete
-        await prisma.$disconnect();
+    const {id} = req.params;
+    if (!id) {
+        return res.status(404).json("empty fields")
     }
-};
+    const business = await prisma.business.findUnique({
+        where: {id: Number(id)},
+        include: {
+            admins: {
+                select: {
+                    id: true,
+                    email: true,
+                    name: true
+                }
+            },
+            Image: {
+                select: {
+                    id: true,
+                    fileName: true,
+                    imageUrl: true,
+                }
+            },
+            stores: {
+                select: {
+                    id: true,
+                    name: true,
+                    phoneNumber: true,
+                    address: true,
+                    location: true,
+                    slug: true
+                }
+            }
+        }
+    });
+    if (business) {
+        return res.status(404).json("no business found")
+    }
+    return res.status(200).json({
+        businessName: business.name,
+        businessEmail: business.email,
+        businessNumber: business.phoneNumber,
+        businessAddress: business.address,
+        businessCity: business.city,
+        businessCountry: business.country
+    })
+}
