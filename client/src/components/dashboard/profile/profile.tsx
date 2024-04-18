@@ -65,44 +65,44 @@ const Profile = () => {
     return (
         <>
             <Navbar />
-            <div className="profile-container flex justify-center items-center bg-gray-700 h-[100vh]">
-                <div className="profile-card bg-slate-950 rounded-lg shadow-md p-6 md:p-8 lg:p-10 text-white w-full max-w-lg">
-                    {loading ? (
-                        <Loading />
-                    ) : (
-                        <>
-                            <div className="profile-header flex flex-col md:flex-row items-center md:items-start">
-                                {/* Avatar with fallback image */}
-                                <div className="avatar-container w-32 h-32 md:mr-8 mb-4 md:mb-0">
-                                    <img
-                                        src={profileData?.avatar || "https://via.placeholder.com/150"}
-                                        alt={profileData?.firstName || "Avatar"}
-                                        className="avatar w-full h-full object-cover rounded-full"
-                                    />
+            <div className="bg-gray-100 h-screen">
+                <div className="container mx-auto p-4">
+                    <div className="bg-white p-4 rounded-md shadow-md">
+                        <div className="flex items-center justify-between">
+                            <h1 className="text-2xl font-semibold">Profile</h1>
+                            <button onClick={onLogout} className="flex items-center text-red-500">
+                                <CiLogout />
+                                <span className="ml-2">Logout</span>
+                            </button>
+                        </div>
+                        {loading ? (
+                            <Loading />
+                        ) : (
+                            <div className="mt-4">
+                                <div className="flex items-center">
+                                    <img src={profileData?.avatar || '/avatar.png'} alt="avatar" className="w-16 h-16 rounded-full" />
+                                    <div className="ml-4">
+                                        <h2 className="text-xl font-semibold">{profileData?.firstName}</h2>
+                                        <p className="text-gray-500">{profileData?.email}</p>
+                                    </div>
                                 </div>
-                                <div className="profile-info flex-1">
-                                    {/* Displaying user profile information */}
-                                    <h1 className="profile-name text-2xl font-bold">{profileData?.firstName} {profileData?.lastName}</h1>
-                                    <p className="profile-email text-lg">Email: {profileData?.email}</p>
-                                    <p className="profile-phone text-lg">Phone: {profileData?.phone}</p>
-                                    <p className="profile-address text-lg">Address: {profileData?.address}</p>
-                                    <p className="profile-orders text-lg">Total Orders: {profileData?.orders}</p>
+                                <div className="mt-4">
+                                    <h3 className="text-lg font-semibold">Contact Information</h3>
+                                    <div className="mt-2">
+                                        <p><span className="font-semibold">Phone:</span> {profileData?.phone}</p>
+                                        <p><span className="font-semibold">Address:</span> {profileData?.address}</p>
+                                    </div>
+                                </div>
+                                <div className="mt-4">
+                                    <h3 className="text-lg font-semibold">Orders</h3>
+                                    <p>Orders: {profileData?.orders || "you have placed no orders"} </p>
                                 </div>
                             </div>
-                            {/* Logout button */}
-                            <div className="mt-8 flex justify-end">
-                                <button
-                                    className="logout-button bg-red-600 hover:bg-red-700 text-white py-2 px-4 rounded"
-                                    onClick={onLogout}
-                                >
-                                    <CiLogout className="mr-2" /> Logout
-                                </button>
-                            </div>
-                        </>
-                    )}
+                        )}
+                    </div>
                 </div>
-                <ToastContainer />
             </div>
+            <ToastContainer />
         </>
     );
 };

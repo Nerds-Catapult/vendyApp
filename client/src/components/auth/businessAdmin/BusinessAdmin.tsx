@@ -16,6 +16,7 @@ const BusinessAdmin: React.FC = () => {
     const [password, setPassword] = useState("")
     const [password2, setPassword2] = useState("")
     const [passwordError, setPasswordError] = useState("")
+    const [image, setImage] = useState<File | null>(null)
 
     const handleRegistrationHTMLChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const {name, value} = e.target;
@@ -32,12 +33,31 @@ const BusinessAdmin: React.FC = () => {
         }
     }
 
+    const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const {name, files} = e.target;
+        if (name === 'image') {
+            setImage(files![0]);
+            console.log(files![0])
+        }
+
+    }
+    const clearStates = () => {
+        setName("")
+        setEmail("")
+        setPhone("")
+        setPassword("")
+        setPassword2("")
+        setImage(null)
+    }
+
     useEffect(() => {
         const checkTokenExists = () => {
+            setLoading(true)
             const businessToken = localStorageService.readBusinessToken('BusinessToken')
             if (businessToken) {
                 window.location.href = '/business-dashboard';
             }
+            setLoading(false)
         }
         checkTokenExists()
         /**
@@ -59,30 +79,33 @@ const BusinessAdmin: React.FC = () => {
     const createAdmin = async (e: React.FormEvent) => {
         e.preventDefault()
         try {
+        setLoading(true)
             if (!name || !email || !phone || !password || !password2) {
                 toast.error("Please fill all the fields")
-                return
+                setLoading(false)
             }
             const response = await fetch('http://localhost:4200/api/create-business-admin', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({name, email, phone, password})
+                body: JSON.stringify({name, email, phone, password, image})
             })
             if (response.ok) {
                 const data = await response.json()
                 localStorageService.writeBusinessAdminToken("BusinessToken", data.token)
                 toast.success("Admin created successfully")
-
-                // window.location.href = '/business-dashboard'
+                setLoading(false)
+                window.location.href = '/business-dashboard'
             } else if (response.status === 400) {
                 toast.error("Admin with the same email exists, please specify a different one")
+                setLoading(false)
             }
-
+            clearStates();
         } catch (error) {
             console.log(error)
             toast.error("failed to create entity, please try again later")
+            setLoading(false)
         }
     }
 
@@ -192,6 +215,19 @@ const BusinessAdmin: React.FC = () => {
                             <span className={
                                 passwordError === "Passwords do not match" ? "text-red-500" : "text-green-500"}>{passwordError}</span>
                             </div>
+                        </div>
+                        <div>
+                            <label htmlFor="image" className="block font-medium text-gray-700 mb-1">
+                                Profile Picture
+                            </label>
+                            <input
+                                type="file"
+                                name="image"
+                                id="image"
+                                formEncType={"multipart/form-data"}
+                                required
+                                onChange={handleImageChange}
+                            />
                         </div>
                     </div>
                     <div className="flex justify-end mt-6">

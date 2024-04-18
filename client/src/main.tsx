@@ -11,7 +11,6 @@ import Profile from './components/dashboard/profile/profile.tsx';
 import CreateStore from "./components/forms/createStore.tsx";
 import BusinessAdmin from "./components/auth/businessAdmin/BusinessAdmin.tsx";
 import BusinessDashBoard from "./components/dashboard/Business/BusinessDashBoard.tsx";
-
 const router = createBrowserRouter([
     {
         path: '/',
