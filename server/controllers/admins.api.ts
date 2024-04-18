@@ -6,6 +6,7 @@ const prisma = new PrismaClient();
 
 
 export const createBusinessAdmin = async (req: Request, res: Response) => {
+    console.log(req.body)
     const {name, email, phone, password, image} = req.body;
     try {
         if (!name || !email || !phone || !password) {
@@ -23,6 +24,7 @@ export const createBusinessAdmin = async (req: Request, res: Response) => {
         if(!imageUrl){
             return console.error("failed to create image url")
         }
+        return res.status(200).json("image string found")
         // const admin = await prisma.businessAdmin.create({
         //     data: {
         //         name,

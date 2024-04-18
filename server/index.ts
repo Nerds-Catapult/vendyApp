@@ -5,6 +5,8 @@ import { PrismaClient } from '@prisma/client';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import router from './routes/router';
+import multer from 'multer';
+import { middlewareUploads } from './middlewares/uploads.cloudinary';
 
 
 dotenv.config();
@@ -20,6 +22,7 @@ app.use(cors({
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+const upload = multer();
 
 
 app.get('/', (req, res) => {

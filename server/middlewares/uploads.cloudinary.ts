@@ -4,37 +4,35 @@ import cloudinaryConfig from '../configs/appConfigs';
 import path from 'path';
 
 
-
-export const middlewareUploads =async(folderName:string)=>{
+export const middlewareUploads = async (folderName: string) => {
     const storage = new CloudinaryStorage({
         cloudinary: cloudinaryConfig,
-        params:(req, file)=>{
+        params: (req, file) => {
             const folderPath = `${folderName.trim()}`;
             const fileExtension = path.extname(file.originalname).substring(1);
             const publicId = `${folderPath}/${Date.now()}`;
 
-
-            return{
-                folder:folderPath,
-                public_id:publicId,
-                allowed_formats:['jpg','jpeg','png'],
-                resource_type:'image',
+            return {
+                folder: folderPath,
+                public_id: publicId,
+                allowed_formats: ['jpg', 'jpeg', 'png'],
+                resource_type: 'image',
                 format: fileExtension,
             };
         },
     });
 
     return multer({
-        storage:storage,
-        fileFilter:(req, file, cb)=>{
+        storage: storage,
+        fileFilter: (req, file, cb) => {
             const fileExtension = path.extname(file.originalname).substring(1);
-            if(fileExtension !== 'jpg' && fileExtension !== 'jpeg' && fileExtension !== 'png'){
+            if (fileExtension !== 'jpg' && fileExtension !== 'jpeg' && fileExtension !== 'png') {
                 return cb(new Error('Only jpg, jpeg, and png files are allowed'));
             }
             cb(null, true);
         },
-        limits:{
+        limits: {
             fileSize: 1024 * 1024 * 2,
         },
-    })
+    });
 }
