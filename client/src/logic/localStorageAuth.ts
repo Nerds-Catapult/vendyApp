@@ -39,6 +39,9 @@ class LocalStorageService {
     public readBusinessAdminToken(key: string): string | null {
         return localStorage.getItem(key);
     }
+    public writeBusinessAdminProfileData(profileKey: string, businessAdminProfile: string): void {
+        localStorage.setItem(profileKey, JSON.stringify(businessAdminProfile));
+    }
 }
 
 export default LocalStorageService;

@@ -7,7 +7,7 @@ const prisma = new PrismaClient();
 
 export const createBusinessAdmin = async (req: Request, res: Response) => {
     console.log(req.body)
-    const {name, email, phone, password, image} = req.body;
+    const {name, email, phone, password} = req.body;
     try {
         if (!name || !email || !phone || !password) {
             return res.status(400).json({error: "All fields are required"});
@@ -19,33 +19,27 @@ export const createBusinessAdmin = async (req: Request, res: Response) => {
             return res.status(400).json({error: "Admin already exists"});
         }
         const hashedPassword = await hashPassword(password);
-        const imageUrl = req.file;
-        console.log(imageUrl)
-        if(!imageUrl){
-            return console.error("failed to create image url")
+        const admin = await prisma.businessAdmin.create({
+            data: {
+                name,
+                email,
+                phone,
+                password: hashedPassword,
+            },
+        });
+        if (!admin) {
+            return res.status(400).json({error: "Failed to create admin"});
         }
-        return res.status(200).json("image string found")
-        // const admin = await prisma.businessAdmin.create({
-        //     data: {
-        //         name,
-        //         email,
-        //         phone,
-        //         password: hashedPassword,
-        //     },
-        // });
-        // if (!admin) {
-        //     return res.status(400).json({error: "Failed to create admin"});
-        // }
-        // const token = await generateToken({id: admin.id, role: admin.role});
-        // const adminResponse = {
-        //     id: admin.id,
-        //     name: admin.name,
-        //     email: admin.email,
-        //     phone: admin.phone,
-        //     role: admin.role,
-        //     token: token,
-        // };
-        // return res.status(201).json(adminResponse);
+        const token = await generateToken({id: admin.id, role: admin.role});
+        const adminResponse = {
+            id: admin.id,
+            name: admin.name,
+            email: admin.email,
+            phone: admin.phone,
+            role: admin.role,
+            token: token,
+        };
+        return res.status(201).json(adminResponse);
     } catch (error) {
         console.log(error);
         return res.status(500).json({error: "Something went wrong"});
