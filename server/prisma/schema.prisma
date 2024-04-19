@@ -49,11 +49,13 @@ model BusinessAdmin {
 model Business {
   id          Int     @id @default(autoincrement())
   name        String  @unique
-  phoneNumber String?
+  phoneNumber String? @default("")
   email       String?
   address     String
   city        String
   country     String
+
+  productId String?
 
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt

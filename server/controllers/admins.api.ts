@@ -6,7 +6,6 @@ const prisma = new PrismaClient();
 
 
 export const createBusinessAdmin = async (req: Request, res: Response) => {
-    console.log(req.body)
     const {name, email, phone, password} = req.body;
     try {
         if (!name || !email || !phone || !password) {

@@ -52,8 +52,8 @@ app.post('/api/upload', upload.single('file'), async (req: Request, res: Respons
         const b64 = Buffer.from(req.file.buffer).toString('base64');
         const dataURI = `data:${req.file.mimetype};base64,${b64}`;
         const cldRes = await handleUpload(dataURI);
-        console.log(cldRes);
         return res.status(200).json({
+            secure_url: cldRes.secure_url,
             url : cldRes.url,
         });
     } catch (error) {
