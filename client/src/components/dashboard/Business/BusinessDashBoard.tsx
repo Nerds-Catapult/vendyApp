@@ -22,7 +22,7 @@ const BusinessDashBoard = () => {
     };
 
     useEffect(() => {
-        if (!localStorage.readBusinessAdminToken('BusinessToken')) {
+        if (!localStorage.readBusinessAdminToken('businessAdmin')) {
             window.location.href = '/auth/create-admin';
         }
     }, [localStorage])
