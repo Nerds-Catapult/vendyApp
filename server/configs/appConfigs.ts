@@ -1,14 +1,20 @@
-import { v2 as cloudinaryConfig, ConfigOptions } from "cloudinary";
+import {v2 as cloudinaryConfig} from "cloudinary";
 import dotenv from "dotenv";
 
 dotenv.config();
 
-const configOptions: ConfigOptions = {
-    cloud_name: process.env.CLOUD_NAME as string,
-    api_key: process.env.CLOUDINARY_API_KEY as string,
-    api_secret: process.env.CLOUDINARY_API_SECRET as string,
-};
+cloudinaryConfig.config({
+  cloud_name: process.env.CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
 
-cloudinaryConfig.config(configOptions);
 
-export default cloudinaryConfig;
+export async function handleUpload(file: string) {
+    const res = await cloudinaryConfig.uploader.upload(file, {
+    resource_type: "auto",
+  });
+  return res;
+}
+
+export default cloudinaryConfig

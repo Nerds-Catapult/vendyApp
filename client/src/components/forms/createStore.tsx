@@ -1,6 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {toast, ToastContainer} from "react-toastify";
-import {useAuth} from "../../hooks/useAuth.ts";
+import {ToastContainer} from "react-toastify";
 import LocalStorageService from "../../logic/localStorageAuth.ts";
 import Spinner from '../spinner/Spinner';
 import 'react-toastify/dist/ReactToastify.css';
@@ -11,11 +10,10 @@ const CreateStore: React.FC = () => {
     const localStorageService = LocalStorageService.getInstance();
     const [loading, setLoading] = useState(false);
     const [showCreateStore, setShowCreateStore] = useState(false);
-    const {CreateBusiness} = useAuth();
 
     const [businessName, setBusinessName] = useState('');
     const [address, setAddress] = useState('');
-    const [phoneNumber, setphoneNumber] = useState('');
+    const [phoneNumber, setPhoneNumber] = useState('');
     const [email, setEmail] = useState('');
     const [country, setCountry] = useState('');
     const [city, setCity] = useState('');
@@ -25,6 +23,31 @@ const CreateStore: React.FC = () => {
     const [storeLocation, setStoreLocation] = useState('');
     const [storeCountry, setStoreCountry] = useState('');
     const [storeSlug, setStoreSlug] = useState('');
+
+    const [file, setFile] = useState(null);
+    const [res, setRes] = useState({
+        url: '',
+        secure_url: ''
+    });
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    const handleSelectFile = (e: React.ChangeEvent<HTMLInputElement>) => setFile(e.target.files[0])
+
+    const handleUpload = async () : Promise<void | string> => {
+        setLoading(true);
+        const data = new FormData();
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-expect-error
+        data.append('file', file);
+        return await fetch('http://localhost:4200/api/upload', {
+            method: 'POST',
+            body: data
+        }).then(res => res.json())
+            .then(res => {
+                setRes(res);
+                setLoading(false);
+            });
+    }
 
 
     const handleStoreChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -43,7 +66,6 @@ const CreateStore: React.FC = () => {
     }
 
 
-
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const {name, value} = e.target;
         if (name === 'businessName') {
@@ -51,7 +73,7 @@ const CreateStore: React.FC = () => {
         } else if (name === 'address') {
             setAddress(value);
         } else if (name === 'phoneNumber') {
-            setphoneNumber(value);
+            setPhoneNumber(value);
         } else if (name === 'email') {
             setEmail(value);
         } else if (name === 'country') {
@@ -82,26 +104,12 @@ const CreateStore: React.FC = () => {
 
     async function registerBusiness(e: React.FormEvent) {
         e.preventDefault();
+        setLoading(true);
         try {
-            setLoading(true);
-            if (!businessName || !address || !phoneNumber || !email || !country || !city) {
-                toast.error('Please fill in all fields');
-                setLoading(false);
-                return;
-            }
-            const response = await CreateBusiness({
-                businessName,
-                phoneNumber,
-                email,
-                address,
-                city,
-                country
-            });
-            setLoading(false);
-            console.log(response.data)
-        } catch (err) {
-            toast.error('Error occurred while registering business');
-            setLoading(false);
+            await handleUpload();
+
+        } catch (e) {
+            console.log(e);
         }
     }
 
@@ -179,7 +187,7 @@ const CreateStore: React.FC = () => {
                                 />
                             </div>
                         </div>
-                        <div className="flex justify-end mt-6">
+                        <div className="flex justify-end mt-6 mb-4">
                             <button
                                 type="submit"
                                 className="bg-blue-500 text-white font-medium py-2 px-4 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
@@ -187,6 +195,10 @@ const CreateStore: React.FC = () => {
                                 Create Store
                             </button>
                         </div>
+                        <span className="ml-2 text-gray-500 ">Already have a business?
+                            <button className="text-blue-500 "
+                                    onClick={() => setShowCreateStore(false)}>Create Store</button>
+                    </span>
                     </form>
                 </div>
             </div>
@@ -278,7 +290,18 @@ const CreateStore: React.FC = () => {
                                 onChange={handleChange}
                             />
                         </div>
-
+                        <div>
+                            <label htmlFor="image" className="block font-medium text-gray-700 mb-1">
+                                Business Logo
+                                <input
+                                    type="file"
+                                    name="image"
+                                    id="image"
+                                    required
+                                    onChange={handleSelectFile}
+                                />
+                            </label>
+                        </div>
                     </div>
                     <div className="flex justify-end mt-6">
                         <button
@@ -289,6 +312,10 @@ const CreateStore: React.FC = () => {
                             Register Business
                         </button>
                     </div>
+                    <span className="ml-2 text-gray-500">
+                            Already have a business? <button className="text-blue-500 pt-5"
+                                                             onClick={() => setShowCreateStore(true)}>Create Store</button>
+                        </span>
                 </form>
             </div>
         )

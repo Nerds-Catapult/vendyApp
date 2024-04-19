@@ -42,6 +42,20 @@ class LocalStorageService {
     public writeBusinessAdminProfileData(profileKey: string, businessAdminProfile: string): void {
         localStorage.setItem(profileKey, JSON.stringify(businessAdminProfile));
     }
+    public deleteBusinessAdminProfileData(profileKey: string): void {
+        localStorage.removeItem(profileKey);
+    }
+
+    //------------------------business profile------------------------
+    public writeBusinessProfileData(profileKey: string, businessProfile: string): void {
+        localStorage.setItem(profileKey, JSON.stringify(businessProfile));
+    }
+    public readBusinessProfileData(key: string): string | null {
+        return localStorage.getItem(key);
+    }
+    public deleteBusinessProfileData(profileKey: string): void {
+        localStorage.removeItem(profileKey);
+    }
 }
 
 export default LocalStorageService;

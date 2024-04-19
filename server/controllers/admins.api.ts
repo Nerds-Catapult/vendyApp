@@ -46,6 +46,7 @@ export const createBusinessAdmin = async (req: Request, res: Response) => {
     }
 };
 
+
 export const getBusinessAdmin = async (req: Request, res: Response) => {
     const {id} = req.params;
     if (!id) {
