@@ -49,7 +49,7 @@ model BusinessAdmin {
 model Business {
   id          Int     @id @default(autoincrement())
   name        String  @unique
-  phoneNumber String? @default("")
+  phoneNumber String? 
   email       String?
   address     String
   city        String
@@ -114,7 +114,7 @@ model Product {
   storeId Int // Foreign Key to Store
   store   Store   @relation("StoreToProduct", fields: [storeId], references: [id])
   colorId String // Foreign Key to Color
-  images  Image[]
+  
 
   orderItems OrderItem[]
 
@@ -123,7 +123,7 @@ model Product {
 
 // Model: Order
 model Order {
-  id String @id @default(cuid())
+  id Int @id @default(autoincrement())
 
   isPaid    Boolean  @default(false)
   phone     String   @default("")
@@ -142,10 +142,10 @@ model Order {
 
 // Model: OrderItem
 model OrderItem {
-  id String @id @default(cuid())
+  id Int @id @default(autoincrement())
 
   // relations
-  orderId   String // Foreign Key to Order
+  orderId   Int // Foreign Key to Order
   order     Order   @relation(fields: [orderId], references: [id])
   productId Int // Foreign Key to Product
   product   Product @relation(fields: [productId], references: [id])
@@ -156,19 +156,18 @@ model OrderItem {
 
 // Model: Image
 model Image {
-  id        String   @id @default(cuid())
+  id        Int   @id @default(autoincrement())
   fileName  String
   imageUrl  String
   createdAt DateTime @default(now())
 
   // relations
-  productId       Int
-  businessAdminId Int
-  businessId      Int
-  storeId         Int
+  productId       Int @default(0)
+  businessAdminId Int @default(0)
+  businessId      Int @default(0)
+  storeId         Int @default(0)
 
   // Foreign Keys
-  product       Product?       @relation(fields: [productId], references: [id])
   businessAdmin BusinessAdmin? @relation(fields: [businessAdminId], references: [id])
   business      Business?      @relation(fields: [businessId], references: [id])
   store         Store?         @relation(fields: [storeId], references: [id])
