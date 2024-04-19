@@ -12,6 +12,8 @@ import CreateStore from "./components/forms/createStore.tsx";
 import BusinessAdmin from "./components/auth/businessAdmin/BusinessAdmin.tsx";
 import BusinessDashBoard from "./components/dashboard/Business/BusinessDashBoard.tsx";
 import Errands from "./components/dashboard/errands/errands.tsx";
+import MobileIsNotSupported from "./MobileNotSupported/MobileIsNotSupported.tsx";
+
 const router = createBrowserRouter([
     {
         path: '/',
@@ -50,6 +52,10 @@ const router = createBrowserRouter([
     {
         path: '/errands',
         element: <Errands/>
+    },
+    {
+        path: '/500',
+        element: <MobileIsNotSupported/>
     }
 ])
 
