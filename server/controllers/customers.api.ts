@@ -10,6 +10,7 @@ interface jwtPayload {
 }
 
 export const createCustomer = async (req: Request, res: Response) => {
+    console.log(req.body)
     const { firstName, lastName, email, password, address, phone } = req.body;
 
     if (!firstName || !lastName || !email || !password || !address || !phone ) {

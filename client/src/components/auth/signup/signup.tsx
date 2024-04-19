@@ -57,12 +57,7 @@ const Signup = () => {
             });
             toast.success('successfully registered');
             window.location.href = '/';
-            // localStorageService.cacheProfileData({
-            //     name: name,
-            //     email: email,
-            //     phone: phone,
-            //     address: address,
-            // })
+
         } catch (error) {
             alert('Invalid email or password');
         }

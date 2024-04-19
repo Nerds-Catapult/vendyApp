@@ -9,15 +9,14 @@ import { createBusinessAdmin, getBusinessAdmin, loginBusinessAdmin } from '../co
 
 import {middlewareUploads} from "../middlewares/uploads.cloudinary";
 
-
-const uploads = middlewareUploads("vendy");
+const uploads = middlewareUploads('vendy');
 export default async (router: express.Router) => {
-    router.post('/create-customer', createCustomer);
+    router.post('/create-customer' ,createCustomer);
     router.post('/login-customer', loginCustomer);
     router.get('/get-customer/:id', protectRoutes, getACustomer);
     router.get('/get-customer-by-token', getACustomerByToken);
 
-    router.post('/create-business-admin', (await uploads).single('avatar'), createBusinessAdmin);
+    router.post('/create-business-admin',  createBusinessAdmin);
     router.post('/login-business-admin', loginBusinessAdmin);
     router.get('/get-business-admin/:id', protectRoutes, getBusinessAdmin);
 
