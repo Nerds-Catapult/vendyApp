@@ -11,6 +11,7 @@ interface expectedProps {
 }
 
 
+
 const CreateStore: React.FC = () => {
     const localStorageService = LocalStorageService.getInstance();
     const [loading, setLoading] = useState(false);
@@ -95,7 +96,12 @@ const CreateStore: React.FC = () => {
                     })
                 });
             const res = await data.json();
-            console.log(res);
+            if(res.error){
+                toast.error(res.error);
+                return;
+            }
+            toast.success('Business registered successfully');
+            window.location.href = '/business-dashboard';
             setLoading(false);
         } catch (e) {
             console.log({"error": e});
