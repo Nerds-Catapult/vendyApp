@@ -1,11 +1,14 @@
 import Navbar from "./components/nav/Nav"
+import ComingSoonBanner from "./components/Comingsoon/ComingSoon.tsx";
 
 
 export default function App() {
   return (
-    <body className="bg-gray-100 text-gray-900">
+    <body className="bg-gray-100 text-gray-900 h-screen">
       <Navbar />
-      <main className="p-2"></main>
+      <main className="flex justify-center pt-[20%] h-full">
+        <ComingSoonBanner />
+      </main>
     </body>
   )
 }

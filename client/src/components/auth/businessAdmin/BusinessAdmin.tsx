@@ -2,13 +2,6 @@ import React, {useEffect, useState} from 'react';
 import {ToastContainer, toast} from "react-toastify";
 import LocalStorageService from "../../../logic/localStorageAuth.ts";
 
-interface expectedProps {
-    name: string;
-    email: string;
-    phone: string;
-    role: string;
-    token: string;
-}
 
 const CreateBusinessAdmin = () => {
     const [name, setName] = useState('');
@@ -20,13 +13,7 @@ const CreateBusinessAdmin = () => {
     const [showLogin, setShowLogin] = useState(false);
     const storageService = LocalStorageService.getInstance();
 
-    const [businessAdmin, setBusinessAdmin] = useState<expectedProps>({
-        name: '',
-        email: '',
-        phone: '',
-        role: '',
-        token: ''
-    });
+
 
     useEffect(() => {
         if (password !== confirmPassword) {
@@ -45,6 +32,7 @@ const CreateBusinessAdmin = () => {
 
     function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
         const { name, value } = e.target;
+        console.log(e.target.value)
         if (name === 'name') {
             setName(value);
         } else if (name === 'email') {
@@ -74,23 +62,26 @@ const CreateBusinessAdmin = () => {
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({name, email, phone, password})
+            body: JSON.stringify({
+                name: name,
+                email: email,
+                phone: phone,
+                password: password
+            })
         });
         const data = await response.json();
         if (data.error) {
             toast.error(data.error);
         } else {
             toast.success('Admin Account Created Successfully');
-            setBusinessAdmin({
-                name: data.name,
-                email: data.email,
-                phone: data.phone,
-                role: data.role,
-                token: data.token
-            });
+            storageService.writeAdminEmail('adminEmail', data.email);
             storageService.writeBusinessAdminToken('businessAdmin', data.token);
-            storageService.writeBusinessAdminProfileData('businessAdminProfile', JSON.stringify(businessAdmin));
-            window.location.href = '/create-store';
+            const auth =storageService.readBusinessAdminToken("businessAdmin")
+            if(!auth){
+                toast.error("Please try again, could not authenticate")
+            } else {
+                window.location.href = '/create-store'
+            }
         }
     }
         const RegisterBusinessAdmin =  () =>{
