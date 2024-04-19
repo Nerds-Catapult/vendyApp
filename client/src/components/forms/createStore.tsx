@@ -36,7 +36,7 @@ const CreateStore: React.FC = () => {
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-expect-error
         data.append('file', file);
-      const response = await fetch('http://localhost:4200/api/upload', {
+      const response = await fetch('https://goose-merry-mollusk.ngrok-free.app/api/upload', {
             method: 'POST',
             body: data
         })
@@ -79,7 +79,7 @@ const CreateStore: React.FC = () => {
         try {
             const response = await handleUpload() as unknown as expectedProps;
             const admin=  localStorageService.readAdminEmail('adminEmail');
-            const data = await fetch('http://localhost:4200/api/create-business', {
+            const data = await fetch('https://goose-merry-mollusk.ngrok-free.app/api/create-business', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',

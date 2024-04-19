@@ -57,7 +57,7 @@ const CreateBusinessAdmin = () => {
             return;
         }
 
-        const response = await fetch('http://localhost:4200/api/create-business-admin', {
+        const response = await fetch('https://goose-merry-mollusk.ngrok-free.app/api/create-business-admin', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

@@ -1,6 +1,5 @@
 import  express from 'express';
 import http from 'http';
-import path from 'path'
 import { PrismaClient } from '@prisma/client';
 import cors from 'cors';
 import dotenv from 'dotenv';
@@ -25,12 +24,10 @@ app.use(express.urlencoded({ extended: true }));
 
 
 app.get('/', (req, res) => {
-    // res.sendFile(path.join(__dirname, 'public', 'index.html'));
-    // res.send('Welcome to the API');
-    if(req.accepts("json")){
-        res.json({message: 'Welcome to the API'});
-    } else {
-        res.sendFile(path.join(__dirname, 'public', 'index.html'));
+    if(req.accepts('html')){
+        if (req.accepts("html")) {
+            res.sendFile(__dirname + "/public/index.html");
+        }
     }
 });
 

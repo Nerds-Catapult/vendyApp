@@ -26,7 +26,7 @@ export const useAuth = () => {
 
 
     const login = async (email: string, password: string) => {
-        const response = await axios.post('http://localhost:4200/api/login-customer', {email, password});
+        const response = await axios.post('https://goose-merry-mollusk.ngrok-free.app/api/login-customer', {email, password});
         const {token} = response.data;
         console.log(token)
         localStorageService.writeAuthToken('token', token);
@@ -37,7 +37,7 @@ export const useAuth = () => {
         // localStorageService.
     }
     const createCustomer = async ({firstName, lastName, email, password, address, phone}: createCustomerRequest) => {
-        const response = await axios.post('http://localhost:4200/api/create-customer', {
+        const response = await axios.post('https://goose-merry-mollusk.ngrok-free.app/api/create-customer', {
             firstName,
             lastName,
             email,
@@ -53,7 +53,7 @@ export const useAuth = () => {
 
     const CreateBusiness = async ({businessName, phoneNumber, email, address,city, country}:createBusinessInterface) => {
         const userAuth =  localStorageService.readAuthToken('token');
-        const response = await axios.post('http://localhost:4200/api/create-business', {
+        const response = await axios.post('https://goose-merry-mollusk.ngrok-free.app/api/create-business', {
             businessName,
             phoneNumber,
             email,
@@ -71,7 +71,7 @@ export const useAuth = () => {
     }
 
     const loginAdmin = async (email: string, password: string) => {
-        const response = await axios.post('http://localhost:4200/api/login-business-admin', {email, password});
+        const response = await axios.post('https://goose-merry-mollusk.ngrok-free.app/api/login-business-admin', {email, password});
         const {token} = response.data;
         localStorageService.writeAuthToken('token', token);
     }
