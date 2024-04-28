@@ -5,16 +5,30 @@ import Spinner from '../spinner/Spinner';
 import 'react-toastify/dist/ReactToastify.css';
 import Navbar from "../nav/Nav.tsx";
 
+
 interface expectedProps {
     secure_url: string;
     url: string;
 }
 
-
-
+interface importedState{
+    state: {
+        isBusinessExists: boolean;
+    }
+}
+interface expectedState {
+    isAuthenticated: boolean;
+    status: number;
+    message: string;
+    email: string;
+    token: string | null;
+  
+}
+  
 const CreateStore: React.FC = () => {
     const localStorageService = LocalStorageService.getInstance();
     const [loading, setLoading] = useState(false);
+    const [adminId, setAdminId] = useState('');
 
     const [businessName, setBusinessName] = useState('');
     const [address, setAddress] = useState('');
@@ -23,6 +37,40 @@ const CreateStore: React.FC = () => {
     const [country, setCountry] = useState('');
     const [city, setCity] = useState('');
 
+    useEffect(() => {
+        const email = localStorageService.readAdminEmail('adminEmail');
+        async function fetchAdminId() {
+            const response = await fetch(`http://localhost:4200/api/get-admin/${email}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+            const data = await response.json();
+            data.id && setAdminId(data.id);
+        }
+        fetchAdminId();
+    }, [localStorageService])
+
+    useEffect(() => {
+        const email = localStorageService.readAdminEmail('adminEmail');
+        async function checkIfAdminHasBusiness() {
+            setLoading(true);
+            const response = await fetch(`http://localhost:4200/api/validateBusinessByEmail/${email}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+            const data = await response.json();
+            const businessState: importedState = data;
+            if (businessState.state.isBusinessExists === true) {
+                window.location.href = '/business-dashboard';
+            }
+            setLoading(false);
+        }
+        checkIfAdminHasBusiness();
+    }, [localStorageService])
 
 
     const [file, setFile] = useState(null);
@@ -36,7 +84,7 @@ const CreateStore: React.FC = () => {
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-expect-error
         data.append('file', file);
-      const response = await fetch('https://goose-merry-mollusk.ngrok-free.app/api/upload', {
+      const response = await fetch('http://localhost:4200/api/upload', {
             method: 'POST',
             body: data
         })
@@ -61,15 +109,7 @@ const CreateStore: React.FC = () => {
             setCity(value);
         }
     }
-    useEffect(() => {
-        const token = localStorageService.readAuthToken('token');
-        /**
-         * TODO: check if token is valid or expired
-         */
-        if (!token) {
-            window.location.href = '/auth/login';
-        }
-    }, [localStorageService]);
+
 
 
 
@@ -78,30 +118,32 @@ const CreateStore: React.FC = () => {
         setLoading(true);
         try {
             const response = await handleUpload() as unknown as expectedProps;
-            const admin=  localStorageService.readAdminEmail('adminEmail');
-            const data = await fetch('https://goose-merry-mollusk.ngrok-free.app/api/create-business', {
+            const data = await fetch('http://localhost:4200/api/create-business', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                     },
                     body: JSON.stringify({
-                        businessName,
+                        name: businessName,
+                        phoneNumber: phoneNumber,
                         address,
-                        phoneNumber,
                         email,
                         country,
                         city,
-                        adminEmail: admin,
+                        adminId,
                         imageUrl: response.secure_url
                     })
                 });
-            const res = await data.json();
-            if(res.error){
-                toast.error(res.error);
-                return;
+            const res: expectedState = await data.json();
+            if (res.status === 201) {
+                toast.success(res.message);
+                localStorageService.writeBusinessEmail("businessEmail", res.email)
+                window.location.href = "/business-dashboard"
+            } else {
+                toast.error(res.message);
+                setLoading(false)
             }
-            toast.success('Business registered successfully');
-            window.location.href = '/business-dashboard';
+
             setLoading(false);
         } catch (e) {
             console.log({"error": e});
@@ -220,7 +262,7 @@ const CreateStore: React.FC = () => {
                         </button>
                     </div>
                     <span className="ml-2 text-gray-500">
-                        Already have an account? <a href="/auth/login" className="text-blue-500">Login</a>
+                        Already have an account? <a href="/login-business" className="text-blue-500">Login</a>
                     </span>
                 </form>
                 <ToastContainer/>

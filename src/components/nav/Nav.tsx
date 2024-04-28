@@ -68,7 +68,7 @@ export default function Navbar() {
                     </li>
                     <li className="flex items-center">
                         {/*<FaShoppingCart className="text-2xl"/>*/}
-                        <a href="/auth/create-admin" className="text-lg">
+                        <a href="/create-admin" className="text-lg">
                             Create Store
                         </a>
                     </li>

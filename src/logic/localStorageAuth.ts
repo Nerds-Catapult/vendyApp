@@ -59,7 +59,12 @@ class LocalStorageService {
     public deleteBusinessProfileData(profileKey: string): void {
         localStorage.removeItem(profileKey);
     }
+    public writeBusinessEmail(profileKey: string, businessEmail: string): void {
+        localStorage.setItem(profileKey, businessEmail)
+    }
+    public logOut = (): void => {
+        localStorage.clear();
+    }
 }
 
 export default LocalStorageService;
-

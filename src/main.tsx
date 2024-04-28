@@ -12,7 +12,8 @@ import CreateStore from "./components/forms/createStore.tsx";
 import BusinessAdmin from "./components/auth/businessAdmin/BusinessAdmin.tsx";
 import BusinessDashBoard from "./components/dashboard/Business/BusinessDashBoard.tsx";
 import Errands from "./components/dashboard/errands/errands.tsx";
-import MobileIsNotSupported from "./MobileNotSupported/MobileIsNotSupported.tsx";
+import NotFound from './components/errors/404.tsx';
+import LoginAdmin from './components/auth/businessAdmin/loginBusinessAdmin.tsx';
 
 const router = createBrowserRouter([
     {
@@ -31,11 +32,15 @@ const router = createBrowserRouter([
                 path: 'signup',
                 element: <Signup/>
             },
-            {
-                path: 'create-admin',
-                element: <BusinessAdmin/>
-            }
         ]
+    },
+    {
+        path: '/create-admin',
+        element: <BusinessAdmin/>
+    },
+    {
+        path: '/login-admin',
+        element: <LoginAdmin/>
     },
     {
         path: '/profile',
@@ -54,8 +59,8 @@ const router = createBrowserRouter([
         element: <Errands/>
     },
     {
-        path: '/500',
-        element: <MobileIsNotSupported/>
+        path: '*',
+        element: <NotFound/>
     }
 ])
 
