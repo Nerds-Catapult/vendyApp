@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import LocalStorageService from "../../../logic/localStorageAuth.ts";
-import Loading from "../../loader/loading";
-import { redirect } from "react-router-dom";
+import Spinner from "../../spinner/Spinner.tsx";
+
 
 const CreateBusinessAdmin = () => {
   const [name, setName] = useState("");
@@ -30,7 +30,6 @@ const CreateBusinessAdmin = () => {
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     const { name, value } = e.target;
-    console.log(e.target.value);
     if (name === "name") {
       setName(value);
     } else if (name === "email") {
@@ -55,6 +54,7 @@ const CreateBusinessAdmin = () => {
       return;
     }
 
+    setLoading(true)
     const response = await fetch(
       "http://localhost:4200/api/create-business-admin",
       {
@@ -73,6 +73,7 @@ const CreateBusinessAdmin = () => {
     const data = await response.json();
     if (data.error) {
       toast.error(data.error);
+      setLoading(false)
     } else {
       toast.success("Admin Account Created Successfully");
       storageService.writeAdminEmail("adminEmail", data.email);
@@ -206,7 +207,7 @@ const CreateBusinessAdmin = () => {
 
   return (
     <div className="flex justify-center items-center h-screen bg-gray-100">
-      {loading ? <Loading /> : RegisterBusinessAdmin()}
+      {loading ? <Spinner /> : RegisterBusinessAdmin()}
       <ToastContainer />
     </div>
   );

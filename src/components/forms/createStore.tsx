@@ -17,11 +17,13 @@ interface importedState{
     }
 }
 interface expectedState {
-    isAuthenticated: boolean;
+    state: {
+        isAuthenticated: boolean;
     status: number;
     message: string;
     email: string;
     token: string | null;
+   }
   
 }
   
@@ -134,13 +136,13 @@ const CreateStore: React.FC = () => {
                         imageUrl: response.secure_url
                     })
                 });
-            const res: expectedState = await data.json();
-            if (res.status === 201) {
-                toast.success(res.message);
-                localStorageService.writeBusinessEmail("businessEmail", res.email)
+            const res:expectedState= await data.json();
+            if (res.state.status == 201) {
+                toast.success(res.state.message);
+                localStorageService.writeBusinessEmail("businessEmail", res.state.email)
                 window.location.href = "/business-dashboard"
             } else {
-                toast.error(res.message);
+                toast.error(res.state.message);
                 setLoading(false)
             }
 

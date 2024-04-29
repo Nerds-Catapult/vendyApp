@@ -1,17 +1,23 @@
 import Navbar from "./components/nav/Nav"
-import ComingSoonBanner from "./components/Comingsoon/ComingSoon.tsx";
-import { useEffect,  } from "react";
+
+
+import BusinessCatalogue from './catalogues/businessCatalogue';
+import BestSellers from "./catalogues/BestSellers";
+
 
 export default function App() {
-  useEffect(() => {
-    document.title = "Errandz"
-  }, [])
+
 
 
   return (
-    <body className="bg-gray-100 text-gray-900 h-screen">
+    <main className="bg-gray-500 text-gray-900 h-screen">
       <Navbar />
-        <ComingSoonBanner />
-    </body>
+      <div className="px-3 py-5">
+        <BusinessCatalogue />
+      </div>
+      <div className="px-3 py-5">
+        <BestSellers />
+      </div>
+    </main>
   )
 }
