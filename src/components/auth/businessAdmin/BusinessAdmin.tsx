@@ -56,7 +56,7 @@ const CreateBusinessAdmin = () => {
 
     setLoading(true)
     const response = await fetch(
-      "http://localhost:4200/api/create-business-admin",
+      "https://vendy-server.onrender.com/api/create-business-admin",
       {
         method: "POST",
         headers: {

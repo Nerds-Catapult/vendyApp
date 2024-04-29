@@ -32,7 +32,7 @@ const LoginAdmin = () => {
     const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         setLoading(true)
-        const response = await fetch("http://localhost:4200/api/login-business-admin", {
+        const response = await fetch("https://vendy-server.onrender.com/api/login-business-admin", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
