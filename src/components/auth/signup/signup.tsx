@@ -157,7 +157,7 @@ const Signup = () => {
                         className="w-full p-2 bg-blue-500 text-white rounded-md cursor-pointer"
                         onClick={handleSubmit}
                 >
-                    Login
+                    Create Account
                 </button>
             </form>
             <p className="text-center mt-5">
