@@ -1,123 +1,113 @@
-import {useEffect, useState} from "react";
-import LocalStorageService from "../../../logic/localStorageAuth.ts";
-import {IoIosOptions} from "react-icons/io";
-import {FaBell, FaRegAddressCard} from "react-icons/fa";
-import {AiOutlineClose, AiOutlineUser} from "react-icons/ai";
-import {VscLibrary} from "react-icons/vsc";
-import {MdCollections, MdShoppingCartCheckout} from "react-icons/md";
-import {IoPeopleSharp} from "react-icons/io5";
-import {TiUserDeleteOutline} from "react-icons/ti";
-import { RiLogoutCircleLine } from "react-icons/ri";
-import { GrDocumentUpdate } from "react-icons/gr";
-import { CgProfile } from "react-icons/cg";
+import React from "react";
 
-
-const BusinessDashBoard = () => {
-    const localStorage = LocalStorageService.getInstance()
-    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-    const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-
-    const toggleSidebar = () => {
-        setIsSidebarOpen(!isSidebarOpen);
-    };
-
-    useEffect(() => {
-        if (!localStorage.readBusinessAdminToken('businessAdmin')) {
-            window.location.href = '/auth/create-admin';
-        }
-    }, [localStorage])
-    const toggleMobileMenu = () => {
-        setIsMobileMenuOpen(!isMobileMenuOpen);
-    };
-    return (
-        <div className="bg-slate-800 h-screen text-white
-          w-full">
-            <nav className="p-4">
-                <div className="container mx-auto flex justify-between items-center">
-                    {/* Logo or brand */}
-                    <a href="/" className="text-white font-bold hidden">Vendy Admin</a>
-
-                    <div className="hidden lg:flex space-x-4">
-                        <a href="#" className="text-white">DashBoard</a>
-                    </div>
-                    <div className="lg:flex space-x-4 h-fit flex items-center">
-                        <button className="text-white bg-slate-700 p-2 rounded-full h-fit">
-                            <FaBell className=" text-center text-2xl "/>
-                        </button>
-                        <button className="text-white p-4 bg-slate-700 rounded-2xl w-[200px] flex items-center gap-5">
-                            <AiOutlineUser className=""/> <span>Admin</span>
-                        </button>
-                    </div>
-                    <div className="lg:hidden">
-                        <button onClick={toggleMobileMenu} className="text-white">
-                            <IoIosOptions/>
-                        </button>
-                    </div>
-                </div>
-
-                {/* Mobile menu (visible only when isMobileMenuOpen is true and on mobile) */}
-                {isMobileMenuOpen && (
-                    <div className="lg:hidden p-4">
-                        <a href="#" className="block text-white mb-2">Home</a>
-                        <a href="#" className="block text-white mb-2">About</a>
-                        <a href="#" className="block text-white">Contact</a>
-                    </div>
-                )}
-            </nav>
-            <section className="sm:rounded">
-                <div className="container mx-auto p-4">
-                    <button
-                        onClick={toggleSidebar}
-                        className="lg:hidden p-2 bg-slate-700 rounded-full"
-                    >
-                        {isSidebarOpen ? <AiOutlineClose size={24}/> : <IoIosOptions size={24}/>}
-                    </button>
-
-                    <div className="flex">
-                        <div
-                            className={`fixed top-0 left-0 h-screen z-10 bg-slate-900 w-80 p-4 transition-transform duration-300 ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0 lg:block`}>
-                            <a href="/" className="text-white font-bold block mb-6 p-8">Vendy Admin</a>
-                            <div className="space-y-12">
-                                < div className="space-y-4 pl-8 ">
-                                    <h1 className="font-bold font-serif">Catalogue</h1>
-                                    <a href="#" className="flex text-white mb-2 gap-5 items-center p-3"><VscLibrary/>Products</a>
-                                    <a href="#"
-                                       className="flex text-white mb-2 gap-5 items-center p-3"><MdShoppingCartCheckout/>Orders</a>
-                                    <a href="#" className="flex text-white mb-2 gap-5 items-center p-3"><MdCollections/>Collections</a>
-                                </div>
-
-                                <div className="space-y-4 pl-8 ">
-                                    <h1 className="font-bold font-serif">CUSTOMERS</h1>
-                                    <a href="#" className="flex text-white mb-2 gap-5 items-center p-3"><IoPeopleSharp/>Products</a>
-                                    <a href="#"
-                                       className="flex text-white mb-2 gap-5 items-center p-3"><FaRegAddressCard/>Add Customers</a>
-                                    <a href="#"
-                                       className="flex text-white mb-2 gap-5 items-center p-3"><TiUserDeleteOutline/>Delete Customer</a>
-                                </div>
-
-                                <div className="space-y-4 pl-8 ">
-                                    <h1 className="font-bold font-serif">Account</h1>
-                                    <a href="#" className="flex text-white mb-2 gap-5 items-center p-3"><RiLogoutCircleLine />LogOut</a>
-                                    <a href="#"
-                                       className="flex text-white mb-2 gap-5 items-center p-3"><GrDocumentUpdate />Update Admin</a>
-                                    <a href="#"
-                                       className="flex text-white mb-2 gap-5 items-center p-3"><CgProfile />Profile</a>
-                                </div>
-                            </div>
-                        </div>
-
-                        {/* Main content */}
-                        <div className="ml-0 lg:ml-64 p-4"> {/* Adjust margin when sidebar is open */}
-                            <h1 className="text-2xl font-bold hidden lg:block">Welcome to your Business Dashboard</h1>
-                            <p className="text-gray-400 hidden lg:block">Manage your business here</p>
-                            {/* ... rest of your content */}
-                        </div>
-                    </div>
-                </div>
-            </section>
+const AdminDashboard: React.FC = () => {
+  return (
+    <div className="min-h-screen bg-gray-900 text-white">
+      {/* Navbar */}
+      <nav className="bg-gray-800 py-4 px-6">
+        <div className="container mx-auto flex justify-between items-center">
+          <button className=" hover:bg-blue-700 px-4 py-2 rounded-md border ">
+            back to shop
+          </button>
+          <div className="text-xl font-bold">Admin Dashboard</div>
+          <div>
+            <button className="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded">
+              Logout
+            </button>
+          </div>
         </div>
-    );
-}
+      </nav>
 
+      <div className="container mx-auto mt-8 flex">
+        {/* Sidebar */}
+        <aside className="bg-gray-800 w-64  hidden md:block px-9 p-4 ">
+          <ul className="space-y-4 gap-x-11">
+            <li>
+              <a href="#" className="block text-gray-400 hover:text-white">
+                Dashboard
+              </a>
+            </li>
+            <li>
+              <a href="#" className="block text-gray-400 hover:text-white">
+                Products
+              </a>
+            </li>
+            <li>
+              <a href="#" className="block text-gray-400 hover:text-white">
+                Orders
+              </a>
+            </li>
+            <li>
+              <a href="#" className="block text-gray-400 hover:text-white">
+                Customers
+              </a>
+            </li>
+            <li>
+              <a href="#" className="block text-gray-400 hover:text-white">
+                Settings
+              </a>
+            </li>
+          </ul>
+        </aside>
 
-export default BusinessDashBoard;
+        {/* Main Content */}
+        <main className="flex-1 p-8">
+          <h1 className="text-3xl font-bold mb-8">Welcome, Admin!</h1>
+
+          {/* Dashboard Widgets */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-8">
+            <div className="bg-blue-600 rounded-lg p-6">
+              <h2 className="text-2xl font-bold mb-4">Total Products</h2>
+              <p className="text-4xl">100</p>
+            </div>
+            <div className="bg-green-600 rounded-lg p-6">
+              <h2 className="text-2xl font-bold mb-4">Total Orders</h2>
+              <p className="text-4xl">50</p>
+            </div>
+            <div className="bg-yellow-600 rounded-lg p-6">
+              <h2 className="text-2xl font-bold mb-4">Total Customers</h2>
+              <p className="text-4xl">200</p>
+            </div>
+            <div className="bg-red-600 rounded-lg p-6">
+              <h2 className="text-2xl font-bold mb-4">Pending Orders</h2>
+              <p className="text-4xl">10</p>
+            </div>
+          </div>
+
+          {/* Recent Orders */}
+          <div className="bg-gray-800 rounded-lg p-8">
+            <h2 className="text-2xl font-bold mb-4">Recent Orders</h2>
+            <table className="w-full text-left">
+              <thead>
+                <tr className="border-b border-gray-700">
+                  <th className="py-2">Order ID</th>
+                  <th className="py-2">Customer</th>
+                  <th className="py-2">Total</th>
+                  <th className="py-2">Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                {/* Dummy order data */}
+                <tr className="border-b border-gray-700">
+                  <td className="py-2">#1001</td>
+                  <td className="py-2">John Doe</td>
+                  <td className="py-2">$100.00</td>
+                  <td className="py-2">Pending</td>
+                </tr>
+                <tr className="border-b border-gray-700">
+                  <td className="py-2">#1002</td>
+                  <td className="py-2">Jane Smith</td>
+                  <td className="py-2">$150.00</td>
+                  <td className="py-2">Shipped</td>
+                </tr>
+                {/* Add more order rows as needed */}
+              </tbody>
+            </table>
+          </div>
+        </main>
+      </div>
+    </div>
+  );
+};
+
+export default AdminDashboard;
