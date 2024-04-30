@@ -42,7 +42,7 @@ const CreateStore: React.FC = () => {
     useEffect(() => {
         const email = localStorageService.readAdminEmail('adminEmail');
         async function fetchAdminId() {
-            const response = await fetch(`http://localhost:4200/api/get-admin/${email}`, {
+            const response = await fetch(`https://vendy-server.onrender.com/api/get-admin/${email}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json'
@@ -58,7 +58,7 @@ const CreateStore: React.FC = () => {
         const email = localStorageService.readAdminEmail('adminEmail');
         async function checkIfAdminHasBusiness() {
             setLoading(true);
-            const response = await fetch(`http://localhost:4200/api/validateBusinessByEmail/${email}`, {
+            const response = await fetch(`https://vendy-server.onrender.com/api/validateBusinessByEmail/${email}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json'
@@ -86,7 +86,7 @@ const CreateStore: React.FC = () => {
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-expect-error
         data.append('file', file);
-      const response = await fetch('http://localhost:4200/api/upload', {
+      const response = await fetch('https://vendy-server.onrender.com/api/upload', {
             method: 'POST',
             body: data
         })
@@ -120,7 +120,7 @@ const CreateStore: React.FC = () => {
         setLoading(true);
         try {
             const response = await handleUpload() as unknown as expectedProps;
-            const data = await fetch('http://localhost:4200/api/create-business', {
+            const data = await fetch('https://vendy-server.onrender.com/api/create-business', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',

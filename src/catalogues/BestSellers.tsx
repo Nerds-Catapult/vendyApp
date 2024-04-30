@@ -43,7 +43,7 @@ const BestSellers = () => {
         const fetchBusiness = async () => {
             setLoading(true);
             try {
-                const response = await fetch("http://localhost:4200/api/businesses", {
+                const response = await fetch("https://vendy-server.onrender.com/api/businesses", {
                     method: "GET",
                     headers: {
                         "Content-Type": "application/json",
@@ -63,7 +63,7 @@ const BestSellers = () => {
             <div>
                 <h2 className="text-lg font-semibold">Best Sellers</h2>
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                    {business.map((business) => (
+              {business.map((business) => (
                         <div className="bg-white rounded p-2" key={business.id}>
                             <div className="flex flex-col sm:flex-row justify-between items-center">
                                 <div>
