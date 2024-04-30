@@ -27,7 +27,6 @@ const Login = () => {
         }
         try {
             await login(email, password);
-            // Redirect the user to the appropriate page after a successful login
             toast.success('successfully logged in');
             window.location.href = '/profile';
         } catch (error) {

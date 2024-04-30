@@ -24,6 +24,13 @@ const products = [
   { id: 15, name: 'Curtains', category: 'Home & Kitchen', price: 40, image:"https://shorturl.at/nvwCD" },
   { id: 16, name: 'Conditioner', category: 'Beauty & Personal Care', price: 5, image:"https://shorturl.at/nvwCD" },
 ];
+const brands = [
+  {brandName: 'Nike'},
+  {brandName: 'Adidas'},
+  {brandName: 'Samsung'},
+  {brandName: 'Apple'},
+  {brandName: 'Google'}
+]
 
 
 export default function App() {
@@ -40,7 +47,7 @@ export default function App() {
         <BestSellers />
       </div>
       <div className="px-3 py-5">
-        <ProductCatalog products={products} categories={categories}/>
+        <ProductCatalog products={products} categories={categories} brands={brands}/>
       </div>
       <FooterComponent />
     </main>
