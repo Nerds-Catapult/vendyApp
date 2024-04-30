@@ -26,28 +26,28 @@ const BusinessCatalogue = () => {
     );
   };
 
-    const Business = () => {
+  const Business = () => {
     return (
-      <div>
+      <div className="container mx-auto">
         <div className="relative">
-          <div className="overflow-x-auto whitespace-nowrap scroll-smooth  container mx-auto">
-            {business.map((business) => (
-              <div
-                key={business.id}
-                className="inline-flex items-center justify-center mx-4"
-              >
-                  <div className="flex flex-col items-center px-4 ">
-                    <img
-                      src={business.image || "https://via.placeholder.com/150"}
-                      className="w-[102px] h-[102px] rounded-full cursor-pointer"
-                      alt="business"
-                                onClick={() => {
-                                    window.location.href = `/business/${business.id}`;
-                        }}
-                    />
-                  </div>
-              </div>
-            ))}
+          <div className="overflow-x-auto whitespace-nowrap scroll-smooth">
+            <div className="flex justify-center space-x-4">
+              {business.map((business) => (
+                <div
+                  key={business.id}
+                  className="flex flex-col items-center cursor-pointer"
+                  onClick={() => {
+                    window.location.href = `/business/${business.id}`;
+                  }}
+                >
+                  <img
+                    src={business.image || "https://via.placeholder.com/150"}
+                    className="w-24 h-24 rounded-full"
+                    alt="business"
+                  />
+                </div>
+              ))}
+            </div>
           </div>
           <button className="absolute left-0 top-1/2 transform -translate-y-1/2 bg-white bg-opacity-50 rounded-full p-2 shadow-md">
             Prev
@@ -96,15 +96,17 @@ const BusinessCatalogue = () => {
 
   const [loading, setLoading] = useState(false);
   return (
-    <div className="bg-slate-300 h-[150px] w-full grid items-center px-4">
+    <div className="bg-slate-300 py-8">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       {loading ? (
-        <div className="flex justify-center text-[12px]">
+        <div className="flex justify-center items-center h-40">
           <Loading />
         </div>
       ) : (
         <Business />
       )}
     </div>
+  </div>
   );
 };
 
