@@ -1,27 +1,27 @@
-import React from 'react';
+import React from "react";
 
 const AdminDashboard: React.FC = () => {
   return (
     <div className="min-h-screen bg-gray-900 text-white">
       {/* Navbar */}
-          <nav className="bg-gray-800 py-4 px-6">
-              <div className="container mx-auto flex justify-between items-center">
-              <button className="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded">
-                    Home
-            </button>
+      <nav className="bg-gray-800 py-4 px-6">
+        <div className="container mx-auto flex justify-between items-center">
+          <button className=" hover:bg-blue-700 px-4 py-2 rounded-md border ">
+            back to shop
+          </button>
           <div className="text-xl font-bold">Admin Dashboard</div>
           <div>
             <button className="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded">
               Logout
-            </button>  
+            </button>
           </div>
         </div>
       </nav>
 
       <div className="container mx-auto mt-8 flex">
         {/* Sidebar */}
-        <aside className="bg-gray-800 w-64 p-4 hidden md:block">
-          <ul className="space-y-4">
+        <aside className="bg-gray-800 w-64  hidden md:block px-9 p-4 ">
+          <ul className="space-y-4 gap-x-11">
             <li>
               <a href="#" className="block text-gray-400 hover:text-white">
                 Dashboard
