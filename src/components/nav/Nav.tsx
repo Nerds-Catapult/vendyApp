@@ -14,7 +14,7 @@ export default function Navbar() {
         if (token) {
             setProfileState('/profile');
         } else {
-            setProfileState('auth/login');
+            setProfileState('/login');
         }
     }, [localStorageService])
     return (

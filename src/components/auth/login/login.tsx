@@ -42,7 +42,7 @@ const Login = () => {
     }, [localStorageService])
 
     return (
-        <>
+        <div className="flex h-screen justify-center items-center">
             <div className="bg-white login rounded-xl shadow-xl w-[400px] h-fit mx-auto p-5">
                 <h1 className="text-center capitalize">Welcome Back</h1>
                 <form className="bg-gray-100 p-10">
@@ -86,7 +86,7 @@ const Login = () => {
                 </p>
                 <ToastContainer/>
             </div>
-        </>
+        </div>
     );
 };
 
