@@ -19,6 +19,12 @@ class LocalStorageService {
     public readAuthToken(tokenKey: string): string | null {
         return localStorage.getItem(tokenKey);
     }
+    public writeCustomerProfileData(profileKey: string, customerProfile: string): void {
+        localStorage.setItem(profileKey, customerProfile);
+    }
+    public readCustomerProfileData(key: string): string | null {
+        return localStorage.getItem(key);
+    }
 
     public clearAllTokens(): void {
         localStorage.clear();

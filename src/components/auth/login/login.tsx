@@ -1,15 +1,35 @@
 import React, {useEffect, useState} from "react";
 import 'react-toastify/dist/ReactToastify.css';
-import {useAuth} from "../../../hooks/useAuth.ts";
-import localStorageAuth from "../../../logic/localStorageAuth.ts";
 import {toast, ToastContainer} from 'react-toastify';
+import LocalStorageService from "../../../logic/localStorageAuth.ts";
 
+
+interface expectedCustomer {
+    isAuthenticated: boolean;
+    status: number;
+    message: string;
+    customer: {
+      id: number;
+      email: string;
+      firstName: string;
+      lastName: string;
+      phone: string;
+      address: string;
+      token: string;
+    };
+  }
 
 const Login = () => {
+    const localStorageService = LocalStorageService.getInstance();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const {login} = useAuth();
 
+
+    useEffect(() => {
+        if (localStorageService.readAuthToken('customerToken')) {
+            window.location.href = '/profile';
+        }
+    }, [localStorageService]);
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const {name, value} = e.target;
         if (name === 'email') {
@@ -21,25 +41,44 @@ const Login = () => {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        if (!email || !password) {
-            toast.error('Please fill all the fields');
-            return;
+        if (!!email ||   !password ) {
+          alert("Please fill all the fields");
+          return;
         }
         try {
-            await login(email, password);
-            toast.success('successfully logged in');
-            window.location.href = '/profile';
+          const response = await fetch(
+            "http://localhost:4200/api/login-customer",
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                email,
+                password,
+              }),
+            }
+          );
+          const data = await response.json();
+          if (data.status !== 201) {
+            toast.error(data.message);
+          } else {
+            const parseCustomerInfo: expectedCustomer = data;
+            toast.success(parseCustomerInfo.message);
+            localStorageService.writeAuthToken(
+              "customerToken",
+              parseCustomerInfo.customer.token
+            );
+            localStorageService.writeCustomerProfileData(
+              "customerProfile",
+              JSON.stringify(parseCustomerInfo.customer)
+            );
+            window.location.href = "/profile";
+          }
         } catch (error) {
-            toast.error('Invalid email or password');
+          alert("Invalid email or password");
         }
-    };
-    const localStorageService = localStorageAuth.getInstance();
-    useEffect(() => {
-        if (localStorageService.readAuthToken('token')) {
-            console.log(localStorageService.readAuthToken('token'));
-            window.location.href = '/profile';
-        }
-    }, [localStorageService])
+    }
 
     return (
         <div className="flex h-screen justify-center items-center">
