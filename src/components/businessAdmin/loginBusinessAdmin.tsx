@@ -1,9 +1,9 @@
 import React, { useState, } from "react";
 
-import Navbar from "../../nav/Nav";
-import Spinner from "../../spinner/Spinner";
+import Navbar from "../nav/Nav";
+import Spinner from "../spinner/Spinner";
 import { ToastContainer, toast } from "react-toastify";
-import LocalStorageService from "../../../logic/localStorageAuth";
+import LocalStorageService from "../../logic/localStorageAuth";
 
 
 interface expectedProps {

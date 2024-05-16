@@ -75,7 +75,6 @@ export default function Navbar() {
                     <li className="flex items-center">
                         <a href={profileState} className="text-lg">
                             <CgProfile className="text-2xl"/>
-                            {/*Profile*/}
                         </a>
                     </li>
                     <li className="flex items-center">

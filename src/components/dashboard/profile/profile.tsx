@@ -29,7 +29,7 @@ const Profile = () => {
     const onLogout = () => {
         try {
             localStorageService.clearAllTokens();
-            window.location.href = '/auth/login';
+            window.location.href = '/login';
             toast.success('Successfully logged out');
         } catch (error) {
             toast.error('An error occurred while logging out');

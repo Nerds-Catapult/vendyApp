@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
-import LocalStorageService from "../../../logic/localStorageAuth.ts";
-import Spinner from "../../spinner/Spinner.tsx";
+import LocalStorageService from "../../logic/localStorageAuth.ts";
+import Spinner from "../spinner/Spinner.tsx";
 
 
 const CreateBusinessAdmin = () => {

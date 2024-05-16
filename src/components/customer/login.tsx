@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 import 'react-toastify/dist/ReactToastify.css';
 import {toast, ToastContainer} from 'react-toastify';
-import LocalStorageService from "../../../logic/localStorageAuth.ts";
+import LocalStorageService from "../../logic/localStorageAuth.ts";
 
 
 interface expectedCustomer {

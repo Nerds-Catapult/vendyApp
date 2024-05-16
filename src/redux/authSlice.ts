@@ -1,41 +1,74 @@
-import { createSlice, configureStore } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction, createAsyncThunk } from "@reduxjs/toolkit";
 
-// Define the initial state based on the entityState interface
-interface entityState { isBusinessOwner: boolean; isCustomer: boolean; } 
 
-const initialState: entityState = {
-  isBusinessOwner: false,
-  isCustomer: false,
-};
+interface AuthState {
+    isAuthenticated: boolean;
+    status: number;
+    message: string;
+    token: string | null;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    user: any;
+}
 
-// Create the entitySlice using createSlice
-const entitySlice = createSlice({
-  name: 'entity',
-  initialState,
-  reducers: {
-    setBusinessOwner: (state, action) => {
-      state.isBusinessOwner = action.payload;
-    },
-    setCustomer: (state, action) => {
-      state.isCustomer = action.payload;
-    },
-  },
-});
+interface expectedCustomerResponse {
+    status: number;
+    message: string;
+    token: string;
+    entity: {
+        id: number;
+        email: string;
+        firstName: string;
+        lastName: string;
+        phone: string;
+        address: string;
+    }
+}
 
-// Extract the action creators from the entitySlice
-export const { setBusinessOwner, setCustomer } = entitySlice.actions;
+export const registerCustomer = createAsyncThunk("customer/register", async (customer: { email: string, password: string, firstName: string, lastName: string, phone: string, address: string }) => {
+    const response = await fetch("http://localhost:4200/api/create-customer", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(customer)
+    })
+    const data: expectedCustomerResponse = await response.json()
+    return data
+})
 
-// Define the RootState type
-export type RootState = {
-  entity: entityState;
-};
+export const loginCustomer = createAsyncThunk("customer/login", async (customer: { email: string, password: string }) => {
+    const response = await fetch("http://localhost:4200/api/login-customer", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(customer)
+    })
+    const data: expectedCustomerResponse = await response.json()
+    return data
+})
 
-// Create the Redux store
-const store = configureStore({
-  reducer: {
-    entity: entitySlice.reducer,
-  },
-});
 
-// Export the store
-export default store;
+const customerSlice = createSlice({
+    name: 'customer',
+    initialState: {
+        isAuthenticated: false,
+        status: 0,
+        message: "",
+        token: null,
+        user: {}
+    } as unknown as AuthState,
+    reducers: {
+        createCustomer: (state, action: PayloadAction<AuthState>) => {
+            state.isAuthenticated = true;
+            state.status = action.payload.status;
+            state.message = action.payload.message;
+            state.token = action.payload.token;
+            state.user = action.payload.user;
+        }
+    }
+})
+
+
+export const { createCustomer } = customerSlice.actions;
+export default customerSlice.reducer;
