@@ -73,50 +73,44 @@ const Login = () => {
 
 
     return (
-        <div className="flex h-screen justify-center items-center">
-            <div className="bg-white login rounded-xl shadow-xl w-[400px] h-fit mx-auto p-5">
-                <h1 className="text-center capitalize">Welcome Back</h1>
-                <form className="bg-gray-100 p-10" onSubmit={handleSubmit}>
-                    <div className="mb-5">
-                        <label htmlFor="email" className="block font-bold">
-                            Email
-                        </label>
-                        <input
-                            type="email"
-                            id="email"
-                            name="email"
-                            className="w-full p-2 border border-gray-300 rounded-md text-sm"
-                            onChange={handleChange}
-                        />
-                    </div>
-                    <div className="mb-5">
-                        <label htmlFor="password" className="block font-bold">
-                            Password
-                        </label>
-                        <input
-                            type="password"
-                            id="password"
-                            name="password"
-                            className="w-full p-2 border border-gray-300 rounded-md text-sm"
-                            onChange={handleChange}
-                        />
-                    </div>
-                    <button
-                        type="submit"
-                        className="w-full p-2 bg-blue-500 text-white rounded-md cursor-pointer"
-                    >
-                        Login
-                    </button>
-                </form>
-                <p className="text-center mt-5">
-                    Don't have an account?{" "}
-                    <a href="signup" className="text-blue-500">
-                        Signup
-                    </a>
-                </p>
-                <ToastContainer/>
+      <>
+      <div className="flex bg-gradient-to-r from-pink-500 to-slate-900 text-white justify-center py-28 h-screen">
+        <div className="w-96 bg-white/30 p-4 rounded-lg backdrop-blur-sm	h-3/4">
+          <h1 className="text-2xl font-bold text-center">Login</h1>
+          <form className="py-[30%] text-black" onSubmit={handleSubmit}>
+            <div className="mb-4 text-black">
+              <label htmlFor="email" className="block">
+                Email
+              </label>
+              <input
+                type="email"
+                id="email"
+                className="w-full p-2 rounded-lg"
+                onChange={handleChange}
+              />
             </div>
+            <div className="mb-4">
+              <label htmlFor="password" className="block">
+                Password
+              </label>
+              <input
+                type="password"
+                id="password"
+                className="w-full p-2 rounded-lg"
+                onChange={handleChange}
+              />
+            </div>
+            <button
+              type="submit"
+              className="w-full bg-slate-900 p-2 rounded-lg mt-4 text-white"
+            >
+              Login
+            </button>
+          </form>
         </div>
+      </div>
+      <ToastContainer />
+    </>
     );
 };
 

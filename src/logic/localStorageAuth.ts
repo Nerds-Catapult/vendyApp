@@ -13,7 +13,7 @@ class LocalStorageService {
     }
 
     public writeAuthToken(tokenKey: string, tokenValue: string): void {
-        localStorage.setItem(tokenKey, tokenValue);
+        localStorage.setItem("customerToken", tokenValue);
     }
 
     public readAuthToken(tokenKey: string): string | null {

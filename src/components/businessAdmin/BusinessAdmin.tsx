@@ -4,6 +4,13 @@ import LocalStorageService from "../../logic/localStorageAuth.ts";
 import Spinner from "../spinner/Spinner.tsx";
 
 
+interface FormData {
+  name: string;
+  email: string;
+  phone: string;
+  password: string;
+}
+
 const CreateBusinessAdmin = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -12,6 +19,8 @@ const CreateBusinessAdmin = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [passwordError, setPasswordError] = useState("");
   const [loading, setLoading] = useState(false);
+
+  
   const storageService = LocalStorageService.getInstance();
 
   useEffect(() => {
@@ -56,7 +65,7 @@ const CreateBusinessAdmin = () => {
 
     setLoading(true)
     const response = await fetch(
-      "https://vendy-server.onrender.com/api/create-business-admin",
+      "http://localhost:4200/api/create-business-admin",
       {
         method: "POST",
         headers: {

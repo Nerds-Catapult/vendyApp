@@ -8,37 +8,27 @@ import Login from "./components/customer/login.tsx";
 import Signup from "./components/customer/signup.tsx";
 import Profile from "./components/dashboard/profile/profile.tsx";
 import CreateStore from "./components/forms/createStore.tsx";
-import BusinessAdmin from "./components/businessAdmin/BusinessAdmin.tsx";
 import BusinessDashBoard from "./components/dashboard/Business/BusinessDashBoard.tsx";
-import Errands from "./components/dashboard/errands/errands.tsx";
 import NotFound from "./components/errors/404.tsx";
-import LoginAdmin from "./components/businessAdmin/loginBusinessAdmin.tsx";
 import store from "./store/store.ts";
+import RunErrands from "./components/forms/errandForms.tsx";
 import "./index.css";
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <App />,
+    element: <App />, 
   },
   {
     path: "/login",
-    element: <Login />,
+    element: <Login />, //done
   },
   {
     path: "/signup",
-    element: <Signup />,
+    element: <Signup />, //done
   },
   {
-    path: "/create-admin",
-    element: <BusinessAdmin />,
-  },
-  {
-    path: "/login-admin",
-    element: <LoginAdmin />,
-  },
-  {
-    path: "/profile",
+    path: "/profile", //done
     element: <Profile />,
   },
   {
@@ -51,7 +41,7 @@ const router = createBrowserRouter([
   },
   {
     path: "/errands",
-    element: <Errands />,
+    element: <RunErrands />,
   },
   {
     path: "*",

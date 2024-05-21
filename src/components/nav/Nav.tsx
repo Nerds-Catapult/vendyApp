@@ -8,11 +8,13 @@ import {CgProfile} from "react-icons/cg";
 export default function Navbar() {
     const [profileState, setProfileState] = useState('');
     const localStorageService = LocalStorageService.getInstance();
+    const [token, setToken] = useState('');
 
     useEffect(() => {
-        const token = localStorageService.readAuthToken("token");
+        const token = localStorageService.readBusinessAdminToken("token");
         if (token) {
             setProfileState('/profile');
+            setToken(token);
         } else {
             setProfileState('/login');
         }
@@ -68,8 +70,8 @@ export default function Navbar() {
                     </li>
                     <li className="flex items-center">
                         {/*<FaShoppingCart className="text-2xl"/>*/}
-                        <a href="/create-admin" className="text-lg">
-                            Create Store
+                        <a href="/create-store" className="text-lg">
+                            {token ? 'Admin' : 'sell With US'}
                         </a>
                     </li>
                     <li className="flex items-center">
