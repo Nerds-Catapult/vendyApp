@@ -4,6 +4,7 @@ import { CiLogout } from "react-icons/ci";
 import Navbar from "../../nav/Nav.tsx";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import Cookies from "js-cookie";
 
 interface ProfileProps {
   id: number;
@@ -22,65 +23,63 @@ interface ExpectedProps {
 }
 
 const Profile = () => {
-  const [profileData, setProfileData] = useState<ProfileProps | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [customerId, setCustomerId] = useState<number>();
-  const [error, setError] = useState<string | null>(null);
+ const [profileData, setProfileData] = useState<ProfileProps | null>(null);
+ const [loading, setLoading] = useState(true);
+ const [error, setError] = useState<string | null>(null);
 
-  const onLogout = () => {
-    try {
-      localStorage.clear();
-      window.location.href = "/";
-      toast.success("Successfully logged out");
-    } catch (error) {
-      toast.error("An error occurred while logging out");
-    }
-  };
+ const fetchProfileData = async () => {
+   const customerToken = Cookies.get("customerToken");
 
-  useEffect(() => {
-    const checkUserStorage = async () => {
-      const userProfile = localStorage.getItem(
-        "customer"
-      ) as unknown as ProfileProps;
-      if (!userProfile) {
-        toast.error("To view your profile please login first.");
-      } else {
-        userProfile.id && setCustomerId(userProfile.id);
-      }
-    };
+   if (!customerToken) {
+     window.location.href = "/auth/customer/login";
+     return;
+   }
 
-    const getProfileData = async () => {
-      setLoading(true);
-      setError(null);
-      const token = localStorage.getItem("customerToken");
-      if (token) {
-        try {
-          const response = await fetch(
-            "http://localhost:4200/api/get-customer",
-            {
-              method: "GET",
-              headers: {
-                Authorization: `Bearer ${token}`,
-              },
-            }
-          );
-          const data: ExpectedProps = await response.json();
-          if (data.status !== 200) {
-            setError(data.message);
-          } else {
-            setProfileData(data.entity);
-          }
-        } catch (error) {
-          setError("An error occurred while fetching profile data.");
-        }
-      }
-      setLoading(false);
-    };
+   try {
+     const response = await fetch(`http://localhost:4200/api/get-customer`, {
+       method: "GET",
+       headers: {
+         Authorization: `Bearer ${customerToken}`,
+       },
+        credentials: "include",
+     });
 
-    checkUserStorage();
-    getProfileData();
-  }, [customerId]);
+     const data: ExpectedProps = await response.json();
 
+     if (data.status === 200) {
+       setProfileData(data.entity);
+     } else {
+       setError(data.message);
+     }
+   } catch (error) {
+     console.log(error);
+     setError("An error occurred while fetching profile data");
+   } finally {
+     setLoading(false);
+   }
+ };
+
+ const onLogout = () => {
+   try {
+     Cookies.remove("customerToken");
+     window.location.href = "/auth/customer/login";
+     toast.success("Successfully logged out");
+   } catch (error) {
+     toast.error("An error occurred while logging out");
+   }
+ };
+
+ useEffect(() => {
+   fetchProfileData();
+ }, []);
+
+ if (loading) {
+   return <div>Loading...</div>;
+ }
+
+ if (error) {
+   return <div>Error: {error}</div>;
+ }
   return (
     <>
       <Navbar />

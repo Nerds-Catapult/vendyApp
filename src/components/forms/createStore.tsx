@@ -3,7 +3,7 @@ import { ToastContainer, toast } from "react-toastify";
 import Spinner from "../spinner/Spinner";
 import "react-toastify/dist/ReactToastify.css";
 import Navbar from "../nav/Nav.tsx";
-
+import Cookies from "js-cookie";
 
 const CreateStore: React.FC = () => {
   interface ExpectedProps {
@@ -58,11 +58,11 @@ const CreateStore: React.FC = () => {
 
   useEffect(() => {
     const authStateProtocol = async () => {
-      const token = localStorage.getItem("customerToken");
-      if (!token) {
-        toast.error("You need to login first, redirecting to login page...");
+          const customerToken = Cookies.get("customerToken");
+      if (!customerToken) {
+        toast.error("You need  first, redirecting to login page...");
         setTimeout(() => {
-          window.location.href = "/login-customer";
+          window.location.href = "/auth/customer/signup";
         }, 3000);
         return;
       } 
@@ -73,7 +73,7 @@ const CreateStore: React.FC = () => {
             method: "GET",
             headers: {
               "Content-Type": "application/json",
-              Authorization: `Bearer ${token}`,
+              Authorization: `Bearer ${customerToken}`,
             },
           }
         );
@@ -89,7 +89,9 @@ const CreateStore: React.FC = () => {
       } catch (error) {
         console.error("Error fetching customer data:", error);
         toast.error("Something went wrong, redirecting to login page...");
-        // Redirect to login page
+        setTimeout(() => {
+          window.location.href = "/auth/customer/signup";
+        }, 3000);
       }
     };
     authStateProtocol();
@@ -143,10 +145,6 @@ const CreateStore: React.FC = () => {
       const res: ExpectedState = await data.json();
       if (res.state.status === 201) {
         toast.success(res.state.message);
-        localStorage.setItem(
-          "businessEmail",
-          res.state.email
-        );
         window.location.href = "/business-dashboard";
       } else {
         toast.error(res.state.message);

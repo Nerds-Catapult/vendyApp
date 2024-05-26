@@ -24,7 +24,6 @@ const CreateAccount: React.FC = () => {
     useEffect(() => {
       const customerToken = Cookies.get("customerToken");
       if (customerToken) {
-        console.log("customerToken", customerToken);
         window.location.href = "/";
       }
     }, []);
@@ -66,7 +65,6 @@ const CreateAccount: React.FC = () => {
       const data: expectedCustomer = await response.json();
       if (data.status === 201) {
         toast.success(data.message);
-        Cookies.set("customerToken", data.token, { sameSite: "strict" });
         window.location.href = "/";
       } else {
         toast.error(data.message);

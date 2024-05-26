@@ -17,8 +17,7 @@ const Login = () => {
   useEffect(() => {
     const customerToken = Cookies.get("customerToken");
     if (customerToken) {
-      console.log("customerToken", customerToken);
-      window.location  .href = "/";
+      window.location  .href = "/shop";
     }
   }, []);
 
@@ -58,8 +57,7 @@ const Login = () => {
       const data: ExpectedCustomer = await response.json();
       if (data.status === 200) {
         toast.success(data.message);
-        Cookies.set("customerToken", data.token, { sameSite: "strict" });
-        window.location.href = "/";
+        window.location.href = "/shop";
       } else {
         toast.error(data.message);
       }
