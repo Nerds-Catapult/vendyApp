@@ -9,6 +9,7 @@ import Signup from "./components/customer/signup.tsx";
 import Profile from "./components/dashboard/profile/profile.tsx";
 import CreateStore from "./components/forms/createStore.tsx";
 import BusinessDashBoard from "./components/dashboard/Business/BusinessDashBoard.tsx";
+import LoginStore from "./components/forms/loginStore.tsx";
 import NotFound from "./components/errors/404.tsx";
 import store from "./store/store.ts";
 import RunErrands from "./components/forms/errandForms.tsx";
@@ -42,6 +43,10 @@ const router = createBrowserRouter([
   {
     path: "/errands",
     element: <RunErrands />,
+  },
+  {
+    path: "/login-store",
+    element: <LoginStore />,
   },
   {
     path: "*",

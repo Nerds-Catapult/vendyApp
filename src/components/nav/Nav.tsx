@@ -1,24 +1,11 @@
 import logo from "../../assets/vendy.png";
-import {useEffect, useState} from "react";
 import {FaShoppingCart} from "react-icons/fa";
-import LocalStorageService from "../../logic/localStorageAuth";
 import {CgProfile} from "react-icons/cg";
-
+import {useState} from "react";
 
 export default function Navbar() {
-    const [profileState, setProfileState] = useState('');
-    const localStorageService = LocalStorageService.getInstance();
-    const [token, setToken] = useState('');
+ const [token] = useState(localStorage.getItem('token'));
 
-    useEffect(() => {
-        const token = localStorageService.readBusinessAdminToken("token");
-        if (token) {
-            setProfileState('/profile');
-            setToken(token);
-        } else {
-            setProfileState('/login');
-        }
-    }, [localStorageService])
     return (
         <nav className="bg-white flex items-center px-4 pt-6 pb-3 w-full top-0 text-[19px]">
             <a href="/" className="flex items-center">
@@ -26,7 +13,7 @@ export default function Navbar() {
                 />
             </a>
 
-
+        
             <form
                 action=""
                 className="hidden  lg:flex flex-row-reverse gap-2 xl:pl-20"
@@ -75,7 +62,7 @@ export default function Navbar() {
                         </a>
                     </li>
                     <li className="flex items-center">
-                        <a href={profileState} className="text-lg">
+                        <a href={'/profile'} className="text-lg">
                             <CgProfile className="text-2xl"/>
                         </a>
                     </li>

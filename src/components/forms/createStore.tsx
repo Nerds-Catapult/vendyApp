@@ -5,54 +5,55 @@ import Spinner from "../spinner/Spinner";
 import "react-toastify/dist/ReactToastify.css";
 import Navbar from "../nav/Nav.tsx";
 
-interface expectedProps {
-  secure_url: string;
-  url: string;
-}
-
-interface expectedState {
-  state: {
-    isAuthenticated: boolean;
-    status: number;
-    message: string;
-    email: string;
-    token: string | null;
-  };
-}
-
-interface expectedCustomer {
-  id: number;
-  fullName: string;
-  phoneNumber: string;
-  email: string;
-  address: string;
-  imageUrl: string | null;
-}
 
 const CreateStore: React.FC = () => {
+  interface ExpectedProps {
+    secure_url: string;
+    url: string;
+  }
+
+  interface ExpectedState {
+    state: {
+      isAuthenticated: boolean;
+      status: number;
+      message: string;
+      email: string;
+      token: string | null;
+    };
+  }
+
+  interface ExpectedCustomer {
+    id: number;
+    fullName: string;
+    phoneNumber: string;
+    email: string;
+    address: string;
+    imageUrl: string | null;
+  }
+
   const localStorageService = LocalStorageService.getInstance();
   const [loading, setLoading] = useState(false);
 
-  const [businessName, setBusinessName] = useState("");
-  const [category, setCategory] = useState("");
-  const [businessEmail, setBusinessEmail] = useState("");
-  const [businessPhoneNumber, setBusinessPhoneNumber] = useState("");
-  const [businessAddress, setBusinessAddress] = useState("");
-  const [subCounty, setSubCounty] = useState("");
-  const [ward, setWard] = useState("");
-  const [area, setArea] = useState("");
-  const [customerId, setCustomerId] = useState(0);
+  const [formData, setFormData] = useState({
+    businessName: "",
+    category: "",
+    businessEmail: "",
+    businessPhoneNumber: "",
+    businessAddress: "",
+    subCounty: "",
+    ward: "",
+    area: "",
+    customerId: 0,
+    firstName: "",
+    lastName: "",
+    identificationNumber: "",
+    password: "",
+  });
 
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [identificationNumber, setIdentificationNumber] = useState("");
-  const [password, setPassword] = useState("");
+  const [file, setFile] = useState<File | null>(null);
 
-  const [file, setFile] = useState(null);
   const handleSelectFile = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
       setFile(e.target.files[0]);
     }
   };
@@ -65,27 +66,33 @@ const CreateStore: React.FC = () => {
         setTimeout(() => {
           window.location.href = "/login-customer";
         }, 3000);
-      }
-      const customer = await fetch(
-        "https://vendy-server.onrender.com/api/get-customer",
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      const data: expectedCustomer = await customer.json();
-      if (data) {
+        return;
+      } 
+      try {
+        const response = await fetch(
+          "http://localhost:4200/api/get-customer",
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        const data: ExpectedCustomer = await response.json();
         localStorageService.writeCustomerProfileData(
           "customer",
           JSON.stringify(data)
         );
-        setCustomerId(data.id);
+        setFormData((prevData) => ({
+          ...prevData,
+          customerId: data.id,
+        }));
+      } catch (error) {
+        console.error("Error fetching customer data:", error);
+        toast.error("Something went wrong, redirecting to login page...");
+        // Redirect to login page
       }
-      toast.error("something went wrong, redirecting to login page...");
-      //redirect to login page
     };
     authStateProtocol();
   }, [localStorageService]);
@@ -93,9 +100,9 @@ const CreateStore: React.FC = () => {
   const handleUpload = async (): Promise<string> => {
     setLoading(true);
     const data = new FormData();
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-expect-error
-    data.append("file", file);
+    if (file) {
+      data.append("file", file);
+    }
     const response = await fetch(
       "https://vendy-server.onrender.com/api/upload",
       {
@@ -106,40 +113,21 @@ const CreateStore: React.FC = () => {
     return response.json();
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     const { name, value } = e.target;
-    if (name === "businessName") {
-      setBusinessName(value);
-    } else if (name === "address") {
-      setBusinessAddress(value);
-    } else if (name === "phoneNumber") {
-      setBusinessPhoneNumber(value);
-    } else if (name === "email") {
-      setBusinessEmail(value);
-    } else if (name === "county") {
-        setCategory(value);
-    } else if (name === "sub-county") {
-        setSubCounty(value);
-    } else if (name === "ward") {
-        setWard(value);
-    } else if (name === "area") {
-        setArea(value);
-    } else if (name === "firstName") {
-        setFirstName(value);
-    } else if (name === "lastName") {
-        setLastName(value);
-    } else if (name === "identificationNumber") {
-        setIdentificationNumber(value);
-    } else if (name === "password") {
-        setPassword(value);
-    }
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
   };
 
-  async function registerBusiness(e: React.FormEvent) {
+  const registerBusiness = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     try {
-      const response = (await handleUpload()) as unknown as expectedProps;
+      const response = (await handleUpload()) as unknown as ExpectedProps;
       const data = await fetch(
         "https://vendy-server.onrender.com/api/create-business",
         {
@@ -147,28 +135,15 @@ const CreateStore: React.FC = () => {
           headers: {
             "Content-Type": "application/json",
           },
-            body: JSON.stringify({
-                businessName: businessName,
-                address: businessAddress,
-                phoneNumber: businessPhoneNumber,
-                email: businessEmail,
-                subCounty: subCounty,
-                ward: ward,
-                area: area,
-                category: category,
-                imageUrl: response.secure_url,
-                customerId: customerId,
-                firstName: firstName,
-                lastName: lastName,
-                identificationNumber: identificationNumber,
-                password: password,
-                phone: businessPhoneNumber
-                
+          body: JSON.stringify({
+            ...formData,
+            imageUrl: response.secure_url,
+            phone: formData.businessPhoneNumber,
           }),
         }
       );
-      const res: expectedState = await data.json();
-      if (res.state.status == 201) {
+      const res: ExpectedState = await data.json();
+      if (res.state.status === 201) {
         toast.success(res.state.message);
         localStorageService.writeBusinessEmail(
           "businessEmail",
@@ -177,17 +152,14 @@ const CreateStore: React.FC = () => {
         window.location.href = "/business-dashboard";
       } else {
         toast.error(res.state.message);
-        setLoading(false);
       }
-
+    } catch (error) {
+      console.error("Error registering business:", error);
+      toast.error("Business registration failed, please try again");
+    } finally {
       setLoading(false);
-    } catch (e) {
-      console.log({ error: e });
-      setLoading(false);
-      toast.error("Business registration failed, Please try again");
     }
-  }
-
+  };
   const createBusiness = () => {
     return (
       <div className="flex justify-center items-center h-full bg-gray-100 py-9">
@@ -337,7 +309,7 @@ const CreateStore: React.FC = () => {
                 id="firstName"
                 required
                 className="w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                onChange={(e) => setFirstName(e.target.value)}
+                onChange={handleChange}
               />
             </div>
             <div>
@@ -353,7 +325,7 @@ const CreateStore: React.FC = () => {
                 id="lastName"
                 required
                 className="w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                onChange={(e) => setLastName(e.target.value)}
+                onChange={handleChange}
               />
             </div>
             <div>
@@ -369,7 +341,7 @@ const CreateStore: React.FC = () => {
                 id="identificationNumber"
                 required
                 className="w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                onChange={(e) => setIdentificationNumber(e.target.value)}
+                onChange={handleChange}
               />
             </div>
             <div>
@@ -385,7 +357,7 @@ const CreateStore: React.FC = () => {
                 id="password"
                 required
                 className="w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                onChange={(e) => setPassword(e.target.value)}
+                onChange={handleChange}
               />
             </div>
             <div className="md:col-span-2">
@@ -417,7 +389,7 @@ const CreateStore: React.FC = () => {
           </div>
           <span className="ml-2 text-gray-500">
             Already have an account?{" "}
-            <a href="/login-business" className="text-blue-500">
+            <a href="/login-store" className="text-blue-500">
               Login
             </a>
           </span>

@@ -43,24 +43,30 @@ const CreateAccount: React.FC = () => {
       lastName: string;
       phone: string;
       address: string;
-    }
+    };
     token: string;
   }
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      const response = await fetch("http://localhost:4200/api/create-customer", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      })
+      const response = await fetch(
+        "http://localhost:4200/api/create-customer",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(formData),
+        }
+      );
       const data: expectedCustomer = await response.json();
       if (data.status === 201) {
         toast.success(data.message);
         localStorage.writeAuthToken("customerToken", data.token);
-        localStorage.writeCustomerProfileData("customer", JSON.stringify(data.entity));
+        localStorage.writeCustomerProfileData(
+          "customer",
+          JSON.stringify(data.entity)
+        );
         window.location.href = "/";
       } else {
         toast.error(data.message);
