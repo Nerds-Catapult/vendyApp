@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
-import LocalStorageService from "../../logic/localStorageAuth";
 import { toast, ToastContainer } from "react-toastify";
+import Cookies from "js-cookie";
+
+
 
 interface FormData {
   fullName: string;
@@ -11,7 +13,6 @@ interface FormData {
 }
 
 const CreateAccount: React.FC = () => {
-  const localStorage = LocalStorageService.getInstance();
   const [formData, setFormData] = useState<FormData>({
     fullName: "",
     email: "",
@@ -20,11 +21,13 @@ const CreateAccount: React.FC = () => {
     phoneNumber: "",
   });
 
-  useEffect(() => {
-    if (localStorage.readAuthToken("customerToken")) {
-      window.location.href = "/";
-    }
-  });
+    useEffect(() => {
+      const customerToken = Cookies.get("customerToken");
+      if (customerToken) {
+        console.log("customerToken", customerToken);
+        window.location.href = "/";
+      }
+    }, []);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -57,16 +60,13 @@ const CreateAccount: React.FC = () => {
             "Content-Type": "application/json",
           },
           body: JSON.stringify(formData),
+          credentials: "include",
         }
       );
       const data: expectedCustomer = await response.json();
       if (data.status === 201) {
         toast.success(data.message);
-        localStorage.writeAuthToken("customerToken", data.token);
-        localStorage.writeCustomerProfileData(
-          "customer",
-          JSON.stringify(data.entity)
-        );
+        Cookies.set("customerToken", data.token, { sameSite: "strict" });
         window.location.href = "/";
       } else {
         toast.error(data.message);

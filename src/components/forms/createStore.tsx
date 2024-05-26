@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
-import LocalStorageService from "../../logic/localStorageAuth.ts";
 import Spinner from "../spinner/Spinner";
 import "react-toastify/dist/ReactToastify.css";
 import Navbar from "../nav/Nav.tsx";
@@ -31,7 +30,6 @@ const CreateStore: React.FC = () => {
     imageUrl: string | null;
   }
 
-  const localStorageService = LocalStorageService.getInstance();
   const [loading, setLoading] = useState(false);
 
   const [formData, setFormData] = useState({
@@ -60,7 +58,7 @@ const CreateStore: React.FC = () => {
 
   useEffect(() => {
     const authStateProtocol = async () => {
-      const token = localStorageService.readAuthToken("customerToken");
+      const token = localStorage.getItem("customerToken");
       if (!token) {
         toast.error("You need to login first, redirecting to login page...");
         setTimeout(() => {
@@ -80,7 +78,7 @@ const CreateStore: React.FC = () => {
           }
         );
         const data: ExpectedCustomer = await response.json();
-        localStorageService.writeCustomerProfileData(
+        localStorage.setItem(
           "customer",
           JSON.stringify(data)
         );
@@ -95,7 +93,7 @@ const CreateStore: React.FC = () => {
       }
     };
     authStateProtocol();
-  }, [localStorageService]);
+  }, []);
 
   const handleUpload = async (): Promise<string> => {
     setLoading(true);
@@ -145,7 +143,7 @@ const CreateStore: React.FC = () => {
       const res: ExpectedState = await data.json();
       if (res.state.status === 201) {
         toast.success(res.state.message);
-        localStorageService.writeBusinessEmail(
+        localStorage.setItem(
           "businessEmail",
           res.state.email
         );

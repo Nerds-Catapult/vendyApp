@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import LocalStorageService from "../../../logic/localStorageAuth.ts";
 import Loading from "../../loader/loading.tsx";
 import { CiLogout } from "react-icons/ci";
 import Navbar from "../../nav/Nav.tsx";
@@ -23,7 +22,6 @@ interface ExpectedProps {
 }
 
 const Profile = () => {
-  const localStorageService = LocalStorageService.getInstance();
   const [profileData, setProfileData] = useState<ProfileProps | null>(null);
   const [loading, setLoading] = useState(true);
   const [customerId, setCustomerId] = useState<number>();
@@ -31,7 +29,7 @@ const Profile = () => {
 
   const onLogout = () => {
     try {
-      localStorageService.clearAllTokens();
+      localStorage.clear();
       window.location.href = "/";
       toast.success("Successfully logged out");
     } catch (error) {
@@ -41,7 +39,7 @@ const Profile = () => {
 
   useEffect(() => {
     const checkUserStorage = async () => {
-      const userProfile = localStorageService.readCustomerProfileData(
+      const userProfile = localStorage.getItem(
         "customer"
       ) as unknown as ProfileProps;
       if (!userProfile) {
@@ -54,7 +52,7 @@ const Profile = () => {
     const getProfileData = async () => {
       setLoading(true);
       setError(null);
-      const token = localStorageService.readAuthToken("customerToken");
+      const token = localStorage.getItem("customerToken");
       if (token) {
         try {
           const response = await fetch(
@@ -81,7 +79,7 @@ const Profile = () => {
 
     checkUserStorage();
     getProfileData();
-  }, [customerId, localStorageService]);
+  }, [customerId]);
 
   return (
     <>

@@ -29,7 +29,7 @@ export const useAuth = () => {
         const response = await axios.post('https://goose-merry-mollusk.ngrok-free.app/api/login-customer', {email, password});
         const {token} = response.data;
         console.log(token)
-        localStorageService.writeAuthToken('token', token);
+        localStorageService.setItem("token", token);
     }
 
     const logOut = () => {
@@ -46,37 +46,51 @@ export const useAuth = () => {
             phone
         });
         const {token} = response.data;
-        localStorageService.writeAuthToken('token', token);
+        localStorageService.setItem("token", token);
         console.log(response);
     }
 
 
-    const CreateBusiness = async ({businessName, phoneNumber, email, address,city, country}:createBusinessInterface) => {
-        const userAuth =  localStorageService.readAuthToken('token');
-        const response = await axios.post('https://goose-merry-mollusk.ngrok-free.app/api/create-business', {
-            businessName,
-            phoneNumber,
-            email,
-            address,
-            city,
-            country,
-        }, {
-            headers: {
-                Authorization: `Bearer ${userAuth}`
-            }
-        });
-        const token = response.data.businessToken
-        localStorageService.writeBusinessToken('businessToken', token);
-        return response;
-    }
+    const CreateBusiness = async ({
+      businessName,
+      phoneNumber,
+      email,
+      address,
+      city,
+      country,
+    }: createBusinessInterface) => {
+      const userAuth = localStorageService.getItem("token");
+      const response = await axios.post(
+        "https://goose-merry-mollusk.ngrok-free.app/api/create-business",
+        {
+          businessName,
+          phoneNumber,
+          email,
+          address,
+          city,
+          country,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${userAuth}`,
+          },
+        }
+      );
+      const token = response.data.businessToken;
+      localStorageService.writeBusinessToken("businessToken", token);
+      return response;
+    };
 
     const loginAdmin = async (email: string, password: string) => {
-        const response = await axios.post('https://goose-merry-mollusk.ngrok-free.app/api/login-business-admin', {email, password});
-        const {token} = response.data;
-        localStorageService.writeAuthToken('token', token);
-    }
+      const response = await axios.post(
+        "https://goose-merry-mollusk.ngrok-free.app/api/login-business-admin",
+        { email, password }
+      );
+      const { token } = response.data;
+      localStorageService.setItem("token", token);
+    };
 
-    const isAuthenticated = () => !!localStorageService.readAuthToken('token');
+    const isAuthenticated = () => !!localStorageService.getItem("token");
 
     return {
         login,
