@@ -21,6 +21,7 @@ const Login = () => {
     }
   }, []);
 
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({
@@ -57,6 +58,7 @@ const Login = () => {
       const data: ExpectedCustomer = await response.json();
       if (data.status === 200) {
         toast.success(data.message);
+        Cookies.set("customerToken", data.token);
         window.location.href = "/shop";
       } else {
         toast.error(data.message);
@@ -118,7 +120,7 @@ const Login = () => {
                 <p className="text-gray-500 text-sm">
                   Don't have an account?{" "}
                   <a
-                    href="/signup"
+                    href="/auth/customer/signup"
                     className="text-blue-500 hover:text-blue-700"
                   >
                     Register

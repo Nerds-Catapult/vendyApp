@@ -29,7 +29,6 @@ const Profile = () => {
 
  const fetchProfileData = async () => {
    const customerToken = Cookies.get("customerToken");
-
    if (!customerToken) {
      window.location.href = "/auth/customer/login";
      return;
@@ -45,11 +44,12 @@ const Profile = () => {
      });
 
      const data: ExpectedProps = await response.json();
-
+     console.log(data.status);
      if (data.status === 200) {
        setProfileData(data.entity);
-     } else {
-       setError(data.message);
+     } else if (data.status === 401) {
+       toast.error("Session expired. Please login again");
+        Cookies.remove("customerToken");
      }
    } catch (error) {
      console.log(error);

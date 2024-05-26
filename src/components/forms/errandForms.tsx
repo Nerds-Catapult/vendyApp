@@ -42,44 +42,45 @@ const RunErrands: React.FC = () => {
     const handleSelectFile = async (e: React.ChangeEvent<HTMLInputElement>) => setFile(e.target.files![0]);
     
     const handleImageUpload = async (): Promise<string> => {
-        setLoading(true);
-        const data = new FormData();
-        data.append("file", file as Blob);
-        const response = await fetch("https://vendy-server.onrender.com/api/upload", {
-            method: "POST",
-            body: data,
-        })
-        return response.json();
-    }
-    
+      setLoading(true);
+      const data = new FormData();
+      data.append("file", file as Blob);
+      const response = await fetch("http://localhost:4200/api/upload", {
+        method: "POST",
+        body: data,
+      });
+      return response.json();
+    };
+
     const submitErrandRequest = async (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-        setLoading(true);
-        try {
-            const response = await handleImageUpload() as unknown as expectedImageProps;
-            const data = await fetch("https://vendy-server.onrender.com/api/errands", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    ...formProps,
-                    image: response.secure_url || response.url,
-                }),
-            });
-            const result = await data.json() as expectedState;
-            if (result.state.status === 201) {
-                setLoading(false);
-                notify("Errand request submitted successfully");
-            } else {
-                setLoading(false);
-                notify("An error occured, please try again");
-            }
-        } catch (error) {
-            setLoading(false);
-            notify("An error occured, please try again");
+      e.preventDefault();
+      setLoading(true);
+      try {
+        const response =
+          (await handleImageUpload()) as unknown as expectedImageProps;
+        const data = await fetch("http://localhost:4200/api/errands", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            ...formProps,
+            image: response.secure_url || response.url,
+          }),
+        });
+        const result = (await data.json()) as expectedState;
+        if (result.state.status === 201) {
+          setLoading(false);
+          notify("Errand request submitted successfully");
+        } else {
+          setLoading(false);
+          notify("An error occured, please try again");
         }
-    }
+      } catch (error) {
+        setLoading(false);
+        notify("An error occured, please try again");
+      }
+    };
     
 
   const ErrandForms = () => {

@@ -103,13 +103,10 @@ const CreateStore: React.FC = () => {
     if (file) {
       data.append("file", file);
     }
-    const response = await fetch(
-      "https://vendy-server.onrender.com/api/upload",
-      {
-        method: "POST",
-        body: data,
-      }
-    );
+    const response = await fetch("http://localhost:4200/api/upload", {
+      method: "POST",
+      body: data,
+    });
     return response.json();
   };
 
@@ -128,20 +125,17 @@ const CreateStore: React.FC = () => {
     setLoading(true);
     try {
       const response = (await handleUpload()) as unknown as ExpectedProps;
-      const data = await fetch(
-        "https://vendy-server.onrender.com/api/create-business",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            ...formData,
-            imageUrl: response.secure_url,
-            phone: formData.businessPhoneNumber,
-          }),
-        }
-      );
+      const data = await fetch("http://localhost:4200/api/create-business", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          ...formData,
+          imageUrl: response.secure_url,
+          phone: formData.businessPhoneNumber,
+        }),
+      });
       const res: ExpectedState = await data.json();
       if (res.state.status === 201) {
         toast.success(res.state.message);
