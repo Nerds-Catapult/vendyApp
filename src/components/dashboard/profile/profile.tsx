@@ -33,14 +33,13 @@ const Profile = () => {
      window.location.href = "/auth/customer/login";
      return;
    }
-
    try {
      const response = await fetch(`http://localhost:4200/api/get-customer`, {
        method: "GET",
        headers: {
          Authorization: `Bearer ${customerToken}`,
        },
-        credentials: "include",
+       credentials: "include",
      });
 
      const data: ExpectedProps = await response.json();
@@ -49,7 +48,6 @@ const Profile = () => {
        setProfileData(data.entity);
      } else if (data.status === 401) {
        toast.error("Session expired. Please login again");
-        Cookies.remove("customerToken");
      }
    } catch (error) {
      console.log(error);
