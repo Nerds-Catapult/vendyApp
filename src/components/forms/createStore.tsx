@@ -30,8 +30,13 @@ const CreateStore: React.FC = () => {
     imageUrl: string | null;
   }
 
-  const [loading, setLoading] = useState(false);
+  const getCustomerIdFromCookies = (): number | null => {
+    const customerId = Cookies.get("customerId");
+    return customerId ? parseInt(customerId, 10) : null;
+  };
 
+  const [loading, setLoading] = useState(false);
+  const [customerId] = useState<number | null>(getCustomerIdFromCookies());
   const [formData, setFormData] = useState({
     businessName: "",
     category: "",
@@ -41,13 +46,12 @@ const CreateStore: React.FC = () => {
     subCounty: "",
     ward: "",
     area: "",
-    customerId: 0,
+    customerId: customerId,
     firstName: "",
     lastName: "",
     identificationNumber: "",
     password: "",
   });
-
   const [file, setFile] = useState<File | null>(null);
 
   const handleSelectFile = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -58,34 +62,27 @@ const CreateStore: React.FC = () => {
 
   useEffect(() => {
     const authStateProtocol = async () => {
-          const customerToken = Cookies.get("customerToken");
+      const customerToken = Cookies.get("customerToken");
       if (!customerToken) {
-        toast.error("You need  first, redirecting to login page...");
+        toast.error("You need to log in first, redirecting to login page...");
         setTimeout(() => {
           window.location.href = "/auth/customer/signup";
         }, 3000);
         return;
-      } 
+      }
+
       try {
-        const response = await fetch(
-          "http://localhost:4200/api/get-customer",
-          {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${customerToken}`,
-            },
-          }
-        );
+        const response = await fetch("http://localhost:4200/api/get-customer", {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${customerToken}`,
+          },
+        });
         const data: ExpectedCustomer = await response.json();
-        localStorage.setItem(
-          "customer",
-          JSON.stringify(data)
-        );
-        setFormData((prevData) => ({
-          ...prevData,
-          customerId: data.id,
-        }));
+        console.log(data);
+        localStorage.setItem("customer", JSON.stringify(data));
+        setFormData((prevData) => ({ ...prevData, customerId: data.id }));
       } catch (error) {
         console.error("Error fetching customer data:", error);
         toast.error("Something went wrong, redirecting to login page...");
@@ -94,6 +91,7 @@ const CreateStore: React.FC = () => {
         }, 3000);
       }
     };
+
     authStateProtocol();
   }, []);
 
@@ -114,10 +112,7 @@ const CreateStore: React.FC = () => {
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const { name, value } = e.target;
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }));
+    setFormData((prevData) => ({ ...prevData, [name]: value }));
   };
 
   const registerBusiness = async (e: React.FormEvent) => {
@@ -172,6 +167,7 @@ const CreateStore: React.FC = () => {
                 required
                 className="w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                 onChange={handleChange}
+                value={formData.businessName}
               />
             </div>
             <div>

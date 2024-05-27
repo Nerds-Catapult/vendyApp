@@ -18,7 +18,11 @@ import "./index.css";
 const router = createBrowserRouter([
   {
     path: "/shop",
-    element: <App />, 
+    element: <App />,
+  },
+  {
+    path: "/",
+    element: <App />,
   },
   {
     path: "/auth/customer/login",

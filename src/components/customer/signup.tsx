@@ -66,7 +66,7 @@ const CreateAccount: React.FC = () => {
       const data: expectedCustomer = await response.json();
       if (data.status === 201) {
         toast.success(data.message);
-        // window.location.href = "/shop";
+        window.location.href = "/shop";
       } else {
         toast.error(data.message);
       }
