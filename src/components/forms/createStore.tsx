@@ -4,21 +4,12 @@ import Spinner from "../spinner/Spinner";
 import "react-toastify/dist/ReactToastify.css";
 import Navbar from "../nav/Nav.tsx";
 import Cookies from "js-cookie";
+import { expectedBusinessInterface } from "@/types/index.ts";
 
 const CreateStore: React.FC = () => {
   interface ExpectedProps {
     secure_url: string;
     url: string;
-  }
-
-  interface ExpectedState {
-    state: {
-      isAuthenticated: boolean;
-      status: number;
-      message: string;
-      email: string;
-      token: string | null;
-    };
   }
 
   interface ExpectedCustomer {
@@ -30,35 +21,59 @@ const CreateStore: React.FC = () => {
     imageUrl: string | null;
   }
 
-  const getCustomerIdFromCookies = (): number | null => {
-    const customerId = Cookies.get("customerId");
-    return customerId ? parseInt(customerId, 10) : null;
-  };
+  interface mediaProps {
+    imageUrl: string;
+  }
 
   const [loading, setLoading] = useState(false);
-  const [customerId] = useState<number | null>(getCustomerIdFromCookies());
   const [formData, setFormData] = useState({
+    ownerFirstName: "",
+    ownerLastName: "",
+    identificationNumber: "",
+    password: "",
+    phoneNumber: "",
     businessName: "",
-    category: "",
+    businessCategory: "",
     businessEmail: "",
-    businessPhoneNumber: "",
-    businessAddress: "",
+    address: "",
+    county: "",
     subCounty: "",
     ward: "",
     area: "",
-    customerId: customerId,
-    firstName: "",
-    lastName: "",
-    identificationNumber: "",
-    password: "",
+    imageUrl: null as File | null,
   });
-  const [file, setFile] = useState<File | null>(null);
+  const [imageUrl, setImageUrl] = useState<mediaProps | null>(null);
 
   const handleSelectFile = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files) {
-      setFile(e.target.files[0]);
-    }
+    const file = e.target.files![0];
+    setFormData({ ...formData, [e.target.name]: file });
   };
+
+  useEffect(() => {
+    const uploadImage = async (file: File, preset: string) => {
+      setLoading(true);
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("upload_preset", preset);
+      const response = await fetch("http://localhost:4200/api/upload", {
+        method: "POST",
+        body: formData,
+      });
+      const data: ExpectedProps = await response.json();
+      setLoading(false);
+      return data.secure_url;
+    };
+    const updateImageUrl = async () => {
+      if (formData.imageUrl) {
+        const [imageUrl] = await Promise.all([
+          uploadImage(formData.imageUrl, "business"),
+        ]);
+        setImageUrl({ imageUrl });
+      }
+    };
+    setLoading(false);
+    updateImageUrl();
+  }, [formData.imageUrl]);
 
   useEffect(() => {
     const authStateProtocol = async () => {
@@ -80,9 +95,7 @@ const CreateStore: React.FC = () => {
           },
         });
         const data: ExpectedCustomer = await response.json();
-        console.log(data);
         localStorage.setItem("customer", JSON.stringify(data));
-        setFormData((prevData) => ({ ...prevData, customerId: data.id }));
       } catch (error) {
         console.error("Error fetching customer data:", error);
         toast.error("Something went wrong, redirecting to login page...");
@@ -95,19 +108,6 @@ const CreateStore: React.FC = () => {
     authStateProtocol();
   }, []);
 
-  const handleUpload = async (): Promise<string> => {
-    setLoading(true);
-    const data = new FormData();
-    if (file) {
-      data.append("file", file);
-    }
-    const response = await fetch("http://localhost:4200/api/upload", {
-      method: "POST",
-      body: data,
-    });
-    return response.json();
-  };
-
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
@@ -115,40 +115,47 @@ const CreateStore: React.FC = () => {
     setFormData((prevData) => ({ ...prevData, [name]: value }));
   };
 
-  const registerBusiness = async (e: React.FormEvent) => {
+  const registerBusiness = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
     try {
-      const response = (await handleUpload()) as unknown as ExpectedProps;
-      const data = await fetch("http://localhost:4200/api/create-business", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          ...formData,
-          imageUrl: response.secure_url,
-          phone: formData.businessPhoneNumber,
-        }),
-      });
-      const res: ExpectedState = await data.json();
-      if (res.state.status === 201) {
-        toast.success(res.state.message);
-        window.location.href = "/business-dashboard";
+      const response = await fetch(
+        "http://localhost:4200/api/create-business",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            ...formData,
+            imageUrl: imageUrl?.imageUrl,
+          }),
+        }
+      );
+      const data: expectedBusinessInterface = await response.json();
+      console.log(data);
+      if (data.status === 201) {
+        toast.success(data.message);
+        setTimeout(() => {
+          // window.location.href = "/store";
+        }, 3000);
       } else {
-        toast.error(res.state.message);
+        setLoading(false);
+        toast.error(data.message);
       }
     } catch (error) {
       console.error("Error registering business:", error);
-      toast.error("Business registration failed, please try again");
-    } finally {
+      toast.error("Something went wrong, please try again later.");
       setLoading(false);
     }
   };
   const createBusiness = () => {
     return (
       <div className="flex justify-center items-center h-full bg-gray-100 py-9">
-        <form className="bg-white shadow-lg rounded-lg p-6 w-full max-w-2xl md:max-w-4xl">
+        <form
+          className="bg-white shadow-lg rounded-lg p-6 w-full max-w-2xl md:max-w-4xl"
+          onSubmit={registerBusiness}
+        >
           <h1 className="text-2xl font-bold text-center mb-6">
             Register Your Business
           </h1>
@@ -167,7 +174,6 @@ const CreateStore: React.FC = () => {
                 required
                 className="w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                 onChange={handleChange}
-                value={formData.businessName}
               />
             </div>
             <div>
@@ -188,6 +194,22 @@ const CreateStore: React.FC = () => {
             </div>
             <div>
               <label
+                htmlFor="businessCategory"
+                className="block font-medium text-gray-700 mb-1"
+              >
+                Business Category
+              </label>
+              <input
+                type="text"
+                name="businessCategory"
+                id="businessCategory"
+                required
+                className="w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                onChange={handleChange}
+              />
+            </div>
+            <div>
+              <label
                 htmlFor="phoneNumber"
                 className="block font-medium text-gray-700 mb-1"
               >
@@ -200,19 +222,20 @@ const CreateStore: React.FC = () => {
                 required
                 className="w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                 onChange={handleChange}
+                value={formData.phoneNumber}
               />
             </div>
             <div>
               <label
-                htmlFor="email"
+                htmlFor="businessEmail"
                 className="block font-medium text-gray-700 mb-1"
               >
                 Business Email
               </label>
               <input
                 type="email"
-                name="email"
-                id="email"
+                name="businessEmail"
+                id="businessEmail"
                 required
                 className="w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                 onChange={handleChange}
@@ -232,19 +255,20 @@ const CreateStore: React.FC = () => {
                 required
                 className="w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                 onChange={handleChange}
+                value={formData.county}
               />
             </div>
             <div>
               <label
-                htmlFor="sub-county"
+                htmlFor="subCo  unty"
                 className="block font-medium text-gray-700 mb-1"
               >
                 Sub County
               </label>
               <input
                 type="text"
-                name="sub-county"
-                id="sub-county"
+                name="subCounty"
+                id="subCounty"
                 required
                 className="w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                 onChange={handleChange}
@@ -284,15 +308,15 @@ const CreateStore: React.FC = () => {
             </div>
             <div>
               <label
-                htmlFor="firstName"
+                htmlFor="ownerFirstName"
                 className="block font-medium text-gray-700 mb-1"
               >
                 First Name
               </label>
               <input
                 type="text"
-                name="firstName"
-                id="firstName"
+                name="ownerFirstName"
+                id="ownerFirstName"
                 required
                 className="w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                 onChange={handleChange}
@@ -300,15 +324,15 @@ const CreateStore: React.FC = () => {
             </div>
             <div>
               <label
-                htmlFor="lastName"
+                htmlFor="ownerLastName"
                 className="block font-medium text-gray-700 mb-1"
               >
                 Last Name
               </label>
               <input
                 type="text"
-                name="lastName"
-                id="lastName"
+                name="ownerLastName"
+                id="ownerLastName"
                 required
                 className="w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                 onChange={handleChange}
@@ -348,14 +372,14 @@ const CreateStore: React.FC = () => {
             </div>
             <div className="md:col-span-2">
               <label
-                htmlFor="image"
+                htmlFor="imageUrl"
                 className="block font-medium text-gray-700 mb-1"
               >
                 Business Logo
                 <input
                   type="file"
-                  name="image"
-                  id="image"
+                  name="imageUrl"
+                  id="imageUrl"
                   accept="image/png, image/jpg, image/jpeg"
                   required
                   onChange={handleSelectFile}
@@ -368,7 +392,6 @@ const CreateStore: React.FC = () => {
             <button
               type="submit"
               className="bg-blue-500 text-white font-medium py-2 px-4 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-              onClick={registerBusiness}
             >
               Register Business
             </button>
@@ -380,7 +403,6 @@ const CreateStore: React.FC = () => {
             </a>
           </span>
         </form>
-        <ToastContainer />
       </div>
     );
   };
