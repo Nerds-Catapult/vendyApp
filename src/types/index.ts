@@ -1,8 +1,4 @@
-
-
-
-
- interface expectedBusiness {
+export interface expectedBusiness {
     id: number;
     ownerFirstName: string;
     ownerLastName: string;
@@ -19,9 +15,33 @@
     country: string;
     imageUrl: string;
 }
+
 export interface expectedBusinessInterface {
-  status: number;
+    status: number;
     message: string;
     token: string;
     entity: expectedBusiness;
 }
+
+
+interface customer {
+    id: number;
+    fullName: string;
+    email: string;
+    address: string;
+    phoneNumber: string;
+    imageUrl: string;
+}
+
+export interface ExpectedCustomer {
+    status: number;
+    message: string;
+    token: string;
+    entity: customer;
+}
+
+
+export  interface asCloudinaryResponse {
+    secure_url: string;
+    url : string;
+  }

@@ -6,7 +6,9 @@ const AdminDashboard: React.FC = () => {
       {/* Navbar */}
       <nav className="bg-gray-800 py-4 px-6">
         <div className="container mx-auto flex justify-between items-center">
-          <button className=" hover:bg-blue-700 px-4 py-2 rounded-md border ">
+          <button className=" hover:bg-blue-700 px-4 py-2 rounded-md border"
+            onClick={() => window.location.href = "/shop"}
+          >
             back to shop
           </button>
           <div className="text-xl font-bold">Admin Dashboard</div>

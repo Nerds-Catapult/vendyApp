@@ -8,7 +8,7 @@ interface Business {
   address: string;
   city: string;
   country: string;
-  image: string | null;
+  imageUrl: string | null;
 }
 
 interface ExpectedBusinessProps {
@@ -76,15 +76,15 @@ const BusinessCatalogue = () => {
                 {visibleBusinesses.map((business) => (
                   <div
                     key={business.id}
-                    className="flex flex-col items-center cursor-pointer transition-transform duration-300 ease-in-out transform hover:scale-110"
+                    className="flex flex-col items-center cursor-pointer transition-transform duration-300 ease-in-out"
                     onClick={() => {
                       window.location.href = `/business/${business.id}`;
                     }}
                   >
-                    <div className="w-32 h-32 rounded-full overflow-hidden shadow-lg">
+                    <div className="w-32 h-32 rounded-full overflow-hidden shadow-lg overflow-y-hidden">
                       <img
                         src={
-                          business.image || "https://via.placeholder.com/150"
+                          business.imageUrl || "https://via.placeholder.com/150"
                         }
                         alt={business.name}
                         className="w-full h-full object-cover"
