@@ -21,7 +21,6 @@ const BestSellers = () => {
                 if (data.entity) {
                     setBusinesses(data.entity as unknown as  expectedBusiness[]);
                 }
-                console.log(data);
                 setLoading(false);
             } catch (error) {
                 console.log(error);
@@ -43,12 +42,12 @@ const BestSellers = () => {
                         >
                             <div className="flex items-center justify-between mb-4">
                                 <div>
-                                    <h3 className="text-xl font-semibold">{business.name}</h3>
+                                    <h3 className="text-xl font-semibold">{business.businessName}</h3>
                                     <p className="text-gray-500">E-commerce</p>
                                 </div>
                                 <img
                                     src={business.imageUrl || "https://via.placeholder.com/150"}
-                                    alt={business.name}
+                                    alt={business.businessName}
                                     className="w-16 h-16 rounded-full object-cover ml-4"
                                 />
                             </div>
@@ -56,7 +55,7 @@ const BestSellers = () => {
                                 <div>
                                     <p className="text-gray-600">{business.address}</p>
                                     <p className="text-gray-600">
-                                        {business.city}, {business.country}
+                                        {business.county}
                                     </p>
                                 </div>
                                 <a

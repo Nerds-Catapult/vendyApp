@@ -1,4 +1,4 @@
-import logo from "../../assets/vendy.png";
+import logo from "../../assets/logo.jpeg";
 import {FaShoppingCart} from "react-icons/fa";
 import {CgProfile} from "react-icons/cg";
 import {useState} from "react";
