@@ -11,7 +11,7 @@ const BestSellers = () => {
         const BestSellers = async () => {
             setLoading(true);
             try {
-                const response = await fetch("http://localhost:4200/api/businesses", {
+                const response = await fetch("https://vendy-server.onrender.com/api/businesses", {
                     method: "GET",
                     headers: {
                         "Content-Type": "application/json",

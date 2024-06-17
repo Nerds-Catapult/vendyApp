@@ -41,10 +41,13 @@ const CreateStore: React.FC = () => {
         }
         const formData = new FormData();
         formData.append("file", fileImage);
-        const response = await fetch("http://localhost:4200/api/upload", {
+        const response = await fetch(
+          "https://vendy-server.onrender.com/api/upload",
+          {
             method: "POST",
-            body: formData
-        });
+            body: formData,
+          }
+        );
         return await response.json();
     };
 
@@ -69,13 +72,16 @@ const CreateStore: React.FC = () => {
             }
 
             try {
-                const response = await fetch("http://localhost:4200/api/get-customer", {
+                const response = await fetch(
+                  "https://vendy-server.onrender.com/api/get-customer",
+                  {
                     method: "GET",
                     headers: {
-                        "Content-Type": "application/json",
-                        Authorization: `Bearer ${customerToken}`,
+                      "Content-Type": "application/json",
+                      Authorization: `Bearer ${customerToken}`,
                     },
-                });
+                  }
+                );
                 const data: ExpectedCustomer = await response.json();
                 if (data.status !== 200) {
                     toast.error("You need to log in first, redirecting to login page...");
@@ -109,18 +115,18 @@ const CreateStore: React.FC = () => {
         try {
             const {secure_url, url}: asCloudinaryResponse = await handleUploadImage();
             const response = await fetch(
-                "http://localhost:4200/api/create-business",
-                {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    credentials: "include",
-                    body: JSON.stringify({
-                        ...formData,
-                        imageUrl: secure_url || url
-                    }),
-                }
+              "https://vendy-server.onrender.com/api/create-business",
+              {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                credentials: "include",
+                body: JSON.stringify({
+                  ...formData,
+                  imageUrl: secure_url || url,
+                }),
+              }
             );
             const data: expectedBusinessInterface = await response.json();
             if (data.status === 201) {

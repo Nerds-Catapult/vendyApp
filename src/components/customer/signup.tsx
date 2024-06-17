@@ -53,7 +53,7 @@ const CreateAccount: React.FC = () => {
     e.preventDefault();
     try {
       const response = await fetch(
-        "http://localhost:4200/api/create-customer",
+        "https://vendy-server.onrender.com/api/create-customer",
         {
           method: "POST",
           headers: {

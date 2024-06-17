@@ -34,13 +34,16 @@ const Profile = () => {
      return;
    }
    try {
-     const response = await fetch(`http://localhost:4200/api/get-customer`, {
-       method: "GET",
-       headers: {
-         Authorization: `Bearer ${customerToken}`,
-       },
-       credentials: "include",
-     });
+     const response = await fetch(
+       `https://vendy-server.onrender.com/api/get-customer`,
+       {
+         method: "GET",
+         headers: {
+           Authorization: `Bearer ${customerToken}`,
+         },
+         credentials: "include",
+       }
+     );
 
      const data: ExpectedProps = await response.json();
      console.log(data.status);

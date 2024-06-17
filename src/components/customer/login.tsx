@@ -47,14 +47,17 @@ const Login = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      const response = await fetch("http://localhost:4200/api/login-customer", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),   
-        credentials: "include", 
-      });
+      const response = await fetch(
+        "https://vendy-server.onrender.com/api/login-customer",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(formData),
+          credentials: "include",
+        }
+      );
       const data: ExpectedCustomer = await response.json();
       if (data.status === 200) {
         toast.success(data.message);
