@@ -34,16 +34,13 @@ const Profile = () => {
      return;
    }
    try {
-     const response = await fetch(
-       `https://vendy-server.onrender.com/api/get-customer`,
-       {
-         method: "GET",
-         headers: {
-           Authorization: `Bearer ${customerToken}`,
-         },
-         credentials: "include",
-       }
-     );
+     const response = await fetch(`http://localhost:4200/api/get-customer`, {
+       method: "GET",
+       headers: {
+         Authorization: `Bearer ${customerToken}`,
+       },
+       credentials: "include",
+     });
 
      const data: ExpectedProps = await response.json();
      console.log(data.status);
@@ -137,7 +134,7 @@ const Profile = () => {
                     No profile data available.
                   </p>
                   <a
-                    href="/login"
+                    href="/auth/customer/login"
                     className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
                   >
                     Please login again

@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
 import Cookies from "js-cookie";
-
-
+import Spinner from "../spinner/Spinner";
 
 interface FormData {
   fullName: string;
@@ -20,14 +19,15 @@ const CreateAccount: React.FC = () => {
     address: "",
     phoneNumber: "",
   });
+  const [loading, setLoading] = useState(false);
 
-    useEffect(() => {
-      const customerToken = Cookies.get("customerToken");
-      console.log(customerToken);
-      if (customerToken) {
-        window.location.href = "/shop";
-      }
-    }, []);
+  useEffect(() => {
+    const customerToken = Cookies.get("customerToken");
+    console.log(customerToken);
+    if (customerToken) {
+      window.location.href = "/shop";
+    }
+  }, []);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -51,9 +51,10 @@ const CreateAccount: React.FC = () => {
   }
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setLoading(true);
     try {
       const response = await fetch(
-        "https://vendy-server.onrender.com/api/create-customer",
+        "http://localhost:4200/api/create-customer",
         {
           method: "POST",
           headers: {
@@ -64,18 +65,25 @@ const CreateAccount: React.FC = () => {
         }
       );
       const data: expectedCustomer = await response.json();
+      console.log(data);
       if (data.status === 201) {
         toast.success(data.message);
         window.location.href = "/shop";
       } else {
         toast.error(data.message);
       }
+      setLoading(false);
     } catch (error) {
+      setLoading(false);
       console.log(error);
     }
   };
 
-  return (
+  return loading ? (
+    <div className="h-screen flex justify-center items-center">
+      <Spinner />
+    </div>
+  ) : (
     <div className="h-screen py-28 ">
       <div className="max-w-md mx-auto border p-9">
         <h2 className="text-2xl font-bold mb-4 text-center">Create Account</h2>
@@ -157,6 +165,17 @@ const CreateAccount: React.FC = () => {
             Create Account
           </button>
         </form>
+        <div className="text-center mt-4">
+          <p className="text-gray-500 text-sm">
+            Already have an account?{" "}
+            <a
+              href="/auth/customer/login"
+              className="text-blue-500 hover:text-blue-700"
+            >
+              Login
+            </a>
+          </p>
+        </div>
       </div>
       <ToastContainer />
     </div>

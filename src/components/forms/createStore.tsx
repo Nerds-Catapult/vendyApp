@@ -41,108 +41,110 @@ const CreateStore: React.FC = () => {
         }
         const formData = new FormData();
         formData.append("file", fileImage);
-        const response = await fetch(
-          "https://vendy-server.onrender.com/api/upload",
-          {
-            method: "POST",
-            body: formData,
-          }
-        );
+        const response = await fetch("http://localhost:4200/api/upload", {
+          method: "POST",
+          body: formData,
+        });
         return await response.json();
     };
 
 
     useEffect(() => {
-        const authStateProtocol = async () => {
-            const customerToken = Cookies.get("customerToken");
-            if (!customerToken) {
-                toast.error("You need to log in first, redirecting to login page...");
-                setTimeout(() => {
-                    window.location.href = "/auth/customer/signup";
-                }, 3000);
-                return;
-            }
-            const businessToken = Cookies.get("businessToken");
-            if (businessToken) {
-                toast("You are already logged in as a business, redirecting to dashboard...");
-                setTimeout(() => {
-                    window.location.href = "/admin/dashboard";
-                }, 3000);
-                return;
-            }
+      const authStateProtocol = async () => {
+        const customerToken = Cookies.get("customerToken");
+        if (!customerToken) {
+          toast.error("You need to log in first, redirecting to login page...");
+          setTimeout(() => {
+            window.location.href = "/auth/customer/signup";
+          }, 3000);
+          return;
+        }
+        const businessToken = Cookies.get("businessToken");
+        if (businessToken) {
+          toast(
+            "You are already logged in as a business, redirecting to dashboard..."
+          );
+          setTimeout(() => {
+            window.location.href = "/admin/dashboard";
+          }, 3000);
+          return;
+        }
 
-            try {
-                const response = await fetch(
-                  "https://vendy-server.onrender.com/api/get-customer",
-                  {
-                    method: "GET",
-                    headers: {
-                      "Content-Type": "application/json",
-                      Authorization: `Bearer ${customerToken}`,
-                    },
-                  }
-                );
-                const data: ExpectedCustomer = await response.json();
-                if (data.status !== 200) {
-                    toast.error("You need to log in first, redirecting to login page...");
-                    setTimeout(() => {
-                        window.location.href = "/auth/customer/signup";
-                    }, 3000);
-                    return;
-                }
-                localStorage.setItem("customer", JSON.stringify(data));
-            } catch (error) {
-                toast.error("Something went wrong, redirecting to login page...");
-                setTimeout(() => {
-                    window.location.href = "/auth/customer/signup";
-                }, 3000);
+        try {
+          const response = await fetch(
+            "http://localhost:4200/api/get-customer",
+            {
+              method: "GET",
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${customerToken}`,
+              },
             }
-        };
+          );
+          const data: ExpectedCustomer = await response.json();
+          if (data.status !== 200) {
+            toast.error(
+              "You need to log in first, redirecting to login page..."
+            );
+            setTimeout(() => {
+              window.location.href = "/auth/customer/signup";
+            }, 3000);
+            return;
+          }
+          localStorage.setItem("customer", JSON.stringify(data));
+        } catch (error) {
+          toast.error("Something went wrong, redirecting to login page...");
+          setTimeout(() => {
+            window.location.href = "/auth/customer/signup";
+          }, 3000);
+        }
+      };
 
-        authStateProtocol().then(r => r);
+      authStateProtocol().then((r) => r);
     }, []);
 
     const handleChange = (
-        e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+      e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
     ) => {
-        const {name, value} = e.target;
-        setFormData((prevData) => ({...prevData, [name]: value}));
+      const { name, value } = e.target;
+      setFormData((prevData) => ({ ...prevData, [name]: value }));
     };
 
     const registerBusiness = async (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-        setLoading(true);
-        try {
-            const {secure_url, url}: asCloudinaryResponse = await handleUploadImage();
-            const response = await fetch(
-              "https://vendy-server.onrender.com/api/create-business",
-              {
-                method: "POST",
-                headers: {
-                  "Content-Type": "application/json",
-                },
-                credentials: "include",
-                body: JSON.stringify({
-                  ...formData,
-                  imageUrl: secure_url || url,
-                }),
-              }
-            );
-            const data: expectedBusinessInterface = await response.json();
-            if (data.status === 201) {
-                toast.success(data.message);
-                setTimeout(() => {
-                    // window.location.href = "/store";
-                }, 3000);
-            } else {
-                toast.error(data.message);
-            }
-        } catch (error) {
-            console.error("Error registering business:", error);
-            toast.error("Something went wrong, please try again later.");
-        } finally {
-            setLoading(false);
+      e.preventDefault();
+      setLoading(true);
+      try {
+        const { secure_url, url }: asCloudinaryResponse =
+          await handleUploadImage();
+        const response = await fetch(
+          "http://localhost:4200/api/create-business",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            credentials: "include",
+            body: JSON.stringify({
+              ...formData,
+              imageUrl: secure_url || url,
+            }),
+          }
+        );
+        const data: expectedBusinessInterface = await response.json();
+        if (data.status === 201) {
+          toast.success(data.message);
+          setTimeout(() => {
+            // window.location.href = "/store";
+          }, 3000);
+        } else {
+          toast.error(data.message);
         }
+      } catch (error) {
+        console.error("Error registering business:", error);
+        toast.error("Something went wrong, please try again later.");
+      } finally {
+        setLoading(false);
+      }
     };
     const createBusiness = () => {
         return (

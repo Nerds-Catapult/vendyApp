@@ -11,12 +11,15 @@ const BestSellers = () => {
         const BestSellers = async () => {
             setLoading(true);
             try {
-                const response = await fetch("https://vendy-server.onrender.com/api/businesses", {
+                const response = await fetch(
+                  "http://localhost:4200/api/businesses",
+                  {
                     method: "GET",
                     headers: {
-                        "Content-Type": "application/json",
+                      "Content-Type": "application/json",
                     },
-                });
+                  }
+                );
                 const data: expectedBusinessInterface = await response.json();
                 if (data.entity) {
                     setBusinesses(data.entity as unknown as  expectedBusiness[]);
