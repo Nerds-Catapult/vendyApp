@@ -26,24 +26,24 @@ interface expectedCustomerResponse {
 
 export const registerCustomer = createAsyncThunk("customer/register", async (customer: { email: string, password: string, firstName: string, lastName: string, phone: string, address: string }) => {
     const response = await fetch("http://localhost:4200/api/create-customer", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify(customer)
-    })
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(customer),
+    });
     const data: expectedCustomerResponse = await response.json()
     return data
 })
 
 export const loginCustomer = createAsyncThunk("customer/login", async (customer: { email: string, password: string }) => {
     const response = await fetch("http://localhost:4200/api/login-customer", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify(customer)
-    })
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(customer),
+    });
     const data: expectedCustomerResponse = await response.json()
     return data
 })

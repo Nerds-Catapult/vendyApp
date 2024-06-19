@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
-import LocalStorageService from "../../../logic/localStorageAuth.ts";
 import Loading from "../../loader/loading.tsx";
 import { CiLogout } from "react-icons/ci";
 import Navbar from "../../nav/Nav.tsx";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import Cookies from "js-cookie";
 
 interface ProfileProps {
   id: number;
@@ -23,66 +23,61 @@ interface ExpectedProps {
 }
 
 const Profile = () => {
-  const localStorageService = LocalStorageService.getInstance();
-  const [profileData, setProfileData] = useState<ProfileProps | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [customerId, setCustomerId] = useState<number>();
-  const [error, setError] = useState<string | null>(null);
+ const [profileData, setProfileData] = useState<ProfileProps | null>(null);
+ const [loading, setLoading] = useState(true);
+ const [error, setError] = useState<string | null>(null);
 
-  const onLogout = () => {
-    try {
-      localStorageService.clearAllTokens();
-      window.location.href = "/";
-      toast.success("Successfully logged out");
-    } catch (error) {
-      toast.error("An error occurred while logging out");
-    }
-  };
+ const fetchProfileData = async () => {
+   const customerToken = Cookies.get("customerToken");
+   if (!customerToken) {
+     window.location.href = "/auth/customer/login";
+     return;
+   }
+   try {
+     const response = await fetch(`http://localhost:4200/api/get-customer`, {
+       method: "GET",
+       headers: {
+         Authorization: `Bearer ${customerToken}`,
+       },
+       credentials: "include",
+     });
 
-  useEffect(() => {
-    const checkUserStorage = async () => {
-      const userProfile = localStorageService.readCustomerProfileData(
-        "customer"
-      ) as unknown as ProfileProps;
-      if (!userProfile) {
-        toast.error("To view your profile please login first.");
-      } else {
-        userProfile.id && setCustomerId(userProfile.id);
-      }
-    };
+     const data: ExpectedProps = await response.json();
+     console.log(data.status);
+     if (data.status === 200) {
+       setProfileData(data.entity);
+     } else if (data.status === 401) {
+       toast.error("Session expired. Please login again");
+     }
+   } catch (error) {
+     console.log(error);
+     setError("An error occurred while fetching profile data");
+   } finally {
+     setLoading(false);
+   }
+ };
 
-    const getProfileData = async () => {
-      setLoading(true);
-      setError(null);
-      const token = localStorageService.readAuthToken("customerToken");
-      if (token) {
-        try {
-          const response = await fetch(
-            "http://localhost:4200/api/get-customer",
-            {
-              method: "GET",
-              headers: {
-                Authorization: `Bearer ${token}`,
-              },
-            }
-          );
-          const data: ExpectedProps = await response.json();
-          if (data.status !== 200) {
-            setError(data.message);
-          } else {
-            setProfileData(data.entity);
-          }
-        } catch (error) {
-          setError("An error occurred while fetching profile data.");
-        }
-      }
-      setLoading(false);
-    };
+ const onLogout = () => {
+   try {
+     Cookies.remove("customerToken");
+     window.location.href = "/auth/customer/login";
+     toast.success("Successfully logged out");
+   } catch (error) {
+     toast.error("An error occurred while logging out");
+   }
+ };
 
-    checkUserStorage();
-    getProfileData();
-  }, [customerId, localStorageService]);
+ useEffect(() => {
+   fetchProfileData();
+ }, []);
 
+ if (loading) {
+   return <div>Loading...</div>;
+ }
+
+ if (error) {
+   return <div>Error: {error}</div>;
+ }
   return (
     <>
       <Navbar />
@@ -139,7 +134,7 @@ const Profile = () => {
                     No profile data available.
                   </p>
                   <a
-                    href="/login"
+                    href="/auth/customer/login"
                     className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
                   >
                     Please login again

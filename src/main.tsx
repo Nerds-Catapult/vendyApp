@@ -15,17 +15,23 @@ import store from "./store/store.ts";
 import RunErrands from "./components/forms/errandForms.tsx";
 import "./index.css";
 
+
+
 const router = createBrowserRouter([
   {
-    path: "/",
-    element: <App />, 
+    path: "/shop",
+    element: <App />,
   },
   {
-    path: "/login",
+    path: "/",
+    element: <App />,
+  },
+  {
+    path: "/auth/customer/login",
     element: <Login />, //done
   },
   {
-    path: "/signup",
+    path: "/auth/customer/signup",
     element: <Signup />, //done
   },
   {
@@ -33,19 +39,19 @@ const router = createBrowserRouter([
     element: <Profile />,
   },
   {
-    path: "/create-store",
+    path: "/auth/createstore",
     element: <CreateStore />,
   },
   {
-    path: "/business-dashboard",
+    path: "/admin/dashboard",
     element: <BusinessDashBoard />,
   },
   {
-    path: "/errands",
+    path: "/auth/runerrands",
     element: <RunErrands />,
   },
   {
-    path: "/login-store",
+    path: "/auth/findstore",
     element: <LoginStore />,
   },
   {

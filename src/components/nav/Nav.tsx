@@ -1,4 +1,4 @@
-import logo from "../../assets/vendy.png";
+import logo from "../../assets/logo.jpeg";
 import {FaShoppingCart} from "react-icons/fa";
 import {CgProfile} from "react-icons/cg";
 import {useState} from "react";
@@ -8,7 +8,7 @@ export default function Navbar() {
 
     return (
         <nav className="bg-white flex items-center px-4 pt-6 pb-3 w-full top-0 text-[19px]">
-            <a href="/" className="flex items-center">
+            <a href="/shop" className="flex items-center">
                 <img src={logo} alt="logo" className="xl:ml-10 w-32 cursor-pointer"
                 />
             </a>
@@ -45,19 +45,19 @@ export default function Navbar() {
                 <ul className="text-text hidden flex-col md:flex-row md:gap-4 lg:gap-10 md:flex lg:ml-48 mt-10 md:mt-0 text-center">
                     <li className="flex items-center">
                         {/*<FaHome className="text-2xl"/>*/}
-                        <a href="/" className="text-lg">
+                        <a href="/shop" className="text-lg">
                             Home
                         </a>
                     </li>
                     <li className="flex items-center">
                         {/*<FaHourglassEnd className="text-2xl"/>*/}
-                        <a href="/errands" className="text-lg">
+                        <a href="/auth/runerrands" className="text-lg">
                             Run Errands
                         </a>
                     </li>
                     <li className="flex items-center">
                         {/*<FaShoppingCart className="text-2xl"/>*/}
-                        <a href="/create-store" className="text-lg">
+                        <a href="/auth/createstore" className="text-lg">
                             {token ? 'Admin' : 'sell With US'}
                         </a>
                     </li>

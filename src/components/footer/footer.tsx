@@ -1,4 +1,4 @@
-import logo from "../../assets/vendy.png";
+import logo from "../../assets/logo.jpeg";
 
 
 import { Footer } from "flowbite-react";
