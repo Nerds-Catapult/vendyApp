@@ -1,155 +1,187 @@
 "use client";
 
-import React, { useState, useRef, useCallback } from "react";
-import { ProductCatalogProps, Product, brands } from "@/app/types";
-import Image from "next/image";
+import { useState, useMemo } from "react";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectItem,
+} from "@/components/ui/select";
+import { Button } from "@/components/ui/button";
 
-const ProductCatalog: React.FC<ProductCatalogProps> = ({
-  products,
-  categories,
-  brands,
-}) => {
+interface Category {
+  id: string;
+  label: string;
+}
+
+interface Product {
+  id: number;
+  name: string;
+  description: string;
+  price: number;
+  category: string;
+}
+
+export default function Component() {
+  const categories: Category[] = [
+    { id: "clothing", label: "Clothing" },
+    { id: "electronics", label: "Electronics" },
+    { id: "home", label: "Home" },
+    { id: "toys", label: "Toys" },
+    { id: "books", label: "Books" },
+  ];
+
+  const products: Product[] = [
+    {
+      id: 1,
+      name: "Cozy Sweater",
+      description: "A soft and warm sweater perfect for the winter",
+      price: 49.99,
+      category: "clothing",
+    },
+    {
+      id: 2,
+      name: "Wireless Headphones",
+      description: "High-quality noise-cancelling headphones",
+      price: 99.99,
+      category: "electronics",
+    },
+    {
+      id: 3,
+      name: "Plush Throw Blanket",
+      description: "A luxurious and soft throw blanket for your living room",
+      price: 29.99,
+      category: "home",
+    },
+    {
+      id: 4,
+      name: "Wooden Building Blocks",
+      description: "Durable and colorful building blocks for kids",
+      price: 19.99,
+      category: "toys",
+    },
+    {
+      id: 5,
+      name: "Classic Hardcover Novel",
+      description: "A timeless literary masterpiece",
+      price: 14.99,
+      category: "books",
+    },
+    {
+      id: 6,
+      name: "Smart Home Hub",
+      description: "Control your smart home devices with this hub",
+      price: 79.99,
+      category: "electronics",
+    },
+    {
+      id: 7,
+      name: "Decorative Throw Pillow",
+      description: "Add a touch of style to your living space",
+      price: 24.99,
+      category: "home",
+    },
+    {
+      id: 8,
+      name: "Educational Board Game",
+      description: "A fun and engaging game for the whole family",
+      price: 39.99,
+      category: "toys",
+    },
+  ];
+
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
-  const [visibleProducts, setVisibleProducts] = useState<number>(6); // Initially load 6 products
-  const observer = useRef<IntersectionObserver | null>(null);
+  const [sortBy, setSortBy] = useState<string>("name");
+  const [cart, setCart] = useState<Product[]>([]);
 
-  const lastProductElementRef = useCallback((node: Element) => {
-    if (observer.current) observer.current.disconnect();
-    observer.current = new IntersectionObserver((entries) => {
-      if (entries[0].isIntersecting) {
-        setVisibleProducts((prevVisibleProducts) => prevVisibleProducts + 6); // Load 6 more products
-      }
-    });
-    if (node) observer.current.observe(node);
-  }, []);
-
-  const handleCategoryChange = (category: string) => {
-    const index = selectedCategories.indexOf(category);
-    if (index === -1) {
-      setSelectedCategories([...selectedCategories, category]);
-    } else {
-      setSelectedCategories(
-        selectedCategories.filter((cat) => cat !== category)
-      );
-    }
-  };
-
-  const handleAllCategoriesChange = () => {
-    if (selectedCategories.length === categories.length) {
-      setSelectedCategories([]);
-    } else {
-      setSelectedCategories([...categories]);
-    }
-  };
-
-  const filteredProducts =
-    selectedCategories.length === 0
-      ? products
-      : products.filter((product) =>
+  const filteredProducts = useMemo(() => {
+    return products
+      .filter(
+        (product) =>
+          selectedCategories.length === 0 ||
           selectedCategories.includes(product.category)
-        );
+      )
+      .sort((a, b) => {
+        if (sortBy === "name") {
+          return a.name.localeCompare(b.name);
+        } else if (sortBy === "price") {
+          return a.price - b.price;
+        }
+        return 0;
+      });
+  }, [selectedCategories, sortBy]);
+
+  const handleCategoryChange = (categoryId: string) => {
+    setSelectedCategories((prevCategories) =>
+      prevCategories.includes(categoryId)
+        ? prevCategories.filter((id) => id !== categoryId)
+        : [...prevCategories, categoryId]
+    );
+  };
+
+  const handleSortChange = (value: string) => {
+    setSortBy(value);
+  };
+
+  const handleAddToCart = (product: Product) => {
+    setCart((prevCart) => [...prevCart, product]);
+  };
 
   return (
-    <div className="flex flex-col md:flex-row">
-      <div className="md:w-1/4 p-4">
-        <h2 className="text-xl font-bold mb-4">Categories</h2>
-        <div className="mb-4">
-          <label className="inline-flex items-center">
-            <input
-              type="checkbox"
-              checked={selectedCategories.length === categories.length}
-              onChange={handleAllCategoriesChange}
-              className="form-checkbox"
-            />
-            <span className="ml-2">All</span>
-          </label>
-        </div>
-        {categories.map((category) => (
-          <div key={category} className="mb-2">
-            <label className="inline-flex items-center">
-              <input
-                type="checkbox"
-                checked={selectedCategories.includes(category)}
-                onChange={() => handleCategoryChange(category)}
-                className="form-checkbox"
+    <div className="grid grid-cols-1 md:grid-cols-[240px_1fr] gap-8 p-8">
+      <div className="bg-white rounded-lg shadow-md p-6">
+        <h2 className="text-lg font-bold mb-4">Categories</h2>
+        <div className="space-y-2">
+          {categories.map((category) => (
+            <div key={category.id} className="flex items-center">
+              <Checkbox
+                id={category.id}
+                checked={selectedCategories.includes(category.id)}
+                onCheckedChange={() => handleCategoryChange(category.id)}
               />
-              <span className="ml-2">{category}</span>
-            </label>
-          </div>
-        ))}
-        {/* brands filter */}
-        <h2 className="text-xl font-bold mb-4">Brands</h2>
-        <div className="mb-4">
-          <label className="inline-flex items-center">
-            <input
-              type="checkbox"
-              checked={selectedCategories.length === categories.length}
-              onChange={handleAllCategoriesChange}
-              className="form-checkbox"
-            />
-            <span className="ml-2">All</span>
-          </label>
-        </div>
-        {brands &&
-          brands.map((brand) => (
-            <div key={brand.brandName} className="mb-2">
-              <label className="inline-flex items-center">
-                <input
-                  type="checkbox"
-                  checked={selectedCategories.includes(brand.brandName)}
-                  onChange={() => handleCategoryChange(brand.brandName)}
-                  className="form-checkbox"
-                />
-                <span className="ml-2">{brand.brandName}</span>
-              </label>
+              <Label htmlFor={category.id} className="ml-2">
+                {category.label}
+              </Label>
             </div>
           ))}
+        </div>
       </div>
-      <div className="md:w-3/4 p-4">
-        <h1 className="text-2xl font-bold mb-4">Products</h1>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-          {filteredProducts.slice(0, visibleProducts).map((product, index) => {
-            if (index === visibleProducts - 1) {
-              return (
-                <div
-                  ref={lastProductElementRef as any}
-                  key={product.id}
-                  className="border p-4"
-                >
-                  <Image
-                    src={product.image}
-                    alt={product.name}
-                    height={300}
-                    width={300}
-                    className="w-full h-48 object-cover mb-4"
-                  />
-                  <h3 className="text-lg font-bold mb-2">{product.name}</h3>
-                  <p className="text-gray-500 mb-2">{product.category}</p>
-                  <p className="font-bold">${product.price.toFixed(2)}</p>
-                  {/* Add other product details */}
-                </div>
-              );
-            } else {
-              return (
-                <div key={product.id} className=" p-4 ">
-                  <Image
-                    src={"https://shorturl.at/nvwCD"}
-                    alt={product.name}
-                    className="w-full h-48 object-cover mb-4 "
-                          width={300}
-                          height={300}
-                  />
-                  <h3 className="text-lg font-bold mb-2">{product.name}</h3>
-                  <p className="text-gray-500 mb-2">{product.category}</p>
-                  <p className="font-bold">${product.price.toFixed(2)}</p>
-                </div>
-              );
-            }
-          })}
+      <div className="bg-white rounded-lg shadow-md p-6">
+        <div className="flex justify-between items-center mb-4">
+          <h2 className="text-lg font-bold">Products</h2>
+          <Select value={sortBy} onValueChange={handleSortChange}>
+            <SelectTrigger className="w-48">
+              <SelectValue placeholder="Sort by" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="name">Name</SelectItem>
+              <SelectItem value="price">Price</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+          {filteredProducts.map((product) => (
+            <div
+              key={product.id}
+              className="bg-gray-100 rounded-lg shadow-md p-4"
+            >
+              <h3 className="text-lg font-bold mb-2">{product.name}</h3>
+              <p className="text-gray-600 mb-4">{product.description}</p>
+              <div className="flex justify-between items-center">
+                <span className="text-primary font-bold">
+                  ${product.price.toFixed(2)}
+                </span>
+                <Button onClick={() => handleAddToCart(product)}>
+                  Add to Cart
+                </Button>
+              </div>
+            </div>
+          ))}
         </div>
       </div>
     </div>
   );
-};
-
-export default ProductCatalog;
+}

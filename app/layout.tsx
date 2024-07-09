@@ -4,7 +4,7 @@ import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"] });
 import Navbar from "@/components/fragments/navbar";
-
+import Footer from "@/components/fragments/footer";
 
 export const metadata: Metadata = {
   title: "Vendy Marketplace",
@@ -21,6 +21,7 @@ export default function RootLayout({
       <body className={inter.className}>
         <Navbar />
         {children}
+        <Footer />
       </body>
     </html>
   );

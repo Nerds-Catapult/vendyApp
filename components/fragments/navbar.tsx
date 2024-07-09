@@ -1,7 +1,12 @@
 
-
 import Link from "next/link";
 import { Input } from "@/components/ui/input";
+import {
+  Drawer,
+  DrawerTrigger,
+  DrawerContent,
+  DrawerClose,
+} from "@/components/ui/drawer";
 import { Button } from "@/components/ui/button";
 import {
   Sheet,
@@ -9,19 +14,17 @@ import {
   SheetContent,
   SheetClose,
 } from "@/components/ui/sheet";
-import { CgProfile } from "react-icons/cg";
-
-
-
+import Image from "next/image";
 import { JSX, SVGProps } from "react";
 
 export default function Component() {
   return (
     <header className="sticky top-0 z-40 w-full bg-background border-b">
       <div className="container flex items-center h-16 px-4 md:px-6">
-        <Link href="#" className="mr-6 md:mr-10" prefetch={false}>
-          <MountainIcon className="h-6 w-6" />
-          <span className="sr-only">Acme Inc</span>
+        <Link href="/" className="mr-6 md:mr-10" prefetch={false}>
+          <div className="flex items-center gap-2">
+            <Image src="/logo.jpeg" alt="vendy logo" width={150} height={150} />
+          </div>
         </Link>
         <div className="relative flex-1 max-w-md">
           <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
@@ -41,34 +44,105 @@ export default function Component() {
           >
             Home
           </Link>
+
+          <Link
+            href="/vendors/all"
+            className="px-4 py-2 rounded-md hover:bg-muted"
+            prefetch={false}
+          >
+            Stores
+          </Link>
           <Link
             href="#"
             className="px-4 py-2 rounded-md hover:bg-muted"
             prefetch={false}
           >
-            Run Errands
-          </Link>
-          <Link
-            href="/vendors/stores/create"
-            className="px-4 py-2 rounded-md hover:bg-muted"
-            prefetch={false}
-          >
-            Create a Vendor Account
-          </Link>
-
-          <Link
-            href="/auth/customers/signin"
-            className="px-4 py-2 rounded-md hover:bg-muted"
-            prefetch={false}
-          >
-            < CgProfile className="h-6 w-6" />
+            Create A store
           </Link>
         </nav>
         <div className="ml-auto flex items-center gap-4">
-          <Button variant="ghost" size="icon" className="rounded-full">
-            <ShoppingCartIcon className="h-6 w-6" />
-            <span className="sr-only">Cart</span>
-          </Button>
+          <Drawer>
+            <DrawerTrigger asChild>
+              <Button variant="ghost" size="icon" className="rounded-full">
+                <ShoppingCartIcon className="h-6 w-6" />
+                <span className="sr-only">Cart</span>
+              </Button>
+            </DrawerTrigger>
+            <DrawerContent className="w-full max-w-md">
+              <div className="flex flex-col h-full">
+                <div className="flex items-center justify-between border-b p-4">
+                  <h3 className="text-lg font-medium">Your Cart</h3>
+                  <DrawerClose asChild>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="rounded-full"
+                    >
+                      <XIcon className="h-6 w-6" />
+                      <span className="sr-only">Close</span>
+                    </Button>
+                  </DrawerClose>
+                </div>
+                <div className="flex-1 overflow-auto p-4 space-y-4">
+                  <div className="flex items-center gap-4">
+                    <Image
+                      src="/placeholder.svg"
+                      alt="Product Image"
+                      width={80}
+                      height={80}
+                      className="rounded-md"
+                    />
+                    <div className="flex-1">
+                      <h4 className="font-medium">Product Name</h4>
+                      <p className="text-muted-foreground">$19.99</p>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Button variant="ghost" size="icon">
+                        <MinusIcon className="h-4 w-4" />
+                        <span className="sr-only">Decrease quantity</span>
+                      </Button>
+                      <span>1</span>
+                      <Button variant="ghost" size="icon">
+                        <PlusIcon className="h-4 w-4" />
+                        <span className="sr-only">Increase quantity</span>
+                      </Button>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-4">
+                    <Image
+                      src="/placeholder.svg"
+                      alt="Product Image"
+                      width={80}
+                      height={80}
+                      className="rounded-md"
+                    />
+                    <div className="flex-1">
+                      <h4 className="font-medium">Another Product</h4>
+                      <p className="text-muted-foreground">$29.99</p>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Button variant="ghost" size="icon">
+                        <MinusIcon className="h-4 w-4" />
+                        <span className="sr-only">Decrease quantity</span>
+                      </Button>
+                      <span>2</span>
+                      <Button variant="ghost" size="icon">
+                        <PlusIcon className="h-4 w-4" />
+                        <span className="sr-only">Increase quantity</span>
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+                <div className="border-t p-4 space-y-2">
+                  <div className="flex items-center justify-between">
+                    <span className="text-muted-foreground">Subtotal</span>
+                    <span className="font-medium">$49.98</span>
+                  </div>
+                  <Button className="w-full">Proceed to Checkout</Button>
+                </div>
+              </div>
+            </DrawerContent>
+          </Drawer>
           <Sheet>
             <SheetTrigger asChild>
               <Button
@@ -169,6 +243,25 @@ function MenuIcon(props: JSX.IntrinsicAttributes & SVGProps<SVGSVGElement>) {
   );
 }
 
+function MinusIcon(props: JSX.IntrinsicAttributes & SVGProps<SVGSVGElement>) {
+  return (
+    <svg
+      {...props}
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="M5 12h14" />
+    </svg>
+  );
+}
+
 function MountainIcon(props: JSX.IntrinsicAttributes & SVGProps<SVGSVGElement>) {
   return (
     <svg
@@ -184,6 +277,26 @@ function MountainIcon(props: JSX.IntrinsicAttributes & SVGProps<SVGSVGElement>) 
       strokeLinejoin="round"
     >
       <path d="m8 3 4 8 5-5 5 15H2L8 3z" />
+    </svg>
+  );
+}
+
+function PlusIcon(props: JSX.IntrinsicAttributes & SVGProps<SVGSVGElement>) {
+  return (
+    <svg
+      {...props}
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="M5 12h14" />
+      <path d="M12 5v14" />
     </svg>
   );
 }
