@@ -9,6 +9,8 @@ import {
   SheetContent,
   SheetClose,
 } from "@/components/ui/sheet";
+import { CgProfile } from "react-icons/cg";
+
 
 
 import { JSX, SVGProps } from "react";
@@ -33,7 +35,7 @@ export default function Component() {
         </div>
         <nav className="hidden md:flex items-center gap-4">
           <Link
-            href="#"
+            href="/"
             className="px-4 py-2 rounded-md hover:bg-muted"
             prefetch={false}
           >
@@ -47,11 +49,19 @@ export default function Component() {
             Run Errands
           </Link>
           <Link
-            href="#"
+            href="/vendors/stores/create"
             className="px-4 py-2 rounded-md hover:bg-muted"
             prefetch={false}
           >
             Create a Vendor Account
+          </Link>
+
+          <Link
+            href="/auth/customers/signin"
+            className="px-4 py-2 rounded-md hover:bg-muted"
+            prefetch={false}
+          >
+            < CgProfile className="h-6 w-6" />
           </Link>
         </nav>
         <div className="ml-auto flex items-center gap-4">

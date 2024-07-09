@@ -28,7 +28,7 @@ export default function Component() {
           <p className="mt-2 text-center text-sm text-muted-foreground">
             Or{" "}
             <Link
-              href="/customers/signin"
+              href="/auth/customers/signin"
               className="font-medium text-primary hover:text-primary/90"
               prefetch={true}
             >
@@ -44,7 +44,7 @@ export default function Component() {
         >
           <div>
             <Label
-              htmlFor="firstName"
+              htmlFor="fullName"
               className="block text-sm font-medium text-muted-foreground"
             >
               Full Name
@@ -52,8 +52,8 @@ export default function Component() {
             <div className="mt-1">
               <Input
                 {...register("fullName")}
-                id="firstName"
-                name="firstName"
+                id="fullName"
+                name="fullName"
                 type="text"
                 autoComplete="off"
                 required
