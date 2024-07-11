@@ -53,11 +53,19 @@ export default function Component() {
             Stores
           </Link>
           <Link
-            href="#"
+            href="/"
             className="px-4 py-2 rounded-md hover:bg-muted"
             prefetch={false}
           >
             Create A store
+          </Link>
+
+          <Link
+            href="/auth/customers/signin"
+            className="px-4 py-2 rounded-md hover:bg-muted"
+            prefetch={false}
+          >
+            Create A customer Account
           </Link>
         </nav>
         <div className="ml-auto flex items-center gap-4">
@@ -163,7 +171,7 @@ export default function Component() {
                     prefetch={false}
                   >
                     <MountainIcon className="h-6 w-6" />
-                    <span className="font-medium">Acme Inc</span>
+                    <span className="font-medium">Vendy MarketPlace</span>
                   </Link>
                   <SheetClose asChild>
                     <Button

@@ -8,15 +8,26 @@ import { Button } from "@/components/ui/button";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { schemaFormsLogin } from "@/app/schemas/schema";
 import { useForm } from "react-hook-form";
+import { useAuth } from "@/context/auth-context";
+import { useRouter } from "next/router";
+import { FormEvent, useState } from "react";
 
 export default function Component() {
   const formOptions = { resolver: yupResolver(schemaFormsLogin) };
-  const { register, handleSubmit, formState } = useForm(formOptions);
-  const { errors } = formState;
+  const [formData, setFormData] = useState({
+    email: "",
+    password: "",
+  });
 
-  const handleChange = () => {
-    console.log("Form submitted");
-  };
+  const handleChange = (e: { target: { name: string; value: string; }; }) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+  }
+
+  const handleSubmit = async (e: FormEvent) => {
+    e.preventDefault();
+    console.log(formData);
+  }
   return (
     <div className="flex min-h-[100dvh] flex-col items-center justify-center bg-background px-4 py-12 sm:px-6 lg:px-8">
       <div className="mx-auto w-full max-w-md space-y-8">
@@ -39,7 +50,7 @@ export default function Component() {
           className="space-y-6"
           action="#"
           method="POST"
-          onSubmit={handleSubmit(handleChange)}
+          onSubmit={handleSubmit}
         >
           <div>
             <Label
@@ -52,6 +63,8 @@ export default function Component() {
               <Input
                 id="email"
                 name="email"
+                // value = {formData.email}
+                onChange={handleChange}
                 type="email"
                 autoComplete="email"
                 required
@@ -59,7 +72,6 @@ export default function Component() {
               />
               <span className="text-sm text-red-600">
                 {" "}
-                {errors.email && errors.email.message}{" "}
               </span>
             </div>
           </div>
@@ -81,7 +93,6 @@ export default function Component() {
               />
               <span className="text-sm text-red-600">
                 {" "}
-                {errors.password && errors.password.message}{" "}
               </span>
             </div>
           </div>

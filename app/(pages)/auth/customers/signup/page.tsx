@@ -174,10 +174,11 @@ export default function Component() {
               type="submit"
               className="flex w-full justify-center rounded-md bg-primary px-3 py-2 text-sm font-semibold text-primary-foreground shadow-sm hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
             >
-              Sign in
+              Sign up
             </Button>
           </div>
         </form>
+        
       </div>
     </div>
   );
