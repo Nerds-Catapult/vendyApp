@@ -53,7 +53,7 @@ export default function Component() {
             Stores
           </Link>
           <Link
-            href="/"
+            href="/auth/vendors/signup"
             className="px-4 py-2 rounded-md hover:bg-muted"
             prefetch={false}
           >
