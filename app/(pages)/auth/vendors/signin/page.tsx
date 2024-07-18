@@ -10,9 +10,15 @@ import toast from "react-hot-toast";
 import {
   VendorTypeFromServer,
   ValidationAuthProps,
+  checkIfVendorHasStoreReturnsBoolean,
 } from "@/app/types/foreignTypes";
+  
 
+//login component
 export default function Component() {
+
+
+
   function LoadingComponent() {
     return (
       <div className="fixed inset-0 flex items-center justify-center bg-background">
@@ -37,70 +43,101 @@ export default function Component() {
       </div>
     );
   }
+
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
   const [loading, setLoading] = useState(false);
-  const [cookies, setCookie] = useState(Cookies.get("storeToken"));
+  const [authToken, setAuthToken] = useState(Cookies.get("storeToken"));
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
     for (let key in formData) {
       if (key === e.target.id) {
         setFormData({ ...formData, [key]: e.target.value });
-      }
+      } 
     }
   };
 
-  useEffect(() => {
-    const authState = async () => {
-      setLoading(true);
-      if (cookies) {
+const ValidateAuthToken = async (): Promise<ValidationAuthProps> => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const response = await fetch("http://localhost:4200/api/auth/validate", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${authToken}`,
+        },
+      });
+      const data: ValidationAuthProps = await response.json();
+      if (data) {
+        resolve(data);
+      } else {
+        reject("An error occurred while validating the token");
+      }
+    } catch (error) {
+      reject("An error occurred while validating the token");
+      console.log(error);
+    }
+  });
+};
+
+const checkIfVendorHasStore =
+  async (): Promise<checkIfVendorHasStoreReturnsBoolean> => {
+    return new Promise(async (resolve, reject) => {
+      try {
         const response = await fetch(
-          "http://localhost:4200/api/auth/validate",
+          "http://localhost:4200/api/auth/hasStore",
           {
             method: "GET",
             headers: {
               "Content-Type": "application/json",
-              Authorization: `Bearer ${cookies}`,
+              Authorization: `Bearer ${authToken}`,
             },
           }
         );
-        const data: ValidationAuthProps = await response.json();
-        if (data.statusCode === 200) {
-          setLoading(false);
-          toast.success(data.message);
-          //check if the vendor has a store
-          const validateStore = await fetch(
-            "http://localhost:4200/api/auth/hasStore",
-            {
-              method: "GET",
-              headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${cookies}`,
-              },
-            }
-          );
-          const returnedResponse: boolean = await validateStore.json();
-          if (returnedResponse) {
-            // router.push("/vendors/Dashboard");
-            window.location.href = "/vendors/Dashboard";
-          } else {
-            // router.push("/auth/vendors/store");
-            window.location.href = "/auth/vendors/stores/create";
-          }
+        const data: checkIfVendorHasStoreReturnsBoolean = await response.json();
+        if (data) {
+          resolve(data);
         } else {
-          setLoading(false);
-          toast.error(data.message);
+          reject("An error occurred while checking if vendor has store");
+        }
+      } catch (error) {
+        reject("An error occurred while checking if vendor has store");
+      }
+    });
+  };
+
+useEffect(() => {
+  if (authToken) {
+    ValidateAuthToken()
+      .then((data) => {
+        if (data.statusCode === 200) {
+          checkIfVendorHasStore()
+            .then((data) => {
+              if (data.hasStore) {
+                console.log("Vendor has store");
+                window.location.href = "/vendors/dashboard";
+              } else {
+                window.location.href = "/auth/vendors/stores/create";
+              }
+            })
+            .catch((error) => {
+              console.log(error);
+            });
+        } else {
+          console.log("Token is invalid");
           Cookies.remove("storeToken");
         }
-      }
-      console.log("No token found");
-      setLoading(false);
-    };
-    authState();
-  }, [cookies]);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+}, [, authToken]);
+
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();

@@ -1,19 +1,31 @@
-/**
- * v0 by Vercel.
- * @see https://v0.dev/t/itVC1bCieth
- * Documentation: https://v0.dev/docs#integrating-generated-code-into-your-nextjs-app
- */
-import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card"
-import { Label } from "@/components/ui/label"
-import { Input } from "@/components/ui/input"
-import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select"
-import { Checkbox } from "@/components/ui/checkbox"
-import Link from "next/link"
-import { Button } from "@/components/ui/button"
+"use client";
 
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent,
+  CardFooter,
+} from "@/components/ui/card";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectItem,
+} from "@/components/ui/select";
+import { Checkbox } from "@/components/ui/checkbox";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { ValidationAuthProps } from "@/app/types/foreignTypes";
+import { useEffect, useState } from "react";
+import Cookies from "js-cookie";
+import toast from "react-hot-toast";
 
-
-export default function Component() {
+export default function CreateStoreComponent() {
   const counties = [
     "Baringo",
     "Bomet",
@@ -63,12 +75,38 @@ export default function Component() {
     "Wajir",
     "West Pokot",
   ];
+  const categories = [
+    "Clothing",
+    "Electronics",
+    "Home Decor",
+    "Beauty",
+    "Sports",
+    "Toys",
+    "Other",
+  ];
 
+  const [loading, setLoading] = useState(false);
+  const [token, setTokem] = useState(Cookies.get("storeToken"));
+  const [formData, setFormData] = useState({
+    storeName: "",
+    storeCategory: "",
+    storeLocation: "",
+    ownerName: "",
+    ownerEmail: "",
+    ownerPhone: "",
+    storeAddress: "",
+    county: "",
+    ward: "",
+    area: "",
+    storeLogo: "",
+    storeBanner: "",
+  });
+  
   return (
     <main className="flex justify-center  items-center h-[100vh]">
       <Card className="w-full max-w-3xl items-center bg-slate-200">
         <CardHeader>
-          <CardTitle className="text-2xl">Register Your Store</CardTitle>
+          <CardTitle className="text-2xl">Create Your Store</CardTitle>
           <CardDescription>
             Fill out the form below to register your ecommerce store.
           </CardDescription>
@@ -87,13 +125,11 @@ export default function Component() {
                     <SelectValue placeholder="Select category" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="clothing">Clothing</SelectItem>
-                    <SelectItem value="electronics">Electronics</SelectItem>
-                    <SelectItem value="home-decor">Home Decor</SelectItem>
-                    <SelectItem value="beauty">Beauty</SelectItem>
-                    <SelectItem value="sports">Sports</SelectItem>
-                    <SelectItem value="toys">Toys</SelectItem>
-                    <SelectItem value="other">Other</SelectItem>
+                    {categories.map((category) => (
+                      <SelectItem key={category} value={category}>
+                        {category}
+                      </SelectItem>
+                    ))}
                   </SelectContent>
                 </Select>
               </div>
@@ -148,27 +184,18 @@ export default function Component() {
                       </SelectItem>
                     ))}
                   </SelectContent>
-                </Select> 
+                </Select>
               </div>
 
               <div className="space-y-2">
                 <Label htmlFor="ward">Store ward</Label>
-                <Input
-                  id="ward"
-                  type="text"
-                  placeholder="Enter store ward"
-                />
+                <Input id="ward" type="text" placeholder="Enter store ward" />
               </div>
 
               <div className="space-y-2">
                 <Label htmlFor="area">Store Area</Label>
-                <Input
-                  id="area"
-                  type="text"
-                  placeholder="Enter store Area"
-                />
+                <Input id="area" type="text" placeholder="Enter store Area" />
               </div>
-
             </div>
             <div className="grid grid-cols-2 gap-6">
               <div className="space-y-2">

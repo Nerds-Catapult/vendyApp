@@ -24,8 +24,39 @@ export interface VendorTypeFromServer {
 
 
 export interface ValidationAuthProps {
-  accessToken: string | null;
-  statusCode: number;
-  error: string | null;
-  message: string;
+  payload: {
+    email: string;
+    role: string;
+    id: number;
+    iat: number;
+    exp: number;
+  } | null
+  error: string | null
+  message: string
+  statusCode: number
 }
+
+
+
+export interface ReturnedStorePropsFromserver {
+  id: number;
+  storeName: string;
+  storeLocation: string;
+  storeAddress: string;
+  ownerName: string;
+  ownerEmail: string;
+  ownerPhone: string;
+  county: string;
+  ward: string;
+  isActive: boolean;
+  vendorId: number;
+  categoryId: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
+
+export interface checkIfVendorHasStoreReturnsBoolean {
+  hasStore: boolean
+  store: ReturnedStorePropsFromserver | null | undefined
+} 
