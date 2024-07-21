@@ -17,6 +17,7 @@ import {
  } from "@/app/types/foreignTypes";
 
 export default function Component() {
+
   function LoadingComponent() {
     return (
       <div className="fixed inset-0 flex items-center justify-center bg-background">
@@ -170,6 +171,8 @@ export default function Component() {
       console.log(error);
     }
   };
+
+  
   return (
     <div className="w-full min-h-dvh flex flex-col">
       <section className="w-full py-12 md:py-24 lg:py-32 bg-gradient-to-r from-[#6366f1] to-[#8b5cf6]">
