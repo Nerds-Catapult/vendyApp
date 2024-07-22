@@ -30,7 +30,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   useEffect(() => {
     const fetchProfile = async () => {
-      const token = Cookies.get("token");
+      const token = Cookies.get("CustomerToken");
 
       if (token) {
         try {

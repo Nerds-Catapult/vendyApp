@@ -2,7 +2,7 @@
 
 
 export interface VendorTypeFromServer { 
-    /* 
+    /*
     * This is the expected response from the server, includes profile table and vendor table
     * when a vendor is fetched
     * when a vendor is created
@@ -117,4 +117,37 @@ export interface ExpectedAsStoreProps {
     createdAt: string;
     updatedAt: string;
   };
+}
+
+
+export interface loginHttpResponse {
+  message: string;
+  httpStatus: number;
+  accessToken: string;
+}
+
+
+export interface ExpectedAsCustomerTypes {
+  statusCode: number;
+  message: string;
+  data: {
+    id: number;
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone: string;
+  role: string;
+  isActive: boolean;
+  createdAt: string;
+  updatedAt: string;
+  customer: {
+    id: number;
+    profileId: number;
+    orders: {
+      id: number;
+      orderNumber: string;
+      orderStatus: string;
+    }[] | []
+  }
+  } 
 }

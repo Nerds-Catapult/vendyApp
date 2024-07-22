@@ -1,22 +1,70 @@
 "use client";
 
-import React from "react";
+import React, {useState, useEffect} from "react";
 import Link from "next/link";
+import Cookies from "js-cookie";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
-import { schemaForms } from "@/app/schemas/schema";
-import { useForm } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
+import LoadingComponent from "@/components/ui/loading";
+import { ValidationAuthProps} from '@/app/types/foreignTypes';
+
+
 
 export default function Component() {
-  const formOptions = { resolver: yupResolver(schemaForms) };
-  const { register, handleSubmit, formState } = useForm(formOptions);
-  const { errors } = formState;
 
-  const handleChange = () => {
-    console.log("Form submitted");
+
+  const [loading, setLoading] = useState(false);
+  const [authToken, setAuthToken] = useState(Cookies.get("storeToken"));
+  const [formData, setFormData] = useState({
+    fullName: "",
+    phone: "",
+    address: "",
+    email: "",
+    password: "",
+  });
+
+    const ValidateAuthToken = async (): Promise<ValidationAuthProps> => {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const response = await fetch("http://localhost:4200/api/auth/validate", {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${authToken}`,
+          },
+        });
+        const data: ValidationAuthProps = await response.json();
+        if (data) {
+          resolve(data);
+        } else {
+          reject("An error occurred while validating the token");
+        }
+      } catch (error) {
+        reject("An error occurred while validating the token");
+        console.log(error);
+      }
+    })
+    }
+  
+  useEffect(() => {
+    ValidateAuthToken().then((data) => {
+      // console.log(data.statusCode);
+      if (data.statusCode !== 200) {
+        Cookies.remove("storeToken");
+        window.location.href = "/auth/vendors/signin";
+      } else {
+         window.location.href = "/auth/customers/profile";
+      }
+    }).catch((error) => {
+      console.log(error);
+    })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [authToken]);
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
   };
   return (
     <div className="flex min-h-[100dvh] flex-col items-center justify-center bg-background px-4 py-12 sm:px-6 lg:px-8">
@@ -40,7 +88,7 @@ export default function Component() {
           className="space-y-6"
           action="#"
           method="POST"
-          onSubmit={handleSubmit(handleChange)}
+          onSubmit={handleSubmit}
         >
           <div>
             <Label
@@ -51,7 +99,6 @@ export default function Component() {
             </Label>
             <div className="mt-1">
               <Input
-                {...register("fullName")}
                 id="fullName"
                 name="fullName"
                 type="text"
@@ -60,11 +107,6 @@ export default function Component() {
                 className="block w-full appearance-none rounded-md border border-input bg-background px-3 py-2 placeholder-muted-foreground shadow-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary sm:text-sm focus-visible:ring-primary focus-visible:ring-1 focus-visible:ring-offset-0"
               />
               <span>
-                {errors.fullName && (
-                  <p className="text-red-500 text-xs italic">
-                    {errors.fullName.message}
-                  </p>
-                )}
               </span>
             </div>
           </div>
@@ -77,7 +119,6 @@ export default function Component() {
             </Label>
             <div className="mt-1">
               <Input
-                {...register("phone")}
                 id="phone"
                 name="phone"
                 type="number"
@@ -97,7 +138,6 @@ export default function Component() {
             </Label>
             <div className="mt-1">
               <Input
-                {...register("address")}
                 id="address"
                 name="address"
                 type="text"
@@ -116,7 +156,6 @@ export default function Component() {
             </Label>
             <div className="mt-1">
               <Input
-                {...register("email")}
                 id="email"
                 name="email"
                 type="email"
@@ -135,7 +174,6 @@ export default function Component() {
             </Label>
             <div className="mt-1">
               <Input
-                {...register("password")}
                 id="password"
                 name="password"
                 type="password"
@@ -178,7 +216,6 @@ export default function Component() {
             </Button>
           </div>
         </form>
-        
       </div>
     </div>
   );

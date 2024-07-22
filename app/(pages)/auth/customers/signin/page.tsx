@@ -5,19 +5,60 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
-import { yupResolver } from "@hookform/resolvers/yup";
-import { schemaFormsLogin } from "@/app/schemas/schema";
-import { useForm } from "react-hook-form";
-import { useAuth } from "@/context/auth-context";
-import { useRouter } from "next/router";
-import { FormEvent, useState } from "react";
+import { FormEvent, useState, useEffect } from "react";
+import Cookies from "js-cookie";
+
+
+import type { ValidationAuthProps, loginHttpResponse } from "@/app/types/foreignTypes";
+import {toast} from "react-hot-toast";
 
 export default function Component() {
-  const formOptions = { resolver: yupResolver(schemaFormsLogin) };
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
+  const [authToken, setAthToken] = useState(Cookies.get("customerToken"));
+
+  const ValidateAuthToken = async (): Promise<ValidationAuthProps> => {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const response = await fetch(
+          "http://localhost:4200/api/auth/validate",
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${authToken}`,
+            },
+          }
+        );
+        const data: ValidationAuthProps = await response.json();
+        console.log(data);
+        if (data.statusCode === 200) {
+          resolve(data);
+        } else if (data.statusCode === 401) {
+          Cookies.remove("customerToken");
+        }
+      } catch (error) {
+        reject("An error occurred while validating the token");
+        console.log(error);
+      }
+    });
+  };
+
+  useEffect(() => {
+    if (authToken) {
+      ValidateAuthToken().then((data) => {
+        if (data.statusCode === 200) {
+          window.location.href = "/auth/customers/profile";
+        } else {
+          Cookies.remove("customerToken");
+        }
+        return;
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [authToken]);
 
   const handleChange = (e: { target: { name: string; value: string; }; }) => {
     const { name, value } = e.target;
@@ -26,7 +67,26 @@ export default function Component() {
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    console.log(formData);
+    try {
+      const { email, password } = formData;
+      const response = await fetch("http://localhost:4200/api/auth/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password }),
+      });
+      const data: loginHttpResponse = await response.json();
+      if (data.httpStatus === 200) {
+        Cookies.set("customerToken", data.accessToken);
+        window.location.href = "/auth/customers/profile";
+      } else {
+        toast.error(data.message);
+        console.log(data.message);
+      }
+    } catch (error) {
+      console.log(error);
+    }
   }
   return (
     <div className="flex min-h-[100dvh] flex-col items-center justify-center bg-background px-4 py-12 sm:px-6 lg:px-8">
@@ -88,6 +148,7 @@ export default function Component() {
                 name="password"
                 type="password"
                 autoComplete="current-password"
+                onChange={handleChange}
                 required
                 className="block w-full appearance-none rounded-md border border-input bg-background px-3 py-2 placeholder-muted-foreground shadow-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary sm:text-sm focus-visible:ring-primary focus-visible:ring-1 focus-visible:ring-offset-0"
               />
