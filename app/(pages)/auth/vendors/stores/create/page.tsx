@@ -1,5 +1,7 @@
 "use client";
 
+
+//TODO: all these auth functions can be state managed by the context api or redux
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import Cookies from "js-cookie";
@@ -362,7 +364,7 @@ export default function CreateStoreComponent() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          {loading ? (
+          {loading ? ( //TODO: Add a loading spinner
             <p>Loading...</p>
           ) : (
             <form className="grid gap-6" onSubmit={handleFormSubmit}>

@@ -1,3 +1,5 @@
+"use client"
+
 
 import Link from "next/link";
 import { Input } from "@/components/ui/input";
@@ -15,9 +17,57 @@ import {
   SheetClose,
 } from "@/components/ui/sheet";
 import Image from "next/image";
-import { JSX, SVGProps } from "react";
+import { JSX, SVGProps, useEffect, useState } from "react";
+import Cookies from "js-cookie";
+import { toast } from "react-hot-toast";
+import { ValidationAuthProps } from '@/app/types/foreignTypes';
+
+
+
+
 
 export default function Component() {
+
+  const [user, setUser] = useState<boolean>(false);
+  const [authToken, setAthToken] = useState(Cookies.get("customerToken"));
+
+
+    const ValidateAuthToken = async (): Promise<ValidationAuthProps> => {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const response = await fetch("http://localhost:4200/api/auth/validate", {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${authToken}`,
+          },
+        });
+        const data: ValidationAuthProps = await response.json();
+        console.log(data);
+        if (data.statusCode === 200) {
+          resolve(data);
+        } else if(data.statusCode === 401) {
+          Cookies.remove("customerToken");
+        }
+      } catch (error) {
+        reject("An error occurred while validating the token");
+        console.log(error);
+      }
+    })
+    }
+  useEffect(() => {
+    if (authToken) {
+      ValidateAuthToken()
+        .then((data) => {
+          if (data.statusCode === 200) {
+            setUser(true)
+          } else {
+            setUser(false)
+          }
+        })
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [authToken])
   return (
     <header className="sticky top-0 z-40 w-full bg-background border-b">
       <div className="container flex items-center h-16 px-4 md:px-6">
@@ -61,11 +111,13 @@ export default function Component() {
           </Link>
 
           <Link
-            href="/auth/customers/signin"
+            href= {user ? "/auth/customers/profile" : "/auth/customers/signin"}
             className="px-4 py-2 rounded-md hover:bg-muted"
             prefetch={false}
           >
-            Create A customer Account
+            {
+              user ? "profile" : "Sign In"
+            }
           </Link>
         </nav>
         <div className="ml-auto flex items-center gap-4">

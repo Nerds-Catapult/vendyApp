@@ -139,6 +139,7 @@ useEffect(() => {
 }, [, authToken]);
 
 
+  //TODO:double check this logic
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
