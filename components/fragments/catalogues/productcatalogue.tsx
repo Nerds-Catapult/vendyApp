@@ -112,6 +112,7 @@ export default function Component() {
         }
         return 0;
       });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedCategories, sortBy]);
 
   const handleCategoryChange = (categoryId: string) => {

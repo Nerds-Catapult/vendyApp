@@ -63,13 +63,16 @@ export default function Component() {
 const ValidateAuthToken = async (): Promise<ValidationAuthProps> => {
   return new Promise(async (resolve, reject) => {
     try {
-      const response = await fetch("http://localhost:4200/api/auth/validate", {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${authToken}`,
-        },
-      });
+      const response = await fetch(
+        "https://d87e-2c0f-2f00-100-be00-5855-9723-e1d-10dd.ngrok-free.app/api/auth/validate",
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${authToken}`,
+          },
+        }
+      );
       const data: ValidationAuthProps = await response.json();
       if (data) {
         resolve(data);
@@ -88,7 +91,7 @@ const checkIfVendorHasStore =
     return new Promise(async (resolve, reject) => {
       try {
         const response = await fetch(
-          "http://localhost:4200/api/auth/hasStore",
+          "https://d87e-2c0f-2f00-100-be00-5855-9723-e1d-10dd.ngrok-free.app/api/auth/hasStore",
           {
             method: "GET",
             headers: {
@@ -138,43 +141,45 @@ useEffect(() => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
 }, [, authToken]);
 
-
-  //TODO:double check this logic
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    try {
-      const { email, password } = formData;
-      if (!email || !password) {
-        return;
-      }
-      setLoading(true);
-      const response = await fetch("http://localhost:4200/api/auth/login", {
+//TODO:double check this logic
+const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  e.preventDefault();
+  try {
+    const { email, password } = formData;
+    if (!email || !password) {
+      return;
+    }
+    setLoading(true);
+    const response = await fetch(
+      "https://d87e-2c0f-2f00-100-be00-5855-9723-e1d-10dd.ngrok-free.app/api/auth/login",
+      {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(formData),
-      });
-      const data: VendorTypeFromServer = await response.json();
-      if (data) {
-        toast.success("Vendor created successfully");
-        Cookies.set("storeToken", data.token);
-        //refresh the page
-        window.location.href = "/auth/vendors/stores/create";
-      } else {
-        toast.error(
-          "An error occurred while fetching your vendor profile, try again"
-        );
       }
-      setLoading(false);
-    } catch (error) {
-      setLoading(false);
+    );
+    const data: VendorTypeFromServer = await response.json();
+    if (data) {
+      toast.success("Vendor created successfully");
+      Cookies.set("storeToken", data.token);
+      //refresh the page
+      window.location.href = "/auth/vendors/stores/create";
+    } else {
       toast.error(
         "An error occurred while fetching your vendor profile, try again"
       );
-      console.log(error);
     }
-  };
+    setLoading(false);
+  } catch (error) {
+    setLoading(false);
+    toast.error(
+      "An error occurred while fetching your vendor profile, try again"
+    );
+    console.log(error);
+  }
+};
   return (
     <>
       l

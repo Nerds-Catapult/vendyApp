@@ -68,13 +68,16 @@ export default function Component() {
   const ValidateAuthToken = async (): Promise<ValidationAuthProps> => {
     return new Promise(async (resolve, reject) => {
       try {
-        const response = await fetch("http://localhost:4200/api/auth/validate", {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${authToken}`,
-          },
-        });
+        const response = await fetch(
+          "https://d87e-2c0f-2f00-100-be00-5855-9723-e1d-10dd.ngrok-free.app/api/auth/validate",
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${authToken}`,
+            },
+          }
+        );
         const data: ValidationAuthProps = await response.json();
         if (data) {
           resolve(data);
@@ -85,31 +88,35 @@ export default function Component() {
         reject("An error occurred while validating the token");
         console.log(error);
       }
-    })
-  }
+    });
+  };
 
-
-  const checkIfVendorHasStore = async (): Promise<checkIfVendorHasStoreReturnsBoolean> => {
-    return new Promise(async (resolve, reject) => {
-      try {
-        const response = await fetch("http://localhost:4200/api/auth/hasStore", {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${authToken}`
+  const checkIfVendorHasStore =
+    async (): Promise<checkIfVendorHasStoreReturnsBoolean> => {
+      return new Promise(async (resolve, reject) => {
+        try {
+          const response = await fetch(
+            "https://d87e-2c0f-2f00-100-be00-5855-9723-e1d-10dd.ngrok-free.app/api/auth/hasStore",
+            {
+              method: "GET",
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${authToken}`,
+              },
+            }
+          );
+          const data: checkIfVendorHasStoreReturnsBoolean =
+            await response.json();
+          if (data) {
+            resolve(data);
+          } else {
+            reject("An error occurred while checking if vendor has store");
           }
-        });
-        const data: checkIfVendorHasStoreReturnsBoolean = await response.json();
-        if (data) {
-          resolve(data);
-        } else {
+        } catch (error) {
           reject("An error occurred while checking if vendor has store");
         }
-      } catch (error) {
-        reject("An error occurred while checking if vendor has store");
-      }
-    })
-  }
+      });
+    };
 
 
   useEffect(() => {
@@ -148,13 +155,16 @@ export default function Component() {
         return;
       }
       setLoading(true);
-      const response = await fetch("http://localhost:4200/api/vendors", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      });
+      const response = await fetch(
+        "https://d87e-2c0f-2f00-100-be00-5855-9723-e1d-10dd.ngrok-free.app/api/vendors",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(formData),
+        }
+      );
       const data: VendorTypeFromServer = await response.json();
       if (data) {
         toast.success("Vendor created successfully");

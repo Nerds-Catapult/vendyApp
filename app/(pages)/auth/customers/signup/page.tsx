@@ -28,13 +28,16 @@ export default function Component() {
     const ValidateAuthToken = async (): Promise<ValidationAuthProps> => {
     return new Promise(async (resolve, reject) => {
       try {
-        const response = await fetch("http://localhost:4200/api/auth/validate", {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${authToken}`,
-          },
-        });
+        const response = await fetch(
+          "https://d87e-2c0f-2f00-100-be00-5855-9723-e1d-10dd.ngrok-free.app/api/auth/validate",
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${authToken}`,
+            },
+          }
+        );
         const data: ValidationAuthProps = await response.json();
         if (data) {
           resolve(data);

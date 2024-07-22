@@ -38,7 +38,7 @@ export interface ValidationAuthProps {
 
 
 
-export interface ReturnedStorePropsFromserver {
+export interface Store {
   id: number;
   storeName: string;
   storeLocation: string;
@@ -46,6 +46,7 @@ export interface ReturnedStorePropsFromserver {
   ownerName: string;
   ownerEmail: string;
   ownerPhone: string;
+  storeLogo: string 
   county: string;
   ward: string;
   isActive: boolean;
@@ -53,12 +54,12 @@ export interface ReturnedStorePropsFromserver {
   categoryId: number;
   createdAt: string;
   updatedAt: string;
-}
+}[]
 
 
 export interface checkIfVendorHasStoreReturnsBoolean {
   hasStore: boolean;
-  store: ReturnedStorePropsFromserver | null | undefined;
+  store: Store | null | undefined;
 }
 
 export interface ExpectedAStoreCategory {
@@ -67,8 +68,7 @@ export interface ExpectedAStoreCategory {
   description: string;
   createdAt: string;
   updatedAt: string;
-}
-[];
+}[];
 
 export interface ExpectedAsCloudinaryResponse {
   public_id: string;
@@ -98,26 +98,7 @@ export interface ExpectedAsCloudinaryResponse {
   };
 }
 
-export interface ExpectedAsStoreProps {
-  httpStatus: number;
-  message: string;
-  data: {
-    id: number;
-    storeName: string;
-    storeLocation: string;
-    storeAddress: string;
-    ownerName: string;
-    ownerEmail: string;
-    ownerPhone: string;
-    county: string;
-    ward: string;
-    isActive: boolean;
-    vendorId: number;
-    categoryId: number;
-    createdAt: string;
-    updatedAt: string;
-  };
-}
+
 
 
 export interface loginHttpResponse {
@@ -151,3 +132,21 @@ export interface ExpectedAsCustomerTypes {
   }
   } 
 }
+/* 
+<div className="flex-shrink-0">
+                <Link href="#" className="group" prefetch={false}>
+                  <div className="relative h-32 w-32 overflow-hidden rounded-full">
+                    <Image
+                      src="/placeholder.svg"
+                      alt="Store 6"
+                      width={128}
+                      height={128}
+                      className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-110"
+                    />
+                  </div>
+                  <div className="mt-2 text-center font-medium">
+                    Kitchen Essentials
+                  </div>
+                </Link>
+              </div>
+*/

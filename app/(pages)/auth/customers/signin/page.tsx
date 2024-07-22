@@ -23,7 +23,7 @@ export default function Component() {
     return new Promise(async (resolve, reject) => {
       try {
         const response = await fetch(
-          "http://localhost:4200/api/auth/validate",
+          "https://d87e-2c0f-2f00-100-be00-5855-9723-e1d-10dd.ngrok-free.app/api/auth/validate",
           {
             method: "GET",
             headers: {
@@ -60,22 +60,25 @@ export default function Component() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [authToken]);
 
-  const handleChange = (e: { target: { name: string; value: string; }; }) => {
+  const handleChange = (e: { target: { name: string; value: string } }) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
-  }
+  };
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     try {
       const { email, password } = formData;
-      const response = await fetch("http://localhost:4200/api/auth/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email, password }),
-      });
+      const response = await fetch(
+        "https://d87e-2c0f-2f00-100-be00-5855-9723-e1d-10dd.ngrok-free.app/api/auth/login",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ email, password }),
+        }
+      );
       const data: loginHttpResponse = await response.json();
       if (data.httpStatus === 200) {
         Cookies.set("customerToken", data.accessToken);
@@ -87,7 +90,7 @@ export default function Component() {
     } catch (error) {
       console.log(error);
     }
-  }
+  };
   return (
     <div className="flex min-h-[100dvh] flex-col items-center justify-center bg-background px-4 py-12 sm:px-6 lg:px-8">
       <div className="mx-auto w-full max-w-md space-y-8">

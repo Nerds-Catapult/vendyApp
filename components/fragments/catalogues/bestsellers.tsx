@@ -12,12 +12,15 @@ const BestSellers = () => {
     const BestSellers = async () => {
       setLoading(true);
       try {
-        const response = await fetch("http://localhost:4200/api/businesses", {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
+        const response = await fetch(
+          "https://d87e-2c0f-2f00-100-be00-5855-9723-e1d-10dd.ngrok-free.app/api/businesses",
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
         const data: expectedBusinessInterface = await response.json();
         if (data.entity) {
           setBusinesses(data.entity as unknown as expectedBusiness[]);

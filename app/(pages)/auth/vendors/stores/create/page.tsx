@@ -148,7 +148,7 @@ export default function CreateStoreComponent() {
     return new Promise(async (resolve, reject) => {
       try {
         const response = await fetch(
-          "http://localhost:4200/api/auth/validate",
+          "https://d87e-2c0f-2f00-100-be00-5855-9723-e1d-10dd.ngrok-free.app/api/auth/validate",
           {
             method: "GET",
             headers: {
@@ -175,7 +175,7 @@ export default function CreateStoreComponent() {
       return new Promise(async (resolve, reject) => {
         try {
           const response = await fetch(
-            "http://localhost:4200/api/auth/hasStore",
+            "https://d87e-2c0f-2f00-100-be00-5855-9723-e1d-10dd.ngrok-free.app/api/auth/hasStore",
             {
               method: "GET",
               headers: {
@@ -231,12 +231,15 @@ export default function CreateStoreComponent() {
 
   const fetchStoreCategories = async () => {
     try {
-      const response = await fetch("http://localhost:4200/api/store-category", {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
+      const response = await fetch(
+        "https://d87e-2c0f-2f00-100-be00-5855-9723-e1d-10dd.ngrok-free.app/api/store-category",
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
       const data: ExpectedAStoreCategory[] = await response.json();
       if (data) {
         setStoreCategories(data);
@@ -257,10 +260,13 @@ export default function CreateStoreComponent() {
     formData.append("file", file);
     return new Promise(async (resolve, reject) => {
       try {
-        const response = await fetch("http://localhost:4200/api/image/upload", {
-          method: "POST",
-          body: formData,
-        });
+        const response = await fetch(
+          "https://d87e-2c0f-2f00-100-be00-5855-9723-e1d-10dd.ngrok-free.app/api/image/upload",
+          {
+            method: "POST",
+            body: formData,
+          }
+        );
         const data: ExpectedAsCloudinaryResponse = await response.json();
         if (data) {
           resolve(data);
@@ -294,13 +300,16 @@ export default function CreateStoreComponent() {
   ): Promise<ExpectedAsCloudinaryResponse> => {
     return new Promise(async (resolve, reject) => {
       try {
-        const response = await fetch("http://localhost:4200/api/image/delete", {
-          method: "DELETE",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ publicId }),
-        });
+        const response = await fetch(
+          "https://d87e-2c0f-2f00-100-be00-5855-9723-e1d-10dd.ngrok-free.app/api/image/delete",
+          {
+            method: "DELETE",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ publicId }),
+          }
+        );
         const data: ExpectedAsCloudinaryResponse = await response.json();
         if (data) {
           resolve(data);
@@ -325,14 +334,17 @@ export default function CreateStoreComponent() {
         storeLogo: secure_url,
       };
       try {
-        const response = await fetch("http://localhost:4200/api/stores", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${authToken}`,
-          },
-          body: JSON.stringify(storeData),
-        });
+        const response = await fetch(
+          "https://d87e-2c0f-2f00-100-be00-5855-9723-e1d-10dd.ngrok-free.app/api/stores",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${authToken}`,
+            },
+            body: JSON.stringify(storeData),
+          }
+        );
         const data: ExpectedAsStoreProps = await response.json();
         if (data.httpStatus === 201) {
           toast.success(data.message);
