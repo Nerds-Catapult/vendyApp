@@ -56,42 +56,42 @@ export default function Component() {
     for (let key in formData) {
       if (key === e.target.id) {
         setFormData({ ...formData, [key]: e.target.value });
-      } 
+      }
     }
   };
 
-const ValidateAuthToken = async (): Promise<ValidationAuthProps> => {
-  return new Promise(async (resolve, reject) => {
-    try {
-      const response = await fetch(
-        "https://d87e-2c0f-2f00-100-be00-5855-9723-e1d-10dd.ngrok-free.app/api/auth/validate",
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${authToken}`,
-          },
+  const ValidateAuthToken = async (): Promise<ValidationAuthProps> => {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const response = await fetch(
+          "https://3127-102-217-66-27.ngrok-free.app/api/auth/validate",
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${authToken}`,
+            },
+          }
+        );
+        const data: ValidationAuthProps = await response.json();
+        if (data) {
+          resolve(data);
+        } else {
+          reject("An error occurred while validating the token");
         }
-      );
-      const data: ValidationAuthProps = await response.json();
-      if (data) {
-        resolve(data);
-      } else {
+      } catch (error) {
         reject("An error occurred while validating the token");
+        console.log(error);
       }
-    } catch (error) {
-      reject("An error occurred while validating the token");
-      console.log(error);
-    }
-  });
-};
+    });
+  };
 
 const checkIfVendorHasStore =
   async (): Promise<checkIfVendorHasStoreReturnsBoolean> => {
     return new Promise(async (resolve, reject) => {
       try {
         const response = await fetch(
-          "https://d87e-2c0f-2f00-100-be00-5855-9723-e1d-10dd.ngrok-free.app/api/auth/hasStore",
+          "https://3127-102-217-66-27.ngrok-free.app/api/auth/hasStore",
           {
             method: "GET",
             headers: {
@@ -151,7 +151,7 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     }
     setLoading(true);
     const response = await fetch(
-      "https://d87e-2c0f-2f00-100-be00-5855-9723-e1d-10dd.ngrok-free.app/api/auth/login",
+      "https://3127-102-217-66-27.ngrok-free.app/api/auth/login",
       {
         method: "POST",
         headers: {

@@ -65,87 +65,63 @@ export default function Component() {
 
 
 
-  const ValidateAuthToken = async (): Promise<ValidationAuthProps> => {
-    return new Promise(async (resolve, reject) => {
-      try {
-        const response = await fetch(
-          "https://d87e-2c0f-2f00-100-be00-5855-9723-e1d-10dd.ngrok-free.app/api/auth/validate",
-          {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${authToken}`,
-            },
-          }
-        );
-        const data: ValidationAuthProps = await response.json();
-        if (data) {
-          resolve(data);
-        } else {
-          reject("An error occurred while validating the token");
-        }
-      } catch (error) {
-        reject("An error occurred while validating the token");
-        console.log(error);
-      }
-    });
-  };
+ const validateAuthToken = async (): Promise<ValidationAuthProps> => {
+  const response = await fetch("https://3127-102-217-66-27.ngrok-free.app/api/auth/validate", {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${authToken}`,
+    },
+  });
+  if (!response.ok) {
+    throw new Error("An error occurred while validating the token");
+  }
+  return await response.json();
+};
 
-  const checkIfVendorHasStore =
-    async (): Promise<checkIfVendorHasStoreReturnsBoolean> => {
-      return new Promise(async (resolve, reject) => {
+const checkIfVendorHasStore = async (): Promise<checkIfVendorHasStoreReturnsBoolean> => {
+  const response = await fetch("https://3127-102-217-66-27.ngrok-free.app/api/auth/hasStore", {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${authToken}`,
+    },
+  });
+  if (!response.ok) {
+    throw new Error("An error occurred while checking if vendor has store");
+  }
+  return await response.json();
+};
+
+
+useEffect(() => {
+    const handleAuth = async () => {
+      if (authToken) {
         try {
-          const response = await fetch(
-            "https://d87e-2c0f-2f00-100-be00-5855-9723-e1d-10dd.ngrok-free.app/api/auth/hasStore",
-            {
-              method: "GET",
-              headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${authToken}`,
-              },
+          const authData = await validateAuthToken();
+          if (authData.statusCode === 200) {
+            const storeData = await checkIfVendorHasStore();
+            if (storeData.hasStore) {
+              console.log("Vendor has store");
+              window.location.href = "/vendors/dashboard";
+            } else {
+              window.location.href = "/auth/vendors/stores/create";
             }
-          );
-          const data: checkIfVendorHasStoreReturnsBoolean =
-            await response.json();
-          if (data) {
-            resolve(data);
-          } else {
-            reject("An error occurred while checking if vendor has store");
-          }
-        } catch (error) {
-          reject("An error occurred while checking if vendor has store");
-        }
-      });
-    };
-
-
-  useEffect(() => {
-    if (authToken) {
-      ValidateAuthToken()
-        .then((data) => {
-          if (data.statusCode === 200) {
-            checkIfVendorHasStore()
-              .then((data) => {
-                if (data.hasStore) {
-                  console.log("Vendor has store");
-                  window.location.href = "/vendors/dashboard";
-                } else {
-                  window.location.href = "/auth/vendors/stores/create";
-                }
-              })
-              .catch((error) => {
-                console.log(error);
-              });
           } else {
             console.log("Token is invalid");
             Cookies.remove("storeToken");
           }
-        })
-        .catch((error) => {
-          console.log(error);
-        })}
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [,authToken]);
+        } catch (error) {
+          console.error(error);
+          Cookies.remove("storeToken");
+        }
+      }
+    };
+
+    handleAuth();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [authToken]);
+
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -156,7 +132,7 @@ export default function Component() {
       }
       setLoading(true);
       const response = await fetch(
-        "https://d87e-2c0f-2f00-100-be00-5855-9723-e1d-10dd.ngrok-free.app/api/vendors",
+        "https://3127-102-217-66-27.ngrok-free.app/api/vendors",
         {
           method: "POST",
           headers: {

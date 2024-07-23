@@ -23,7 +23,7 @@ export default function Component() {
     return new Promise(async (resolve, reject) => {
       try {
         const response = await fetch(
-          "https://d87e-2c0f-2f00-100-be00-5855-9723-e1d-10dd.ngrok-free.app/api/auth/validate",
+          "https://3127-102-217-66-27.ngrok-free.app/api/auth/validate",
           {
             method: "GET",
             headers: {
@@ -70,7 +70,7 @@ export default function Component() {
     try {
       const { email, password } = formData;
       const response = await fetch(
-        "https://d87e-2c0f-2f00-100-be00-5855-9723-e1d-10dd.ngrok-free.app/api/auth/login",
+        "https://3127-102-217-66-27.ngrok-free.app/api/auth/login",
         {
           method: "POST",
           headers: {

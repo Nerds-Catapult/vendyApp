@@ -13,7 +13,7 @@ const BestSellers = () => {
       setLoading(true);
       try {
         const response = await fetch(
-          "https://d87e-2c0f-2f00-100-be00-5855-9723-e1d-10dd.ngrok-free.app/api/businesses",
+          "https://3127-102-217-66-27.ngrok-free.app/api/businesses",
           {
             method: "GET",
             headers: {

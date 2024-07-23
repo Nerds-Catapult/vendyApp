@@ -14,7 +14,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
      try {
          const response = await axios.get(
-           "https://d87e-2c0f-2f00-100-be00-5855-9723-e1d-10dd.ngrok-free.app/api/auth/profile",
+           "https://3127-102-217-66-27.ngrok-free.app/api/auth/profile",
            { headers: { Authorization: `Bearer ${token}` } }
          );
             res.status(200).json(response.data)

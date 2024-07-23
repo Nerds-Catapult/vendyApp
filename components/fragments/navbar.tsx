@@ -29,14 +29,15 @@ import { ValidationAuthProps } from '@/app/types/foreignTypes';
 export default function Component() {
 
   const [user, setUser] = useState<boolean>(false);
+  const [vendor, setVendor] = useState<boolean>(false);
   const [authToken, setAthToken] = useState(Cookies.get("customerToken"));
+  const [storeToken, setStoreToken] = useState(Cookies.get("storeToken"));
 
-
-    const ValidateAuthToken = async (): Promise<ValidationAuthProps> => {
+  const ValidateAuthToken = async (): Promise<ValidationAuthProps> => {
     return new Promise(async (resolve, reject) => {
       try {
         const response = await fetch(
-          "https://d87e-2c0f-2f00-100-be00-5855-9723-e1d-10dd.ngrok-free.app/api/auth/validate",
+          "https://3127-102-217-66-27.ngrok-free.app/api/auth/validate",
           {
             method: "GET",
             headers: {
@@ -49,15 +50,42 @@ export default function Component() {
         console.log(data);
         if (data.statusCode === 200) {
           resolve(data);
-        } else if(data.statusCode === 401) {
+        } else if (data.statusCode === 401) {
           Cookies.remove("customerToken");
         }
       } catch (error) {
         reject("An error occurred while validating the token");
         console.log(error);
       }
-    })
-    }
+    });
+  };
+  
+  const validateVendorToken = async (): Promise<ValidationAuthProps> => {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const response = await fetch(
+          "https://3127-102-217-66-27.ngrok-free.app/api/auth/validate",
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${storeToken}`,
+            },
+          }
+        );
+        const data: ValidationAuthProps = await response.json();
+        console.log(data);
+        if (data.statusCode === 200) {
+          resolve(data);
+        } else if (data.statusCode === 401) {
+          Cookies.remove("storeToken");
+        }
+      } catch (error) {
+        reject("An error occurred while validating the token");
+        console.log(error);
+      }
+    });
+  };
   useEffect(() => {
     if (authToken) {
       ValidateAuthToken()
@@ -68,6 +96,13 @@ export default function Component() {
             setUser(false)
           }
         })
+      validateVendorToken().then((data) => {
+        if (data.statusCode === 200) {
+          setVendor(true);
+        } else {
+          setVendor(false);
+        }
+      });
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [authToken])
@@ -106,21 +141,19 @@ export default function Component() {
             Stores
           </Link>
           <Link
-            href="/auth/vendors/signup"
+            href={vendor ? "/auth/vendors/dashboard" : "/auth/vendors/signin"}
             className="px-4 py-2 rounded-md hover:bg-muted"
             prefetch={false}
           >
-            Create A store
+            {vendor ? "Dashboard" : "Create Store"}
           </Link>
 
           <Link
-            href= {user ? "/auth/customers/profile" : "/auth/customers/signin"}
+            href={user ? "/auth/customers/profile" : "/auth/customers/signin"}
             className="px-4 py-2 rounded-md hover:bg-muted"
             prefetch={false}
           >
-            {
-              user ? "profile" : "Sign In"
-            }
+            {user ? "profile" : "Sign In"}
           </Link>
         </nav>
         <div className="ml-auto flex items-center gap-4">
