@@ -64,7 +64,7 @@ export default function Component() {
     return new Promise(async (resolve, reject) => {
       try {
         const response = await fetch(
-          "https://3127-102-217-66-27.ngrok-free.app/api/auth/validate",
+          "https://goose-merry-mollusk.ngrok-free.app/api/auth/validate",
           {
             method: "GET",
             headers: {
@@ -86,31 +86,32 @@ export default function Component() {
     });
   };
 
-const checkIfVendorHasStore =
-  async (): Promise<checkIfVendorHasStoreReturnsBoolean> => {
-    return new Promise(async (resolve, reject) => {
-      try {
-        const response = await fetch(
-          "https://3127-102-217-66-27.ngrok-free.app/api/auth/hasStore",
-          {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${authToken}`,
-            },
+  const checkIfVendorHasStore =
+    async (): Promise<checkIfVendorHasStoreReturnsBoolean> => {
+      return new Promise(async (resolve, reject) => {
+        try {
+          const response = await fetch(
+            "https://goose-merry-mollusk.ngrok-free.app/api/auth/hasStore",
+            {
+              method: "GET",
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${authToken}`,
+              },
+            }
+          );
+          const data: checkIfVendorHasStoreReturnsBoolean =
+            await response.json();
+          if (data) {
+            resolve(data);
+          } else {
+            reject("An error occurred while checking if vendor has store");
           }
-        );
-        const data: checkIfVendorHasStoreReturnsBoolean = await response.json();
-        if (data) {
-          resolve(data);
-        } else {
+        } catch (error) {
           reject("An error occurred while checking if vendor has store");
         }
-      } catch (error) {
-        reject("An error occurred while checking if vendor has store");
-      }
-    });
-  };
+      });
+    };
 
 useEffect(() => {
   if (authToken) {
@@ -151,7 +152,7 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     }
     setLoading(true);
     const response = await fetch(
-      "https://3127-102-217-66-27.ngrok-free.app/api/auth/login",
+      "https://goose-merry-mollusk.ngrok-free.app/api/auth/login",
       {
         method: "POST",
         headers: {

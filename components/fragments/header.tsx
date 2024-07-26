@@ -15,7 +15,7 @@ export default function Component() {
 
 const fetchStores = async (): Promise<ReturnedStorePropsFromserver> => {
     return new Promise((resolve, reject) => {
-      fetch("https://3127-102-217-66-27.ngrok-free.app/api/stores", {
+      fetch("https://goose-merry-mollusk.ngrok-free.app/api/stores", {
         method: "GET",
         headers: {
           "Content-Type": "application/json",

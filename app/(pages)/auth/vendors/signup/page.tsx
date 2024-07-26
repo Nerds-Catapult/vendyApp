@@ -66,97 +66,107 @@ export default function Component() {
 
 
  const validateAuthToken = async (): Promise<ValidationAuthProps> => {
-  const response = await fetch("https://3127-102-217-66-27.ngrok-free.app/api/auth/validate", {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${authToken}`,
-    },
-  });
-  if (!response.ok) {
-    throw new Error("An error occurred while validating the token");
-  }
-  return await response.json();
-};
+   const response = await fetch(
+     "https://goose-merry-mollusk.ngrok-free.app/api/auth/validate",
+     {
+       method: "GET",
+       headers: {
+         "Content-Type": "application/json",
+         Authorization: `Bearer ${authToken}`,
+       },
+     }
+   );
+   if (!response.ok) {
+     throw new Error("An error occurred while validating the token");
+   }
+   return await response.json();
+ };
 
-const checkIfVendorHasStore = async (): Promise<checkIfVendorHasStoreReturnsBoolean> => {
-  const response = await fetch("https://3127-102-217-66-27.ngrok-free.app/api/auth/hasStore", {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${authToken}`,
-    },
-  });
-  if (!response.ok) {
-    throw new Error("An error occurred while checking if vendor has store");
-  }
-  return await response.json();
-};
+ const checkIfVendorHasStore =
+   async (): Promise<checkIfVendorHasStoreReturnsBoolean> => {
+     const response = await fetch(
+       "https://goose-merry-mollusk.ngrok-free.app/api/auth/hasStore",
+       {
+         method: "GET",
+         headers: {
+           "Content-Type": "application/json",
+           Authorization: `Bearer ${authToken}`,
+         },
+       }
+     );
+     if (!response.ok) {
+       throw new Error("An error occurred while checking if vendor has store");
+     }
+     return await response.json();
+   };
 
-
-useEffect(() => {
-    const handleAuth = async () => {
-      if (authToken) {
-        try {
-          const authData = await validateAuthToken();
-          if (authData.statusCode === 200) {
-            const storeData = await checkIfVendorHasStore();
-            if (storeData.hasStore) {
-              console.log("Vendor has store");
-              window.location.href = "/vendors/dashboard";
-            } else {
-              window.location.href = "/auth/vendors/stores/create";
-            }
-          } else {
-            console.log("Token is invalid");
-            Cookies.remove("storeToken");
-          }
-        } catch (error) {
-          console.error(error);
-          Cookies.remove("storeToken");
-        }
+  useEffect(() => {
+   setLoading(true);
+   const handleAuth = async () => {
+     if (authToken) {
+       try {
+         const authData = await validateAuthToken();
+         if (authData.statusCode === 200) {
+           const storeData = await checkIfVendorHasStore();
+           if (storeData.hasStore) {
+             console.log("Vendor has store");
+             window.location.href = "/vendors/dashboard";
+           } else {
+             window.location.href = "/auth/vendors/stores/create";
+           }
+         } else {
+           setLoading(false);
+           console.log("Token is invalid");
+           Cookies.remove("storeToken");
+         }
+       } catch (error) {
+          setLoading(false);
+         console.error(error);
+         Cookies.remove("storeToken");
+       }
+     } else {
+        setLoading(false);
       }
-    };
+   };
 
-    handleAuth();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [authToken]);
+   handleAuth();
+   // eslint-disable-next-line react-hooks/exhaustive-deps
+ }, [authToken]);
 
-
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    try {
-      const { firstName, lastName, email, password, phone } = formData;
-      if (!firstName || !lastName || !email || !password || !phone) {
-        return;
-      }
-      setLoading(true);
-      const response = await fetch(
-        "https://3127-102-217-66-27.ngrok-free.app/api/vendors",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(formData),
-        }
-      );
-      const data: VendorTypeFromServer = await response.json();
-      if (data) {
-        toast.success("Vendor created successfully");
-        Cookies.set("storeToken", data.token);
-        //refresh the page
-        window.location.href = "/auth/vendors/stores/create";
-      } else {
-        toast.error("An error occurred while creating the vendor, try again");
-      }
-      setLoading(false);
-    } catch (error) {
-      setLoading(false);
-      toast.error("An error occurred while creating the vendor, try again");
-      console.log(error);
-    }
-  };
+ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+   e.preventDefault();
+   try {
+     const { firstName, lastName, email, password, phone } = formData;
+     if (!firstName || !lastName || !email || !password || !phone) {
+       return;
+     }
+     setLoading(true);
+     const response = await fetch(
+       "https://goose-merry-mollusk.ngrok-free.app/api/vendors",
+       {
+         method: "POST",
+         headers: {
+           "Content-Type": "application/json",
+         },
+         body: JSON.stringify(formData),
+       }
+     );
+     const data: VendorTypeFromServer = await response.json();
+     if (data) {
+       toast.success("Vendor created successfully");
+       Cookies.set("storeToken", data.token);
+       //refresh the page
+       window.location.href = "/auth/vendors/stores/create";
+     } else {
+       toast.error("An error occurred while creating the vendor, try again");
+     }
+     setLoading(false);
+   } catch (error) {
+     setLoading(false);
+     toast.error("An error occurred while creating the vendor, try again");
+     console.log(error);
+   }
+ };
 
   
   return (

@@ -39,7 +39,7 @@ import {
   TableCell,
 } from "@/components/ui/table";
 import { JSX, SVGProps } from "react";
-
+import Image from "next/image";
 
 export default function Component() {
   return (
@@ -236,7 +236,7 @@ export default function Component() {
                 size="icon"
                 className="overflow-hidden rounded-full"
               >
-                <img
+                <Image
                   src="/placeholder.svg"
                   width={36}
                   height={36}
