@@ -52,22 +52,45 @@ export default function Component() {
     }
   
   useEffect(() => {
+    setLoading(true);
     ValidateAuthToken().then((data) => {
-      // console.log(data.statusCode);
       if (data.statusCode !== 200) {
-        Cookies.remove("storeToken");
-        window.location.href = "/auth/vendors/signin";
+        Cookies.remove("customerToken");
       } else {
-         window.location.href = "/auth/customers/profile";
+        window.location.href = "/auth/customers/profile";
       }
     }).catch((error) => {
       console.log(error);
+      setLoading(false);
     })
+    setLoading(false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [authToken]);
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setLoading(true);
+    fetch("https://goose-merry-mollusk.ngrok-free.app/api/auth/customers/signup", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(formData),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.statusCode === 201) {
+          Cookies.set("customerToken", data.data.token);
+          window.location.href = "/auth/customers/profile";
+        } else {
+          setLoading(false);
+          alert(data.message);
+        }
+      })
+      .catch((error) => {
+        setLoading(false);
+        console.log(error);
+      });
   };
   return (
     <div className="flex min-h-[100dvh] flex-col items-center justify-center bg-background px-4 py-12 sm:px-6 lg:px-8">
