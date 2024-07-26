@@ -17,7 +17,7 @@ export default function Component() {
     return new Promise(async (resolve, reject) => {
       try {
         const response = await fetch(
-          "https://3127-102-217-66-27.ngrok-free.app/api/auth/validate",
+          "https://goose-merry-mollusk.ngrok-free.app/api/auth/validate",
           {
             method: "GET",
             headers: {
@@ -42,7 +42,7 @@ export default function Component() {
   const fetchCustomerProfile = async () => {
     setLoading(true);
     const response = await fetch(
-      "https://3127-102-217-66-27.ngrok-free.app/api/auth/customer",
+      "https://goose-merry-mollusk.ngrok-free.app/api/auth/customer",
       {
         method: "GET",
         headers: {
@@ -56,6 +56,7 @@ export default function Component() {
       setData(data);
     } else {
       toast.error("session expired, please login again");
+      Cookies.remove("customerToken");
     }
   };
 
@@ -84,7 +85,8 @@ export default function Component() {
                 // @ts-ignore
                 data?.data?.firstName?.charAt(0).toUpperCase() +
                 // @ts-ignore
-                  data?.data.lastName?.charAt(0).toUpperCase()
+                data?.data.lastName?.charAt(0).toUpperCase()
+                || "A"
               }
             </AvatarFallback>
           </Avatar>

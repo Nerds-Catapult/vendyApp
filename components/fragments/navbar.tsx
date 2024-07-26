@@ -37,7 +37,7 @@ export default function Component() {
     return new Promise(async (resolve, reject) => {
       try {
         const response = await fetch(
-          "https://3127-102-217-66-27.ngrok-free.app/api/auth/validate",
+          "https://goose-merry-mollusk.ngrok-free.app/api/auth/validate",
           {
             method: "GET",
             headers: {
@@ -59,12 +59,12 @@ export default function Component() {
       }
     });
   };
-  
+
   const validateVendorToken = async (): Promise<ValidationAuthProps> => {
     return new Promise(async (resolve, reject) => {
       try {
         const response = await fetch(
-          "https://3127-102-217-66-27.ngrok-free.app/api/auth/validate",
+          "https://goose-merry-mollusk.ngrok-free.app/api/auth/validate",
           {
             method: "GET",
             headers: {
