@@ -186,10 +186,10 @@ export default function CreateStoreComponent() {
           );
           const data: checkIfVendorHasStoreReturnsBoolean =
             await response.json();
-          if (data) {
+          if (data.hasStore === true) {
             resolve(data);
           } else {
-            reject("An error occurred while checking if vendor has store");
+            reject("You do not have a store yet, please create one");
           }
         } catch (error) {
           reject("An error occurred while checking if vendor has store");

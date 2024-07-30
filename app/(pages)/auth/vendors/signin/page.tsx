@@ -12,6 +12,7 @@ import {
   VendorTypeFromServer,
   ValidationAuthProps,
   checkIfVendorHasStoreReturnsBoolean,
+  loginHttpResponse,
 } from "@/app/types/foreignTypes";
   
 
@@ -135,15 +136,14 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         body: JSON.stringify(formData),
       }
     );
-    const data: VendorTypeFromServer = await response.json();
-    if (data) {
+    const data: loginHttpResponse = await response.json();
+    if (data.httpStatus === 200) {
       toast.success("Vendor created successfully");
-      Cookies.set("storeToken", data.token);
-      //refresh the page
+      Cookies.set("storeToken", data.accessToken);
       window.location.href = "/auth/vendors/stores/create";
     } else {
       toast.error(
-        "An error occurred while fetching your vendor profile, try again"
+        toast.error(data.message)
       );
     }
     setLoading(false);

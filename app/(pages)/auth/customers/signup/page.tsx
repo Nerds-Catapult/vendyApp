@@ -57,6 +57,7 @@ export default function Component() {
       if (data.statusCode !== 200) {
         Cookies.remove("customerToken");
       } else {
+        
         window.location.href = "/auth/customers/profile";
       }
     }).catch((error) => {
