@@ -8,9 +8,11 @@ import { Button } from "@/components/ui/button";
 import { FormEvent, useState, useEffect } from "react";
 import Cookies from "js-cookie";
 
-
-import type { ValidationAuthProps, loginHttpResponse } from "@/app/types/foreignTypes";
-import {toast} from "react-hot-toast";
+import type {
+  ValidationAuthProps,
+  loginHttpResponse,
+} from "@/app/types/foreignTypes";
+import { toast } from "react-hot-toast";
 
 export default function Component() {
   const [formData, setFormData] = useState({
@@ -30,7 +32,7 @@ export default function Component() {
               "Content-Type": "application/json",
               Authorization: `Bearer ${authToken}`,
             },
-          }
+          },
         );
         const data: ValidationAuthProps = await response.json();
         console.log(data);
@@ -77,7 +79,7 @@ export default function Component() {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({ email, password }),
-        }
+        },
       );
       const data: loginHttpResponse = await response.json();
       if (data.httpStatus === 200) {
@@ -133,9 +135,7 @@ export default function Component() {
                 required
                 className="block w-full appearance-none rounded-md border border-input bg-background px-3 py-2 placeholder-muted-foreground shadow-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary sm:text-sm focus-visible:ring-primary focus-visible:ring-1 focus-visible:ring-offset-0"
               />
-              <span className="text-sm text-red-600">
-                {" "}
-              </span>
+              <span className="text-sm text-red-600"> </span>
             </div>
           </div>
           <div>
@@ -155,9 +155,7 @@ export default function Component() {
                 required
                 className="block w-full appearance-none rounded-md border border-input bg-background px-3 py-2 placeholder-muted-foreground shadow-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary sm:text-sm focus-visible:ring-primary focus-visible:ring-1 focus-visible:ring-offset-0"
               />
-              <span className="text-sm text-red-600">
-                {" "}
-              </span>
+              <span className="text-sm text-red-600"> </span>
             </div>
           </div>
           <div className="flex items-center justify-between">

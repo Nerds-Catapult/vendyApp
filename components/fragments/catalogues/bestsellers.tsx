@@ -1,7 +1,7 @@
-"use client"
+"use client";
 
 import { useState, useEffect } from "react";
-import { expectedBusinessInterface, expectedBusiness } from '@/app/types/index'
+import { expectedBusinessInterface, expectedBusiness } from "@/app/types/index";
 import Image from "next/image";
 
 const BestSellers = () => {
@@ -19,7 +19,7 @@ const BestSellers = () => {
             headers: {
               "Content-Type": "application/json",
             },
-          }
+          },
         );
         const data: expectedBusinessInterface = await response.json();
         if (data.entity) {

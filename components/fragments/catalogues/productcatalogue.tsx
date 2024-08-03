@@ -102,7 +102,7 @@ export default function Component() {
       .filter(
         (product) =>
           selectedCategories.length === 0 ||
-          selectedCategories.includes(product.category)
+          selectedCategories.includes(product.category),
       )
       .sort((a, b) => {
         if (sortBy === "name") {
@@ -112,14 +112,14 @@ export default function Component() {
         }
         return 0;
       });
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedCategories, sortBy]);
 
   const handleCategoryChange = (categoryId: string) => {
     setSelectedCategories((prevCategories) =>
       prevCategories.includes(categoryId)
         ? prevCategories.filter((id) => id !== categoryId)
-        : [...prevCategories, categoryId]
+        : [...prevCategories, categoryId],
     );
   };
 

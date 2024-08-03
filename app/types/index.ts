@@ -44,7 +44,6 @@ export interface asCloudinaryResponse {
   url: string;
 }
 
-
 export interface Business {
   id: string | number;
   name: string;
@@ -61,7 +60,6 @@ export interface ExpectedBusinessProps {
   message: string;
   entity: Business[] | null;
 }
-
 
 export interface Product {
   id: number;

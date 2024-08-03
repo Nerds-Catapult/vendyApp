@@ -1,6 +1,5 @@
 "use client";
 
-
 //TODO: all these auth functions can be state managed by the context api or redux
 import Link from "next/link";
 import { useEffect, useState } from "react";
@@ -155,7 +154,7 @@ export default function CreateStoreComponent() {
               "Content-Type": "application/json",
               Authorization: `Bearer ${authToken}`,
             },
-          }
+          },
         );
         const data: ValidationAuthProps = await response.json();
         if (data) {
@@ -182,14 +181,14 @@ export default function CreateStoreComponent() {
                 "Content-Type": "application/json",
                 Authorization: `Bearer ${authToken}`,
               },
-            }
+            },
           );
           const data: checkIfVendorHasStoreReturnsBoolean =
             await response.json();
-          if (data) {
+          if (data.hasStore === true) {
             resolve(data);
           } else {
-            reject("An error occurred while checking if vendor has store");
+            reject("You do not have a store yet, please create one");
           }
         } catch (error) {
           reject("An error occurred while checking if vendor has store");
@@ -214,7 +213,9 @@ export default function CreateStoreComponent() {
                 setLoading(false);
               });
           } else {
-            window.location.href = "/auth/vendors/login";
+            toast.success("session expired, please login again");
+            Cookies.remove("storeToken");
+            window.location.href = "/auth/vendors/signup";
           }
         })
         .catch((error) => {
@@ -238,7 +239,7 @@ export default function CreateStoreComponent() {
           headers: {
             "Content-Type": "application/json",
           },
-        }
+        },
       );
       const data: ExpectedAStoreCategory[] = await response.json();
       if (data) {
@@ -254,7 +255,7 @@ export default function CreateStoreComponent() {
   }, [formData]);
 
   const uploadImageToCloudinary = async (
-    file: File
+    file: File,
   ): Promise<ExpectedAsCloudinaryResponse> => {
     const formData = new FormData();
     formData.append("file", file);
@@ -265,7 +266,7 @@ export default function CreateStoreComponent() {
           {
             method: "POST",
             body: formData,
-          }
+          },
         );
         const data: ExpectedAsCloudinaryResponse = await response.json();
         if (data) {
@@ -296,7 +297,7 @@ export default function CreateStoreComponent() {
   };
 
   const invokeImageDelete = async (
-    publicId: string
+    publicId: string,
   ): Promise<ExpectedAsCloudinaryResponse> => {
     return new Promise(async (resolve, reject) => {
       try {
@@ -308,7 +309,7 @@ export default function CreateStoreComponent() {
               "Content-Type": "application/json",
             },
             body: JSON.stringify({ publicId }),
-          }
+          },
         );
         const data: ExpectedAsCloudinaryResponse = await response.json();
         if (data) {
@@ -343,7 +344,7 @@ export default function CreateStoreComponent() {
               Authorization: `Bearer ${authToken}`,
             },
             body: JSON.stringify(storeData),
-          }
+          },
         );
         const data: ExpectedAsStoreProps = await response.json();
         if (data.httpStatus === 201) {
@@ -384,8 +385,8 @@ export default function CreateStoreComponent() {
                 <div className="space-y-2">
                   <Label htmlFor="storeName">Store Name</Label>
                   <Input
-                      id="storeName"
-                      name="storeName"
+                    id="storeName"
+                    name="storeName"
                     placeholder="Enter store name"
                     onChange={handleInputChange}
                   />
@@ -410,8 +411,8 @@ export default function CreateStoreComponent() {
               <div className="grid grid-cols-2 gap-6">
                 <div className="space-y-2">
                   <Label htmlFor="storeLocation">Store Location</Label>
-                    <Input
-                      name="storeLocation"
+                  <Input
+                    name="storeLocation"
                     id="storeLocation"
                     placeholder="Enter store location"
                     onChange={handleInputChange}
@@ -419,8 +420,8 @@ export default function CreateStoreComponent() {
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="fullName">Owner Full Names</Label>
-                    <Input
-                      name="ownerName"
+                  <Input
+                    name="ownerName"
                     id="ownerName"
                     placeholder="Enter owner name"
                     onChange={handleInputChange}
@@ -430,8 +431,8 @@ export default function CreateStoreComponent() {
               <div className="grid grid-cols-2 gap-6">
                 <div className="space-y-2">
                   <Label htmlFor="owneremail">Owner Email</Label>
-                    <Input
-                      name="ownerEmail"
+                  <Input
+                    name="ownerEmail"
                     id="ownerEmail"
                     type="email"
                     placeholder="Enter Your Vendor email"
@@ -440,8 +441,8 @@ export default function CreateStoreComponent() {
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="ownerPhone">Owner Phone</Label>
-                    <Input
-                      name="ownerPhone"
+                  <Input
+                    name="ownerPhone"
                     id="ownerPhone"
                     type="tel"
                     placeholder="Enter Vendor phone"
@@ -451,8 +452,8 @@ export default function CreateStoreComponent() {
 
                 <div className="space-y-2">
                   <Label htmlFor="storeAddress">Store Address</Label>
-                    <Input
-                      name="storeAddress"
+                  <Input
+                    name="storeAddress"
                     id="storeAddress"
                     type="text"
                     placeholder="Enter store address"
@@ -478,8 +479,8 @@ export default function CreateStoreComponent() {
 
                 <div className="space-y-2">
                   <Label htmlFor="ward">Store ward</Label>
-                    <Input
-                      name="ward"
+                  <Input
+                    name="ward"
                     id="ward"
                     type="text"
                     placeholder="Enter store ward"
@@ -489,8 +490,8 @@ export default function CreateStoreComponent() {
 
                 <div className="space-y-2">
                   <Label htmlFor="storeArea">Store Area</Label>
-                    <Input
-                      name="storeArea"
+                  <Input
+                    name="storeArea"
                     id="storeArea"
                     type="text"
                     placeholder="Enter store Area"

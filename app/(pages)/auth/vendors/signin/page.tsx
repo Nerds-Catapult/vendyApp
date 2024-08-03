@@ -12,12 +12,11 @@ import {
   VendorTypeFromServer,
   ValidationAuthProps,
   checkIfVendorHasStoreReturnsBoolean,
+  loginHttpResponse,
 } from "@/app/types/foreignTypes";
-  
 
 //login component
 export default function Component() {
-
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -45,7 +44,7 @@ export default function Component() {
               "Content-Type": "application/json",
               Authorization: `Bearer ${authToken}`,
             },
-          }
+          },
         );
         const data: ValidationAuthProps = await response.json();
         if (data) {
@@ -72,7 +71,7 @@ export default function Component() {
                 "Content-Type": "application/json",
                 Authorization: `Bearer ${authToken}`,
               },
-            }
+            },
           );
           const data: checkIfVendorHasStoreReturnsBoolean =
             await response.json();
@@ -87,74 +86,74 @@ export default function Component() {
       });
     };
 
-useEffect(() => {
-  if (authToken) {
-    ValidateAuthToken()
-      .then((data) => {
-        if (data.statusCode === 200) {
-          checkIfVendorHasStore()
-            .then((data) => {
-              if (data.hasStore) {
-                console.log("Vendor has store");
-                window.location.href = "/vendors/dashboard";
-              } else {
-                window.location.href = "/auth/vendors/stores/create";
-              }
-            })
-            .catch((error) => {
-              console.log(error);
-            });
-        } else {
-          console.log("Token is invalid");
-          Cookies.remove("storeToken");
-        }
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-}, [, authToken]);
+  useEffect(() => {
+    if (authToken) {
+      setLoading(true)
+      ValidateAuthToken()
+        .then((data) => {
+          if (data.statusCode === 200) {
+            checkIfVendorHasStore()
+              .then((data) => {
+                if (data.hasStore) {
+                  console.log("Vendor has store");
+                  window.location.href = "/vendors/dashboard";
+                } else {
+                  window.location.href = "/auth/vendors/stores/create";
+                }
+              })
+              .catch((error) => {
+                console.log(error);
+                setLoading(false);
+              });
+          } else {
+            console.log(data.message);
+            toast.error(data.message);
+          }
+        })
+        .catch((error) => {
+          setLoading(false);
+          console.log(error);
+        });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [, authToken]);
 
-//TODO:double check this logic
-const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-  e.preventDefault();
-  try {
-    const { email, password } = formData;
-    if (!email || !password) {
-      return;
-    }
-    setLoading(true);
-    const response = await fetch(
-      "https://goose-merry-mollusk.ngrok-free.app/api/auth/login",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
+  //TODO:double check this logic
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    try {
+      const { email, password } = formData;
+      if (!email || !password) {
+        return;
       }
-    );
-    const data: VendorTypeFromServer = await response.json();
-    if (data) {
-      toast.success("Vendor created successfully");
-      Cookies.set("storeToken", data.token);
-      //refresh the page
-      window.location.href = "/auth/vendors/stores/create";
-    } else {
-      toast.error(
-        "An error occurred while fetching your vendor profile, try again"
+      setLoading(true);
+      const response = await fetch(
+        "https://goose-merry-mollusk.ngrok-free.app/api/auth/login",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(formData),
+        },
       );
+      const data: loginHttpResponse = await response.json();
+      if (data.httpStatus === 200) {
+        toast.success("Vendor created successfully");
+        Cookies.set("storeToken", data.accessToken);
+        window.location.href = "/auth/vendors/stores/create";
+      } else {
+        toast.error(toast.error(data.message));
+      }
+      setLoading(false);
+    } catch (error) {
+      setLoading(false);
+      toast.error(
+        "An error occurred while fetching your vendor profile, try again",
+      );
+      console.log(error);
     }
-    setLoading(false);
-  } catch (error) {
-    setLoading(false);
-    toast.error(
-      "An error occurred while fetching your vendor profile, try again"
-    );
-    console.log(error);
-  }
-};
+  };
   return (
     <>
       l

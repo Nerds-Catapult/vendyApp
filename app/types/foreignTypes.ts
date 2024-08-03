@@ -1,27 +1,23 @@
-
-
-
-export interface VendorTypeFromServer { 
-    /*
-    * This is the expected response from the server, includes profile table and vendor table
-    * when a vendor is fetched
-    * when a vendor is created
-    * when a vendor is updated
-    * vendorId and profileId are the same
-    */
+export interface VendorTypeFromServer {
+  /*
+   * This is the expected response from the server, includes profile table and vendor table
+   * when a vendor is fetched
+   * when a vendor is created
+   * when a vendor is updated
+   * vendorId and profileId are the same
+   */
+  id: number;
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone: string;
+  role: string; // vendor
+  isActive: boolean;
+  vendor: {
     id: number;
-    firstName: string;
-    lastName: string;
-    email: string;
-    phone: string;
-    role: string; // vendor
-    isActive: boolean;
-    vendor: {
-        id: number;
-    }
+  };
   token: string;
 }
-
 
 export interface ValidationAuthProps {
   payload: {
@@ -30,13 +26,11 @@ export interface ValidationAuthProps {
     id: number;
     iat: number;
     exp: number;
-  } | null
-  error: string | null
-  message: string
-  statusCode: number
+  } | null;
+  error: string | null;
+  message: string;
+  statusCode: number;
 }
-
-
 
 export interface Store {
   id: number;
@@ -46,7 +40,7 @@ export interface Store {
   ownerName: string;
   ownerEmail: string;
   ownerPhone: string;
-  storeLogo: string 
+  storeLogo: string;
   county: string;
   ward: string;
   isActive: boolean;
@@ -54,11 +48,10 @@ export interface Store {
   categoryId: number;
   createdAt: string;
   updatedAt: string;
-}[]
+}
+[];
 
-
-
-export interface ExpectedAsStoreProps extends Store  {
+export interface ExpectedAsStoreProps extends Store {
   message: string;
   httpStatus: number;
 }
@@ -74,7 +67,8 @@ export interface ExpectedAStoreCategory {
   description: string;
   createdAt: string;
   updatedAt: string;
-}[];
+}
+[];
 
 export interface ExpectedAsCloudinaryResponse {
   public_id: string;
@@ -104,39 +98,37 @@ export interface ExpectedAsCloudinaryResponse {
   };
 }
 
-
-
-
 export interface loginHttpResponse {
   message: string;
   httpStatus: number;
   accessToken: string;
 }
 
-
 export interface ExpectedAsCustomerTypes {
   statusCode: number;
   message: string;
   data: {
     id: number;
-  firstName: string;
-  lastName: string;
-  email: string;
-  phone: string;
-  role: string;
-  isActive: boolean;
-  createdAt: string;
-  updatedAt: string;
-  customer: {
-    id: number;
-    profileId: number;
-    orders: {
+    firstName: string;
+    lastName: string;
+    email: string;
+    phone: string;
+    role: string;
+    isActive: boolean;
+    createdAt: string;
+    updatedAt: string;
+    customer: {
       id: number;
-      orderNumber: string;
-      orderStatus: string;
-    }[] | []
-  }
-  } 
+      profileId: number;
+      orders:
+        | {
+            id: number;
+            orderNumber: string;
+            orderStatus: string;
+          }[]
+        | [];
+    };
+  };
 }
 /* 
 <div className="flex-shrink-0">

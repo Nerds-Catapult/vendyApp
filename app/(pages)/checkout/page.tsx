@@ -183,7 +183,9 @@ function AppleIcon(props: JSX.IntrinsicAttributes & SVGProps<SVGSVGElement>) {
   );
 }
 
-function CreditCardIcon(props: JSX.IntrinsicAttributes & SVGProps<SVGSVGElement>) {
+function CreditCardIcon(
+  props: JSX.IntrinsicAttributes & SVGProps<SVGSVGElement>,
+) {
   return (
     <svg
       {...props}
@@ -203,7 +205,9 @@ function CreditCardIcon(props: JSX.IntrinsicAttributes & SVGProps<SVGSVGElement>
   );
 }
 
-function WalletCardsIcon(props: JSX.IntrinsicAttributes & SVGProps<SVGSVGElement>) {
+function WalletCardsIcon(
+  props: JSX.IntrinsicAttributes & SVGProps<SVGSVGElement>,
+) {
   return (
     <svg
       {...props}
