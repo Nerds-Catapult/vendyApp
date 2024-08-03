@@ -1,6 +1,6 @@
 "use client";
 
-import React, {useState, useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import Cookies from "js-cookie";
 import { Label } from "@/components/ui/label";
@@ -8,13 +8,9 @@ import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 import LoadingComponent from "@/components/ui/loading";
-import { ValidationAuthProps} from '@/app/types/foreignTypes';
-
-
+import { ValidationAuthProps } from "@/app/types/foreignTypes";
 
 export default function Component() {
-
-
   const [loading, setLoading] = useState(false);
   const [authToken, setAuthToken] = useState(Cookies.get("storeToken"));
   const [formData, setFormData] = useState({
@@ -25,7 +21,7 @@ export default function Component() {
     password: "",
   });
 
-    const ValidateAuthToken = async (): Promise<ValidationAuthProps> => {
+  const ValidateAuthToken = async (): Promise<ValidationAuthProps> => {
     return new Promise(async (resolve, reject) => {
       try {
         const response = await fetch(
@@ -36,7 +32,7 @@ export default function Component() {
               "Content-Type": "application/json",
               Authorization: `Bearer ${authToken}`,
             },
-          }
+          },
         );
         const data: ValidationAuthProps = await response.json();
         if (data) {
@@ -48,22 +44,23 @@ export default function Component() {
         reject("An error occurred while validating the token");
         console.log(error);
       }
-    })
-    }
-  
+    });
+  };
+
   useEffect(() => {
     setLoading(true);
-    ValidateAuthToken().then((data) => {
-      if (data.statusCode !== 200) {
-        Cookies.remove("customerToken");
-      } else {
-        
-        window.location.href = "/auth/customers/profile";
-      }
-    }).catch((error) => {
-      console.log(error);
-      setLoading(false);
-    })
+    ValidateAuthToken()
+      .then((data) => {
+        if (data.statusCode !== 200) {
+          Cookies.remove("customerToken");
+        } else {
+          window.location.href = "/auth/customers/profile";
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+        setLoading(false);
+      });
     setLoading(false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [authToken]);
@@ -71,13 +68,16 @@ export default function Component() {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
-    fetch("https://goose-merry-mollusk.ngrok-free.app/api/auth/customers/signup", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
+    fetch(
+      "https://goose-merry-mollusk.ngrok-free.app/api/auth/customers/signup",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
       },
-      body: JSON.stringify(formData),
-    })
+    )
       .then((response) => response.json())
       .then((data) => {
         if (data.statusCode === 201) {
@@ -133,8 +133,7 @@ export default function Component() {
                 required
                 className="block w-full appearance-none rounded-md border border-input bg-background px-3 py-2 placeholder-muted-foreground shadow-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary sm:text-sm focus-visible:ring-primary focus-visible:ring-1 focus-visible:ring-offset-0"
               />
-              <span>
-              </span>
+              <span></span>
             </div>
           </div>
           <div>

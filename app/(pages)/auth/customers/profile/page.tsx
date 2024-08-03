@@ -5,11 +5,14 @@ import { JSX, SVGProps, useEffect, useState } from "react";
 import Image from "next/image";
 import Cookies from "js-cookie";
 
-import { ExpectedAsCustomerTypes, ValidationAuthProps } from "@/app/types/foreignTypes";
+import {
+  ExpectedAsCustomerTypes,
+  ValidationAuthProps,
+} from "@/app/types/foreignTypes";
 import toast from "react-hot-toast";
 
 export default function Component() {
-  const [data, setData] = useState<ExpectedAsCustomerTypes | null >(null);
+  const [data, setData] = useState<ExpectedAsCustomerTypes | null>(null);
   const [authToken] = useState(Cookies.get("customerToken"));
   const [loading, setLoading] = useState(false);
 
@@ -24,7 +27,7 @@ export default function Component() {
               "Content-Type": "application/json",
               Authorization: `Bearer ${authToken}`,
             },
-          }
+          },
         );
         const data: ValidationAuthProps = await response.json();
         if (data) {
@@ -49,7 +52,7 @@ export default function Component() {
           "Content-Type": "application/json",
           Authorization: `Bearer ${authToken}`,
         },
-      }
+      },
     );
     const data: ExpectedAsCustomerTypes = await response.json();
     if (response.ok) {
@@ -61,19 +64,20 @@ export default function Component() {
   };
 
   useEffect(() => {
-    ValidateAuthToken().then((data) => {
-      if (data.statusCode !== 200) {
-        Cookies.remove("customerToken");
-        window.location.href = "/auth/customers/signin";
-      } else {
-        fetchCustomerProfile();
-      }
-    }).catch((error) => {
-      console.log(error);
-    });
+    ValidateAuthToken()
+      .then((data) => {
+        if (data.statusCode !== 200) {
+          Cookies.remove("customerToken");
+          window.location.href = "/auth/customers/signin";
+        } else {
+          fetchCustomerProfile();
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [authToken]);
-
 
   return (
     <div className="w-full max-w-4xl mx-auto py-8 md:py-12">
@@ -84,18 +88,15 @@ export default function Component() {
               {
                 // @ts-ignore
                 data?.data?.firstName?.charAt(0).toUpperCase() +
-                // @ts-ignore
-                data?.data.lastName?.charAt(0).toUpperCase()
-                || "A"
+                  // @ts-ignore
+                  data?.data.lastName?.charAt(0).toUpperCase() || "A"
               }
             </AvatarFallback>
           </Avatar>
         </div>
         <div className="flex-1 space-y-2">
           <h1 className="text-2xl md:text-3xl font-bold">
-            {
-              data?.data.firstName + " " + data?.data.lastName
-            }
+            {data?.data.firstName + " " + data?.data.lastName}
           </h1>
         </div>
       </div>
@@ -107,22 +108,14 @@ export default function Component() {
               <MailIcon className="w-5 h-5 text-muted-foreground" />
               <div>
                 <div className="font-medium">Email</div>
-                <div className="text-muted-foreground">
-                  {
-                    data?.data.email
-                  }
-                </div>
+                <div className="text-muted-foreground">{data?.data.email}</div>
               </div>
             </div>
             <div className="flex items-center gap-3">
               <PhoneIcon className="w-5 h-5 text-muted-foreground" />
               <div>
                 <div className="font-medium">Phone</div>
-                <div className="text-muted-foreground">
-                  {
-                    data?.data.phone
-                  }
-                </div>
+                <div className="text-muted-foreground">{data?.data.phone}</div>
               </div>
             </div>
             <div className="flex items-center gap-3">
@@ -142,54 +135,44 @@ export default function Component() {
             <div className="flex items-center justify-between">
               <div className="font-medium">Joined</div>
               <div className="text-muted-foreground">
-                {
-                  data?.data.createdAt.split("T")[0]
-                }
+                {data?.data.createdAt.split("T")[0]}
               </div>
             </div>
           </div>
         </div>
         <div className="md:col-span-2">
           <h2 className="text-lg font-semibold mb-4">Order History</h2>
-          {
-            data?.data.customer.orders? (
-              <div className="text-muted-foreground text-center">
-                No orders yet
-              </div>
-            ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {
-                  data?.data?.customer?.orders?.map((order) => (
-                    <div
-                      key={order.id}
-                      className="flex items-center justify-between p-4 bg-white rounded-lg shadow-sm"
-                    >
-                      <div>
-                        <div className="text-sm font-medium text-muted-foreground">
-                          Order Number
-                        </div>
-                        <div className="text-lg font-semibold">
-                          {
-                            order.orderNumber
-                          }
-                        </div>
-                      </div>
-                      <div>
-                        <div className="text-sm font-medium text-muted-foreground">
-                          Status
-                        </div>
-                        <div className="text-lg font-semibold">
-                          {
-                            order.orderStatus
-                          }
-                        </div>
-                      </div>
+          {data?.data.customer.orders ? (
+            <div className="text-muted-foreground text-center">
+              No orders yet
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {data?.data?.customer?.orders?.map((order) => (
+                <div
+                  key={order.id}
+                  className="flex items-center justify-between p-4 bg-white rounded-lg shadow-sm"
+                >
+                  <div>
+                    <div className="text-sm font-medium text-muted-foreground">
+                      Order Number
                     </div>
-                  ))
-                }
-              </div>
-            )
-          }
+                    <div className="text-lg font-semibold">
+                      {order.orderNumber}
+                    </div>
+                  </div>
+                  <div>
+                    <div className="text-sm font-medium text-muted-foreground">
+                      Status
+                    </div>
+                    <div className="text-lg font-semibold">
+                      {order.orderStatus}
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       </div>
     </div>

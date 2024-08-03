@@ -1,5 +1,14 @@
-"use client"
+"use client";
 
+import {
+  MenuIcon,
+  ShoppingCartIcon,
+  SearchIcon,
+  XIcon,
+  MinusIcon,
+  MountainIcon,
+  PlusIcon,
+} from "lucide-react";
 
 import Link from "next/link";
 import { Input } from "@/components/ui/input";
@@ -17,48 +26,14 @@ import {
   SheetClose,
 } from "@/components/ui/sheet";
 import Image from "next/image";
-import { JSX, SVGProps, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Cookies from "js-cookie";
 import { toast } from "react-hot-toast";
-import { ValidationAuthProps } from '@/app/types/foreignTypes';
-
-
-
-
+import { ValidationAuthProps } from "@/app/types/foreignTypes";
 
 export default function Component() {
-
-  const [user, setUser] = useState<boolean>(false);
   const [vendor, setVendor] = useState<boolean>(false);
-  const [authToken, setAthToken] = useState(Cookies.get("customerToken"));
   const [storeToken, setStoreToken] = useState(Cookies.get("storeToken"));
-
-  const ValidateAuthToken = async (): Promise<ValidationAuthProps> => {
-    return new Promise(async (resolve, reject) => {
-      try {
-        const response = await fetch(
-          "https://goose-merry-mollusk.ngrok-free.app/api/auth/validate",
-          {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${authToken}`,
-            },
-          }
-        );
-        const data: ValidationAuthProps = await response.json();
-        console.log(data);
-        if (data.statusCode === 200) {
-          resolve(data);
-        } else if (data.statusCode === 401) {
-          Cookies.remove("customerToken");
-        }
-      } catch (error) {
-        reject("An error occurred while validating the token");
-        console.log(error);
-      }
-    });
-  };
 
   const validateVendorToken = async (): Promise<ValidationAuthProps> => {
     return new Promise(async (resolve, reject) => {
@@ -71,7 +46,7 @@ export default function Component() {
               "Content-Type": "application/json",
               Authorization: `Bearer ${storeToken}`,
             },
-          }
+          },
         );
         const data: ValidationAuthProps = await response.json();
         console.log(data);
@@ -86,26 +61,22 @@ export default function Component() {
       }
     });
   };
+
   useEffect(() => {
-    if (authToken) {
-      ValidateAuthToken()
+    if (storeToken) {
+      validateVendorToken()
         .then((data) => {
           if (data.statusCode === 200) {
-            setUser(true)
-          } else {
-            setUser(false)
+            setVendor(true);
           }
         })
-      validateVendorToken().then((data) => {
-        if (data.statusCode === 200) {
-          setVendor(true);
-        } else {
-          setVendor(false);
-        }
-      });
+        .catch((error) => {
+          toast.error(error);
+        });
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [authToken])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [storeToken]);
+
   return (
     <header className="sticky top-0 z-40 w-full bg-background border-b">
       <div className="container flex items-center h-16 px-4 md:px-6">
@@ -141,19 +112,11 @@ export default function Component() {
             Stores
           </Link>
           <Link
-            href={vendor ? "/auth/vendors/dashboard" : "/auth/vendors/signin"}
+            href={vendor ? "/auth/vendors/dashboard" : "/auth/vendors/signup"}
             className="px-4 py-2 rounded-md hover:bg-muted"
             prefetch={false}
           >
-            {vendor ? "Dashboard" : "Create Store"}
-          </Link>
-
-          <Link
-            href={user ? "/auth/customers/profile" : "/auth/customers/signin"}
-            className="px-4 py-2 rounded-md hover:bg-muted"
-            prefetch={false}
-          >
-            {user ? "profile" : "Sign In"}
+            {vendor ? "My store" : "Create Store"}
           </Link>
         </nav>
         <div className="ml-auto flex items-center gap-4">
@@ -315,145 +278,5 @@ export default function Component() {
         </div>
       </div>
     </header>
-  );
-}
-
-function MenuIcon(props: JSX.IntrinsicAttributes & SVGProps<SVGSVGElement>) {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <line x1="4" x2="20" y1="12" y2="12" />
-      <line x1="4" x2="20" y1="6" y2="6" />
-      <line x1="4" x2="20" y1="18" y2="18" />
-    </svg>
-  );
-}
-
-function MinusIcon(props: JSX.IntrinsicAttributes & SVGProps<SVGSVGElement>) {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M5 12h14" />
-    </svg>
-  );
-}
-
-function MountainIcon(props: JSX.IntrinsicAttributes & SVGProps<SVGSVGElement>) {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="m8 3 4 8 5-5 5 15H2L8 3z" />
-    </svg>
-  );
-}
-
-function PlusIcon(props: JSX.IntrinsicAttributes & SVGProps<SVGSVGElement>) {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M5 12h14" />
-      <path d="M12 5v14" />
-    </svg>
-  );
-}
-
-function SearchIcon(props: JSX.IntrinsicAttributes & SVGProps<SVGSVGElement>) {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <circle cx="11" cy="11" r="8" />
-      <path d="m21 21-4.3-4.3" />
-    </svg>
-  );
-}
-
-function ShoppingCartIcon(props: JSX.IntrinsicAttributes & SVGProps<SVGSVGElement>) {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <circle cx="8" cy="21" r="1" />
-      <circle cx="19" cy="21" r="1" />
-      <path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12" />
-    </svg>
-  );
-}
-
-function XIcon(props: JSX.IntrinsicAttributes & SVGProps<SVGSVGElement>) {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M18 6 6 18" />
-      <path d="m6 6 12 12" />
-    </svg>
   );
 }

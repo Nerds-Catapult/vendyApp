@@ -6,7 +6,7 @@ export default function Home() {
     <main className="">
       <Header />
       <section className="container mx-auto px-4 md:px-6 py-8">
-        <ProductCatalogue/>
+        <ProductCatalogue />
       </section>
     </main>
   );

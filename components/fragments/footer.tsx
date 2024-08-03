@@ -7,7 +7,6 @@ import Link from "next/link";
 import { JSX, SVGProps } from "react";
 import Image from "next/image";
 
-
 export default function Component() {
   return (
     <footer className="bg-muted py-12 text-muted-foreground">
@@ -96,7 +95,9 @@ export default function Component() {
   );
 }
 
-function FacebookIcon(props: JSX.IntrinsicAttributes & SVGProps<SVGSVGElement>) {
+function FacebookIcon(
+  props: JSX.IntrinsicAttributes & SVGProps<SVGSVGElement>,
+) {
   return (
     <svg
       {...props}
@@ -115,7 +116,9 @@ function FacebookIcon(props: JSX.IntrinsicAttributes & SVGProps<SVGSVGElement>) 
   );
 }
 
-function InstagramIcon(props: JSX.IntrinsicAttributes & SVGProps<SVGSVGElement>) {
+function InstagramIcon(
+  props: JSX.IntrinsicAttributes & SVGProps<SVGSVGElement>,
+) {
   return (
     <svg
       {...props}
@@ -136,7 +139,9 @@ function InstagramIcon(props: JSX.IntrinsicAttributes & SVGProps<SVGSVGElement>)
   );
 }
 
-function LinkedinIcon(props: JSX.IntrinsicAttributes & SVGProps<SVGSVGElement>) {
+function LinkedinIcon(
+  props: JSX.IntrinsicAttributes & SVGProps<SVGSVGElement>,
+) {
   return (
     <svg
       {...props}
