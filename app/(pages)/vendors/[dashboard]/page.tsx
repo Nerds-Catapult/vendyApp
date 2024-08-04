@@ -47,11 +47,70 @@ import {
   PlusIcon,
 } from "@/components/ui/Icons";
 
+import {
+  ExpectedAsProductTypes,
+  ExpectedAStoreCategory as ProductTypes
+ } from "@/app/types/foreignTypes";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 export default function Component() {
 
+  const [products, setProducts] = useState<ExpectedAsProductTypes[]>([]);
+  const [storeDetails, setStoreDetails] = useState<ExpectedAsProductTypes | null>(null);
+  const [productCategory, setProductCategory] = useState<ProductTypes[]>([]);
   const [storeId, setStoreId] = useState<number | null>(11);
+
+  async function fetchProducts() {
+    const response = await fetch(`https://goose-merry-mollusk.ngrok-free.app/api/products/many/${storeId}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    const data = await response.json();
+    setProducts(data);
+  }
+
+  const fetchStoreDetails = async () => {
+    const response = await fetch(`https://goose-merry-mollusk.ngrok-free.app/api/stores/${storeId}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    const data = await response.json();
+    setStoreDetails(data);
+  }
+
+    const fetchStoreCategories = async () => {
+      try {
+        const response = await fetch(
+          "https://goose-merry-mollusk.ngrok-free.app/api/store-category",
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          },
+        );
+        const data: ProductTypes[] = await response.json();
+        if (data) {
+          setProductCategory(data);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+  useEffect(() => {
+    fetchProducts();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  //dynamic products
+
+
+
   return (
     <div className="grid min-h-screen w-full grid-cols-[280px_1fr]">
       <div className="hidden border-r bg-muted/40 lg:block">
@@ -144,7 +203,7 @@ export default function Component() {
                 className="rounded-full border w-8 h-8"
               >
                 <Image
-                  src="/placeholder.svg"
+                  src="/"
                   width="32"
                   height="32"
                   className="rounded-full"
@@ -171,6 +230,8 @@ export default function Component() {
               <TabsTrigger value="create">Create Product</TabsTrigger>
               <TabsTrigger value="edit">Edit Product</TabsTrigger>
             </TabsList>
+
+            {/* PRODUCTS */}
             <TabsContent value="products">
               <div className="border shadow-sm rounded-lg">
                 <Table>
@@ -191,132 +252,63 @@ export default function Component() {
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    <TableRow>
-                      <TableCell>
-                        <Image
-                          src="/placeholder.svg"
-                          width="64"
-                          height="64"
-                          alt="Product image"
-                          className="aspect-square rounded-md object-cover"
-                        />
-                      </TableCell>
-                      <TableCell className="font-medium">
-                        Glimmer Lamps
-                      </TableCell>
-                      <TableCell className="hidden md:table-cell">
-                        Elegant and stylish lamps for your home
-                      </TableCell>
-                      <TableCell className="hidden md:table-cell">
-                        $49.99
-                      </TableCell>
-                      <TableCell className="hidden md:table-cell">
-                        500
-                      </TableCell>
-                      <TableCell>
-                        <DropdownMenu>
-                          <DropdownMenuTrigger asChild>
-                            <Button
-                              aria-haspopup="true"
-                              size="icon"
-                              variant="ghost"
-                            >
-                              <MoveVerticalIcon className="h-4 w-4" />
-                              <span className="sr-only">Toggle menu</span>
-                            </Button>
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent align="end">
-                            <DropdownMenuItem>Edit</DropdownMenuItem>
-                            <DropdownMenuItem>Delete</DropdownMenuItem>
-                            <DropdownMenuItem>View Details</DropdownMenuItem>
-                          </DropdownMenuContent>
-                        </DropdownMenu>
-                      </TableCell>
-                    </TableRow>
-                    <TableRow>
-                      <TableCell>
-                        <Image
-                          src="/placeholder.svg"
-                          width="64"
-                          height="64"
-                          alt="Product image"
-                          className="aspect-square rounded-md object-cover"
-                        />
-                      </TableCell>
-                      <TableCell className="font-medium">
-                        Aqua Filters
-                      </TableCell>
-                      <TableCell className="hidden md:table-cell">
-                        High-quality water filters for your home
-                      </TableCell>
-                      <TableCell className="hidden md:table-cell">
-                        $29.99
-                      </TableCell>
-                      <TableCell className="hidden md:table-cell">
-                        750
-                      </TableCell>
-                      <TableCell>
-                        <DropdownMenu>
-                          <DropdownMenuTrigger asChild>
-                            <Button
-                              aria-haspopup="true"
-                              size="icon"
-                              variant="ghost"
-                            >
-                              <MoveVerticalIcon className="h-4 w-4" />
-                              <span className="sr-only">Toggle menu</span>
-                            </Button>
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent align="end">
-                            <DropdownMenuItem>Edit</DropdownMenuItem>
-                            <DropdownMenuItem>Delete</DropdownMenuItem>
-                            <DropdownMenuItem>View Details</DropdownMenuItem>
-                          </DropdownMenuContent>
-                        </DropdownMenu>
-                      </TableCell>
-                    </TableRow>
-                    <TableRow>
-                      <TableCell>
-                        <Image
-                          src="/placeholder.svg"
-                          width="64"
-                          height="64"
-                          alt="Product image"
-                          className="aspect-square rounded-md object-cover"
-                        />
-                      </TableCell>
-                      <TableCell className="font-medium">
-                        Eco Planters
-                      </TableCell>
-                      <TableCell className="hidden md:table-cell">
-                        Sustainable and eco-friendly planters
-                      </TableCell>
-                      <TableCell className="hidden md:table-cell">
-                        $19.99
-                      </TableCell>
-                      <TableCell className="hidden md:table-cell">
-                        300
-                      </TableCell>
-                      <TableCell>
-                        <DropdownMenu>
-                          <DropdownMenuTrigger asChild>
-                            <Button
-                              aria-haspopup="true"
-                              size="icon"
-                              variant="ghost"
-                            >
-                              <MoveVerticalIcon className="h-4 w-4" />
-                              <span className="sr-only">Toggle menu</span>
-                            </Button>
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent align="end">
-                            <DropdownMenuItem>Edit</DropdownMenuItem>
-                            <DropdownMenuItem>Delete</DropdownMenuItem>
-                            <DropdownMenuItem>View Details</DropdownMenuItem>
-                          </DropdownMenuContent>
-                        </DropdownMenu>
-                      </TableCell>
-                    </TableRow>
+                      {products?.length > 0 ? (
+                        products.map((product, index) => {
+                          return (
+                            <TableRow key={index}>
+                              <TableCell>
+                                <Image
+                                  src={product.productImage}
+                                  width="64"
+                                  height="64"
+                                  alt="Product image"
+                                  className="aspect-square rounded-md object-cover"
+                                />
+                              </TableCell>
+                              <TableCell className="font-medium">
+                                {product.productName}
+                              </TableCell>
+                              <TableCell className="hidden md:table-cell">
+                                {product.productDescription}
+                              </TableCell>
+                              <TableCell className="hidden md:table-cell">
+                                ${product.productPrice}
+                              </TableCell>
+                              <TableCell className="hidden md:table-cell">
+                                {product.productStatus}
+                              </TableCell>
+                              <TableCell>
+                                <DropdownMenu>
+                                  <DropdownMenuTrigger asChild>
+                                    <Button
+                                      aria-haspopup="true"
+                                      size="icon"
+                                      variant="ghost"
+                                    >
+                                      <MoveVerticalIcon className="h-4 w-4" />
+                                      <span className="sr-only">
+                                        Toggle menu
+                                      </span>
+                                    </Button>
+                                  </DropdownMenuTrigger>
+                                  <DropdownMenuContent align="end">
+                                    <DropdownMenuItem>Edit</DropdownMenuItem>
+                                    <DropdownMenuItem>Delete</DropdownMenuItem>
+                                    <DropdownMenuItem>
+                                      View Details
+                                    </DropdownMenuItem>
+                                  </DropdownMenuContent>
+                                </DropdownMenu>
+                              </TableCell>
+                            </TableRow>
+                          );
+                        })
+                      ) : (
+                        <span className="w-96 h-24 flex justify-center items-center">
+                          {" "}
+                          No Products found
+                        </span>
+                      )}
                   </TableBody>
                 </Table>
               </div>
@@ -332,47 +324,25 @@ export default function Component() {
                 <CardContent>
                   <form className="grid gap-4">
                     <div className="grid gap-2">
-                      <Label htmlFor="name">Name</Label>
-                      <Input id="name" type="text" />
+                      <Label htmlFor="productName">Name</Label>
+                      <Input id="productName" type="text" />
                     </div>
                     <div className="grid gap-2">
-                      <Label htmlFor="description">Description</Label>
+                      <Label htmlFor="productDescription">Description</Label>
                       <Textarea id="description" rows={3} />
                     </div>
                     <div className="grid gap-2 sm:grid-cols-2">
                       <div className="grid gap-2">
-                        <Label htmlFor="price">Price</Label>
+                        <Label htmlFor="productPrice">Price</Label>
                         <Input id="price" type="number" />
                       </div>
                       <div className="grid gap-2">
-                        <Label htmlFor="stock">Stock</Label>
-                        <Input id="stock" type="number" />
+                        <Label htmlFor="quantity">quantity</Label>
+                        <Input id="quanity" type="number" />
                       </div>
-                    </div>
-                    <div className="grid gap-2">
-                      <Label>Product Images</Label>
-                      <div className="grid grid-cols-3 gap-2">
-                        <Button
-                          variant="outline"
-                          className="aspect-square rounded-md"
-                        >
-                          <PlusIcon className="h-4 w-4" />
-                          <span className="sr-only">Add image</span>
-                        </Button>
-                        <Image
-                          src="/placeholder.svg"
-                          width="84"
-                          height="84"
-                          alt="Product image"
-                          className="aspect-square rounded-md object-cover"
-                        />
-                        <Image
-                          src="/placeholder.svg"
-                          width="84"
-                          height="84"
-                          alt="Product image"
-                          className="aspect-square rounded-md object-cover"
-                        />
+                      <div className="grid gap-2">
+                        <Label htmlFor="productImage">Image</Label>
+                        <Input id="productImage" type="file" />
                       </div>
                     </div>
                   </form>
@@ -416,32 +386,6 @@ export default function Component() {
                       <div className="grid gap-2">
                         <Label htmlFor="stock">Stock</Label>
                         <Input id="stock" type="number" defaultValue={500} />
-                      </div>
-                    </div>
-                    <div className="grid gap-2">
-                      <Label>Product Images</Label>
-                      <div className="grid grid-cols-3 gap-2">
-                        <Button
-                          variant="outline"
-                          className="aspect-square rounded-md"
-                        >
-                          <PlusIcon className="h-4 w-4" />
-                          <span className="sr-only">Add image</span>
-                        </Button>
-                        <Image
-                          src="/placeholder.svg"
-                          width="84"
-                          height="84"
-                          alt="Product image"
-                          className="aspect-square rounded-md object-cover"
-                        />
-                        <Image
-                          src="/placeholder.svg"
-                          width="84"
-                          height="84"
-                          alt="Product image"
-                          className="aspect-square rounded-md object-cover"
-                        />
                       </div>
                     </div>
                   </form>

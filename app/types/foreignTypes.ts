@@ -131,6 +131,20 @@ export interface ExpectedAsCustomerTypes {
     };
   };
 }
+
+
+export interface ExpectedAsProductTypes {
+  id: number;
+  productName: string;
+  productDescription: string;
+  productPrice: number;
+  productImage: string;
+  productCategory: string;
+  productStatus: string;
+  storeId: number;
+  createdAt: string;
+  updatedAt: string;
+}
 /* 
 <div className="flex-shrink-0">
                 <Link href="#" className="group" prefetch={false}>

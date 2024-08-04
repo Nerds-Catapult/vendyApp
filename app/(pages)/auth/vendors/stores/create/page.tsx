@@ -39,9 +39,7 @@ import {
 export default function CreateStoreComponent() {
 
   const [loading, setLoading] = useState(false);
-  const [storeCategories, setStoreCategories] = useState<
-    ExpectedAStoreCategory[]
-  >([]);
+  const [storeCategories, setStoreCategories] = useState<ExpectedAStoreCategory[]>([]);
   const [authToken, setAuthTokem] = useState(Cookies.get("storeToken"));
   const [fileData, setFileData] = useState<File | null>(null);
   const [formData, setFormData] = useState({
