@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import Cookies from "js-cookie";
 import toast from "react-hot-toast";
+import { counties, categories } from "@/constants/constants";
 import LoadingComponent from "@/components/ui/loading";
 import {
   Card,
@@ -36,64 +37,6 @@ import {
 } from "@/app/types/foreignTypes";
 
 export default function CreateStoreComponent() {
-  const counties = [
-    "Baringo",
-    "Bomet",
-    "Bungoma",
-    "Busia",
-    "Elgeyo-Marakwet",
-    "Embu",
-    "Garissa",
-    "Homa Bay",
-    "Isiolo",
-    "Kajiado",
-    "Kakamega",
-    "Kericho",
-    "Kiambu",
-    "Kilifi",
-    "Kirinyaga",
-    "Kisii",
-    "Kisumu",
-    "Kitui",
-    "Kwale",
-    "Laikipia",
-    "Lamu",
-    "Machakos",
-    "Makueni",
-    "Mandera",
-    "Marsabit",
-    "Meru",
-    "Migori",
-    "Mombasa",
-    "Murang'a",
-    "Nairobi",
-    "Nakuru",
-    "Nandi",
-    "Narok",
-    "Nyamira",
-    "Nyandarua",
-    "Nyeri",
-    "Samburu",
-    "Siaya",
-    "Taita-Taveta",
-    "Tana River",
-    "Tharaka-Nithi",
-    "Trans Nzoia",
-    "Turkana",
-    "Uasin Gishu",
-    "Vihiga",
-    "Wajir",
-    "West Pokot",
-  ];
-  const categories = [
-    "Clothing",
-    "Electronics",
-    "Home Decor",
-    "Beauty",
-    "Sports",
-    "Toys",
-    "Other",
-  ];
 
   const [loading, setLoading] = useState(false);
   const [storeCategories, setStoreCategories] = useState<
@@ -378,7 +321,7 @@ export default function CreateStoreComponent() {
         </CardHeader>
         <CardContent>
           {loading ? ( //TODO: Add a loading spinner
-            <p>Loading...</p>
+            <p>Checking your Email...</p>
           ) : (
             <form className="grid gap-6" onSubmit={handleFormSubmit}>
               <div className="grid grid-cols-2 gap-6">

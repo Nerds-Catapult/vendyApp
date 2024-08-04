@@ -25,7 +25,7 @@ export default function Component() {
     firstName: "",
     lastName: "",
     email: "",
-    password: "",
+    password: "testing",
     phone: "",
   });
 
@@ -83,7 +83,7 @@ export default function Component() {
             const storeData = await checkIfVendorHasStore();
             if (storeData.hasStore) {
               console.log("Vendor has store");
-              window.location.href = "/vendors/dashboard";
+              window.location.href = `/vendors/dashboard/${storeData.storeId}`;
             } else {
               window.location.href = "/auth/vendors/stores/create";
             }
@@ -217,7 +217,8 @@ export default function Component() {
                     type="password"
                     placeholder="Enter a password"
                     required
-                    onChange={handleChange}
+                      onChange={handleChange}
+                      value = {formData.password}
                   />
                 </div>
                 <div>

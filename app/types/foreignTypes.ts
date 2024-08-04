@@ -58,6 +58,7 @@ export interface ExpectedAsStoreProps extends Store {
 
 export interface checkIfVendorHasStoreReturnsBoolean {
   hasStore: boolean;
+  storeId: number;
   store: Store | null | undefined;
 }
 

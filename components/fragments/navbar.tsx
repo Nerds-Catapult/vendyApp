@@ -30,6 +30,7 @@ import { useEffect, useState } from "react";
 import Cookies from "js-cookie";
 import { toast } from "react-hot-toast";
 import { ValidationAuthProps } from "@/app/types/foreignTypes";
+import { Store } from '../../app/types/foreignTypes';
 
 export default function Component() {
   const [vendor, setVendor] = useState<boolean>(false);
@@ -202,6 +203,7 @@ export default function Component() {
               </div>
             </DrawerContent>
           </Drawer>
+          {/* only shown on smaller devices */}
           <Sheet>
             <SheetTrigger asChild>
               <Button
@@ -221,7 +223,6 @@ export default function Component() {
                     className="flex items-center gap-2"
                     prefetch={false}
                   >
-                    <MountainIcon className="h-6 w-6" />
                     <span className="font-medium">Vendy MarketPlace</span>
                   </Link>
                   <SheetClose asChild>
@@ -241,21 +242,25 @@ export default function Component() {
                     className="px-4 py-2 rounded-md hover:bg-muted"
                     prefetch={false}
                   >
-                    New
+                    Stores List
+                  </Link>
+                  <Link
+                    href={
+                      vendor
+                        ? "/auth/vendors/dashboard"
+                        : "/auth/vendors/signup"
+                    }
+                    className="px-4 py-2 rounded-md hover:bg-muted"
+                    prefetch={false}
+                  >
+                    {vendor ? "My store" : "Create Store"}
                   </Link>
                   <Link
                     href="#"
                     className="px-4 py-2 rounded-md hover:bg-muted"
                     prefetch={false}
                   >
-                    Clothing
-                  </Link>
-                  <Link
-                    href="#"
-                    className="px-4 py-2 rounded-md hover:bg-muted"
-                    prefetch={false}
-                  >
-                    Accessories
+                    FAQ
                   </Link>
                   <Link
                     href="#"
@@ -263,13 +268,6 @@ export default function Component() {
                     prefetch={false}
                   >
                     Home
-                  </Link>
-                  <Link
-                    href="#"
-                    className="px-4 py-2 rounded-md hover:bg-muted"
-                    prefetch={false}
-                  >
-                    Beauty
                   </Link>
                 </nav>
               </div>
