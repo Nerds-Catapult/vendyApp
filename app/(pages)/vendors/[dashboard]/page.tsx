@@ -1,18 +1,17 @@
-import {
-  TooltipProvider,
-  Tooltip,
-  TooltipTrigger,
-  TooltipContent,
-} from "@/components/ui/tooltip";
+"use client";
+
+
 import Link from "next/link";
-import { Sheet, SheetTrigger, SheetContent } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import {
-  Breadcrumb,
-  BreadcrumbList,
-  BreadcrumbItem,
-  BreadcrumbLink,
-} from "@/components/ui/breadcrumb";
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent,
+  CardFooter,
+} from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import {
   DropdownMenu,
@@ -22,13 +21,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuItem,
 } from "@/components/ui/dropdown-menu";
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-  CardContent,
-} from "@/components/ui/card";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import {
   Table,
   TableHeader,
@@ -37,211 +30,128 @@ import {
   TableBody,
   TableCell,
 } from "@/components/ui/table";
-import { JSX, SVGProps } from "react";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 import Image from "next/image";
 
-export default function Component({ params }: { params: { id: number } }) {
+import {
+  HomeIcon,
+  ShoppingCartIcon,
+  PackageIcon,
+  UsersIcon,
+  LineChartIcon,
+  Package2Icon,
+  BellIcon,
+  SearchIcon,
+  MoveVerticalIcon,
+  PlusIcon,
+} from "@/components/ui/Icons";
+
+
+import { useState } from "react";
+export default function Component() {
+
+  const [storeId, setStoreId] = useState<number | null>(11);
   return (
-    <div className="flex min-h-screen w-full flex-col bg-muted/40">
-      <aside className="fixed inset-y-0 left-0 z-10 hidden w-14 flex-col border-r bg-background sm:flex">
-        <nav className="flex flex-col items-center gap-4 px-2 sm:py-5">
-          <TooltipProvider>
+    <div className="grid min-h-screen w-full grid-cols-[280px_1fr]">
+      <div className="hidden border-r bg-muted/40 lg:block">
+        <div className="flex h-full max-h-screen flex-col gap-2">
+          <div className="flex h-[60px] items-center border-b px-6">
             <Link
               href="#"
-              className="group flex h-9 w-9 shrink-0 items-center justify-center gap-2 rounded-full bg-primary text-lg font-semibold text-primary-foreground md:h-8 md:w-8 md:text-base"
+              className="flex items-center gap-2 font-semibold"
               prefetch={false}
             >
-              <Package2Icon className="h-4 w-4 transition-all group-hover:scale-110" />
-              <span className="sr-only">Acme Inc</span>
+              <span className="">Vendy</span>
             </Link>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Link
-                  href="#"
-                  className="flex h-9 w-9 items-center justify-center rounded-lg bg-accent text-accent-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
-                  prefetch={false}
-                >
-                  <HomeIcon className="h-5 w-5" />
-                  <span className="sr-only">Dashboard</span>
-                </Link>
-              </TooltipTrigger>
-              <TooltipContent side="right">Dashboard</TooltipContent>
-            </Tooltip>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Link
-                  href="#"
-                  className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
-                  prefetch={false}
-                >
-                  <ShoppingCartIcon className="h-5 w-5" />
-                  <span className="sr-only">Orders</span>
-                </Link>
-              </TooltipTrigger>
-              <TooltipContent side="right">Orders</TooltipContent>
-            </Tooltip>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Link
-                  href="#"
-                  className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
-                  prefetch={false}
-                >
-                  <PackageIcon className="h-5 w-5" />
-                  <span className="sr-only">Products</span>
-                </Link>
-              </TooltipTrigger>
-              <TooltipContent side="right">Products</TooltipContent>
-            </Tooltip>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Link
-                  href="#"
-                  className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
-                  prefetch={false}
-                >
-                  <UsersIcon className="h-5 w-5" />
-                  <span className="sr-only">Customers</span>
-                </Link>
-              </TooltipTrigger>
-              <TooltipContent side="right">Customers</TooltipContent>
-            </Tooltip>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Link
-                  href="#"
-                  className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
-                  prefetch={false}
-                >
-                  <LineChartIcon className="h-5 w-5" />
-                  <span className="sr-only">Analytics</span>
-                </Link>
-              </TooltipTrigger>
-              <TooltipContent side="right">Analytics</TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
-        </nav>
-        <nav className="mt-auto flex flex-col items-center gap-4 px-2 sm:py-5">
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Link
-                  href="#"
-                  className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
-                  prefetch={false}
-                >
-                  <SettingsIcon className="h-5 w-5" />
-                  <span className="sr-only">Settings</span>
-                </Link>
-              </TooltipTrigger>
-              <TooltipContent side="right">Settings</TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
-        </nav>
-      </aside>
-      <div className="flex flex-col sm:gap-4 sm:py-4 sm:pl-14">
-        <header className="sticky top-0 z-30 flex h-14 items-center gap-4 border-b bg-background px-4 sm:static sm:h-auto sm:border-0 sm:bg-transparent sm:px-6">
-          <Sheet>
-            <SheetTrigger asChild>
-              <Button size="icon" variant="outline" className="sm:hidden">
-                <MenuIcon className="h-5 w-5" />
-                <span className="sr-only">Toggle Menu</span>
-              </Button>
-            </SheetTrigger>
-            <SheetContent side="left" className="sm:max-w-xs">
-              <nav className="grid gap-6 text-lg font-medium">
-                <Link
-                  href="#"
-                  className="group flex h-10 w-10 shrink-0 items-center justify-center gap-2 rounded-full bg-primary text-lg font-semibold text-primary-foreground md:text-base"
-                  prefetch={false}
-                >
-                  <Package2Icon className="h-5 w-5 transition-all group-hover:scale-110" />
-                  <span className="sr-only">Acme Inc</span>
-                </Link>
-                <Link
-                  href="#"
-                  className="flex items-center gap-4 px-2.5 text-accent hover:text-accent-foreground"
-                  prefetch={false}
-                >
-                  <HomeIcon className="h-5 w-5" />
-                  Dashboard
-                </Link>
-                <Link
-                  href="#"
-                  className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
-                  prefetch={false}
-                >
-                  <ShoppingCartIcon className="h-5 w-5" />
-                  Orders
-                </Link>
-                <Link
-                  href="#"
-                  className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
-                  prefetch={false}
-                >
-                  <PackageIcon className="h-5 w-5" />
-                  Products
-                </Link>
-                <Link
-                  href="#"
-                  className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
-                  prefetch={false}
-                >
-                  <UsersIcon className="h-5 w-5" />
-                  Customers
-                </Link>
-                <Link
-                  href="#"
-                  className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
-                  prefetch={false}
-                >
-                  <LineChartIcon className="h-5 w-5" />
-                  Analytics
-                </Link>
-                <Link
-                  href="#"
-                  className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
-                  prefetch={false}
-                >
-                  <SettingsIcon className="h-5 w-5" />
-                  Settings
-                </Link>
-              </nav>
-            </SheetContent>
-          </Sheet>
-          <Breadcrumb className="hidden md:flex">
-            <BreadcrumbList>
-              <BreadcrumbItem>
-                <BreadcrumbLink asChild>
-                  <Link href="#" prefetch={false}>
-                    Dashboard
-                  </Link>
-                </BreadcrumbLink>
-              </BreadcrumbItem>
-            </BreadcrumbList>
-          </Breadcrumb>
-          <div className="relative ml-auto flex-1 md:grow-0">
-            <SearchIcon className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-            <Input
-              type="search"
-              placeholder="Search..."
-              className="w-full rounded-lg bg-background pl-8 md:w-[200px] lg:w-[336px]"
-            />
+            <Button variant="outline" size="icon" className="ml-auto h-8 w-8">
+              <BellIcon className="h-4 w-4" />
+              <span className="sr-only">Toggle notifications</span>
+            </Button>
+          </div>
+          <div className="flex-1 overflow-auto py-2">
+            <nav className="grid items-start px-4 text-sm font-medium">
+              <Link
+                href="#"
+                className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
+                prefetch={false}
+              >
+                <HomeIcon className="h-4 w-4" />
+                Home
+              </Link>
+              <Link
+                href="#"
+                className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
+                prefetch={false}
+              >
+                <ShoppingCartIcon className="h-4 w-4" />
+                Orders
+                <Badge className="ml-auto flex h-6 w-6 shrink-0 items-center justify-center rounded-full">
+                  6
+                </Badge>
+              </Link>
+              <Link
+                href="#"
+                className="flex items-center gap-3 rounded-lg bg-muted px-3 py-2 text-primary  transition-all hover:text-primary"
+                prefetch={false}
+              >
+                <PackageIcon className="h-4 w-4" />
+                Products{" "}
+              </Link>
+              <Link
+                href="#"
+                className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
+                prefetch={false}
+              >
+                <UsersIcon className="h-4 w-4" />
+                Customers
+              </Link>
+              <Link
+                href="#"
+                className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
+                prefetch={false}
+              >
+                <LineChartIcon className="h-4 w-4" />
+                Analytics
+              </Link>
+            </nav>
+          </div>
+        </div>
+      </div>
+      <div className="flex flex-col">
+        <header className="flex h-14 lg:h-[60px] items-center gap-4 border-b bg-muted/40 px-6">
+          <Link href="#" className="lg:hidden" prefetch={false}>
+            <Package2Icon className="h-6 w-6" />
+            <span className="sr-only">Home</span>
+          </Link>
+          <div className="w-full flex-1">
+            <form>
+              <div className="relative">
+                <SearchIcon className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+                <Input
+                  type="search"
+                  placeholder="Search products..."
+                  className="w-full bg-background shadow-none appearance-none pl-8 md:w-2/3 lg:w-1/3"
+                />
+              </div>
+            </form>
           </div>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button
-                variant="outline"
+                variant="ghost"
                 size="icon"
-                className="overflow-hidden rounded-full"
+                className="rounded-full border w-8 h-8"
               >
                 <Image
                   src="/placeholder.svg"
-                  width={36}
-                  height={36}
+                  width="32"
+                  height="32"
+                  className="rounded-full"
                   alt="Avatar"
-                  className="overflow-hidden rounded-full"
+                  style={{ aspectRatio: "32/32", objectFit: "cover" }}
                 />
+                <span className="sr-only">Toggle user menu</span>
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
@@ -254,390 +164,296 @@ export default function Component({ params }: { params: { id: number } }) {
             </DropdownMenuContent>
           </DropdownMenu>
         </header>
-        <main className="grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8">
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-            <Card>
-              <CardHeader>
-                <CardTitle>Total Sales</CardTitle>
-                <CardDescription>
-                  The total amount of sales across all your stores.
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="text-4xl font-bold">$125,432</div>
-                <div className="text-sm text-muted-foreground">
-                  +15% from last month
-                </div>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardHeader>
-                <CardTitle>New Orders</CardTitle>
-                <CardDescription>
-                  The number of new orders received across all your stores.
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="text-4xl font-bold">342</div>
-                <div className="text-sm text-muted-foreground">
-                  +8% from last month
-                </div>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardHeader>
-                <CardTitle>Active Customers</CardTitle>
-                <CardDescription>
-                  The number of active customers across all your stores.
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="text-4xl font-bold">1,234</div>
-                <div className="text-sm text-muted-foreground">
-                  +3% from last month
-                </div>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardHeader>
-                <CardTitle>Pending Orders</CardTitle>
-                <CardDescription>
-                  The number of orders that are currently pending across all
-                  your stores.
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="text-4xl font-bold">78</div>
-                <div className="text-sm text-muted-foreground">
-                  -2% from last month
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-            <Card>
-              <CardHeader>
-                <CardTitle>Top Selling Products</CardTitle>
-                <CardDescription>
-                  The best-selling products across all your stores.
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
+        <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-6">
+          <Tabs defaultValue="products">
+            <TabsList className="flex items-center gap-4">
+              <TabsTrigger value="products">Products</TabsTrigger>
+              <TabsTrigger value="create">Create Product</TabsTrigger>
+              <TabsTrigger value="edit">Edit Product</TabsTrigger>
+            </TabsList>
+            <TabsContent value="products">
+              <div className="border shadow-sm rounded-lg">
                 <Table>
                   <TableHeader>
                     <TableRow>
-                      <TableHead>Product</TableHead>
-                      <TableHead>Sales</TableHead>
+                      <TableHead className="w-[80px]">Image</TableHead>
+                      <TableHead className="max-w-[150px]">Name</TableHead>
+                      <TableHead className="hidden md:table-cell">
+                        Description
+                      </TableHead>
+                      <TableHead className="hidden md:table-cell">
+                        Price
+                      </TableHead>
+                      <TableHead className="hidden md:table-cell">
+                        Stock
+                      </TableHead>
+                      <TableHead>Actions</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
                     <TableRow>
-                      <TableCell className="font-medium">
-                        Wireless Headphones
+                      <TableCell>
+                        <Image
+                          src="/placeholder.svg"
+                          width="64"
+                          height="64"
+                          alt="Product image"
+                          className="aspect-square rounded-md object-cover"
+                        />
                       </TableCell>
-                      <TableCell>1,234</TableCell>
+                      <TableCell className="font-medium">
+                        Glimmer Lamps
+                      </TableCell>
+                      <TableCell className="hidden md:table-cell">
+                        Elegant and stylish lamps for your home
+                      </TableCell>
+                      <TableCell className="hidden md:table-cell">
+                        $49.99
+                      </TableCell>
+                      <TableCell className="hidden md:table-cell">
+                        500
+                      </TableCell>
+                      <TableCell>
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <Button
+                              aria-haspopup="true"
+                              size="icon"
+                              variant="ghost"
+                            >
+                              <MoveVerticalIcon className="h-4 w-4" />
+                              <span className="sr-only">Toggle menu</span>
+                            </Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent align="end">
+                            <DropdownMenuItem>Edit</DropdownMenuItem>
+                            <DropdownMenuItem>Delete</DropdownMenuItem>
+                            <DropdownMenuItem>View Details</DropdownMenuItem>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+                      </TableCell>
                     </TableRow>
                     <TableRow>
-                      <TableCell className="font-medium">
-                        Smart Watches
+                      <TableCell>
+                        <Image
+                          src="/placeholder.svg"
+                          width="64"
+                          height="64"
+                          alt="Product image"
+                          className="aspect-square rounded-md object-cover"
+                        />
                       </TableCell>
-                      <TableCell>987</TableCell>
+                      <TableCell className="font-medium">
+                        Aqua Filters
+                      </TableCell>
+                      <TableCell className="hidden md:table-cell">
+                        High-quality water filters for your home
+                      </TableCell>
+                      <TableCell className="hidden md:table-cell">
+                        $29.99
+                      </TableCell>
+                      <TableCell className="hidden md:table-cell">
+                        750
+                      </TableCell>
+                      <TableCell>
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <Button
+                              aria-haspopup="true"
+                              size="icon"
+                              variant="ghost"
+                            >
+                              <MoveVerticalIcon className="h-4 w-4" />
+                              <span className="sr-only">Toggle menu</span>
+                            </Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent align="end">
+                            <DropdownMenuItem>Edit</DropdownMenuItem>
+                            <DropdownMenuItem>Delete</DropdownMenuItem>
+                            <DropdownMenuItem>View Details</DropdownMenuItem>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+                      </TableCell>
                     </TableRow>
                     <TableRow>
-                      <TableCell className="font-medium">
-                        Fitness Trackers
+                      <TableCell>
+                        <Image
+                          src="/placeholder.svg"
+                          width="64"
+                          height="64"
+                          alt="Product image"
+                          className="aspect-square rounded-md object-cover"
+                        />
                       </TableCell>
-                      <TableCell>765</TableCell>
-                    </TableRow>
-                    <TableRow>
                       <TableCell className="font-medium">
-                        Bluetooth Speakers
+                        Eco Planters
                       </TableCell>
-                      <TableCell>543</TableCell>
+                      <TableCell className="hidden md:table-cell">
+                        Sustainable and eco-friendly planters
+                      </TableCell>
+                      <TableCell className="hidden md:table-cell">
+                        $19.99
+                      </TableCell>
+                      <TableCell className="hidden md:table-cell">
+                        300
+                      </TableCell>
+                      <TableCell>
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <Button
+                              aria-haspopup="true"
+                              size="icon"
+                              variant="ghost"
+                            >
+                              <MoveVerticalIcon className="h-4 w-4" />
+                              <span className="sr-only">Toggle menu</span>
+                            </Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent align="end">
+                            <DropdownMenuItem>Edit</DropdownMenuItem>
+                            <DropdownMenuItem>Delete</DropdownMenuItem>
+                            <DropdownMenuItem>View Details</DropdownMenuItem>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+                      </TableCell>
                     </TableRow>
                   </TableBody>
                 </Table>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardHeader>
-                <CardTitle>Order Fulfillment Status</CardTitle>
-                <CardDescription>
-                  The current status of order fulfillment across all your
-                  stores.
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="grid grid-cols-3 gap-4 text-center">
-                  <div>
-                    <div className="text-4xl font-bold">78%</div>
-                    <div className="text-sm text-muted-foreground">
-                      Fulfilled
+              </div>
+            </TabsContent>
+            <TabsContent value="create">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Create Product</CardTitle>
+                  <CardDescription>
+                    Fill out the form to create a new product.
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <form className="grid gap-4">
+                    <div className="grid gap-2">
+                      <Label htmlFor="name">Name</Label>
+                      <Input id="name" type="text" />
                     </div>
-                  </div>
-                  <div>
-                    <div className="text-4xl font-bold">12%</div>
-                    <div className="text-sm text-muted-foreground">Pending</div>
-                  </div>
-                  <div>
-                    <div className="text-4xl font-bold">10%</div>
-                    <div className="text-sm text-muted-foreground">
-                      Cancelled
+                    <div className="grid gap-2">
+                      <Label htmlFor="description">Description</Label>
+                      <Textarea id="description" rows={3} />
                     </div>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardHeader>
-                <CardTitle>Customer Analytics</CardTitle>
-                <CardDescription>
-                  Insights into your customer base across all your stores.
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="grid grid-cols-2 gap-4 text-center">
-                  <div>
-                    <div className="text-4xl font-bold">54%</div>
-                    <div className="text-sm text-muted-foreground">
-                      Repeat Customers
+                    <div className="grid gap-2 sm:grid-cols-2">
+                      <div className="grid gap-2">
+                        <Label htmlFor="price">Price</Label>
+                        <Input id="price" type="number" />
+                      </div>
+                      <div className="grid gap-2">
+                        <Label htmlFor="stock">Stock</Label>
+                        <Input id="stock" type="number" />
+                      </div>
                     </div>
-                  </div>
-                  <div>
-                    <div className="text-4xl font-bold">46%</div>
-                    <div className="text-sm text-muted-foreground">
-                      New Customers
+                    <div className="grid gap-2">
+                      <Label>Product Images</Label>
+                      <div className="grid grid-cols-3 gap-2">
+                        <Button
+                          variant="outline"
+                          className="aspect-square rounded-md"
+                        >
+                          <PlusIcon className="h-4 w-4" />
+                          <span className="sr-only">Add image</span>
+                        </Button>
+                        <Image
+                          src="/placeholder.svg"
+                          width="84"
+                          height="84"
+                          alt="Product image"
+                          className="aspect-square rounded-md object-cover"
+                        />
+                        <Image
+                          src="/placeholder.svg"
+                          width="84"
+                          height="84"
+                          alt="Product image"
+                          className="aspect-square rounded-md object-cover"
+                        />
+                      </div>
                     </div>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-            <Card>
-              <CardHeader>
-                <CardTitle>Recent Orders</CardTitle>
-                <CardDescription />
-              </CardHeader>
-            </Card>
-          </div>
+                  </form>
+                </CardContent>
+                <CardFooter>
+                  <Button type="submit">Create Product</Button>
+                </CardFooter>
+              </Card>
+            </TabsContent>
+            <TabsContent value="edit">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Edit Product</CardTitle>
+                  <CardDescription>
+                    Update the product details in the form below.
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <form className="grid gap-4">
+                    <div className="grid gap-2">
+                      <Label htmlFor="name">Name</Label>
+                      <Input
+                        id="name"
+                        type="text"
+                        defaultValue="Glimmer Lamps"
+                      />
+                    </div>
+                    <div className="grid gap-2">
+                      <Label htmlFor="description">Description</Label>
+                      <Textarea
+                        id="description"
+                        rows={3}
+                        defaultValue="Elegant and stylish lamps for your home"
+                      />
+                    </div>
+                    <div className="grid gap-2 sm:grid-cols-2">
+                      <div className="grid gap-2">
+                        <Label htmlFor="price">Price</Label>
+                        <Input id="price" type="number" defaultValue={49.99} />
+                      </div>
+                      <div className="grid gap-2">
+                        <Label htmlFor="stock">Stock</Label>
+                        <Input id="stock" type="number" defaultValue={500} />
+                      </div>
+                    </div>
+                    <div className="grid gap-2">
+                      <Label>Product Images</Label>
+                      <div className="grid grid-cols-3 gap-2">
+                        <Button
+                          variant="outline"
+                          className="aspect-square rounded-md"
+                        >
+                          <PlusIcon className="h-4 w-4" />
+                          <span className="sr-only">Add image</span>
+                        </Button>
+                        <Image
+                          src="/placeholder.svg"
+                          width="84"
+                          height="84"
+                          alt="Product image"
+                          className="aspect-square rounded-md object-cover"
+                        />
+                        <Image
+                          src="/placeholder.svg"
+                          width="84"
+                          height="84"
+                          alt="Product image"
+                          className="aspect-square rounded-md object-cover"
+                        />
+                      </div>
+                    </div>
+                  </form>
+                </CardContent>
+                <CardFooter>
+                  <Button type="submit">Update Product</Button>
+                </CardFooter>
+              </Card>
+            </TabsContent>
+          </Tabs>
         </main>
       </div>
     </div>
-  );
-}
-
-function HomeIcon(props: JSX.IntrinsicAttributes & SVGProps<SVGSVGElement>) {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
-      <polyline points="9 22 9 12 15 12 15 22" />
-    </svg>
-  );
-}
-
-function LineChartIcon(
-  props: JSX.IntrinsicAttributes & SVGProps<SVGSVGElement>,
-) {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M3 3v18h18" />
-      <path d="m19 9-5 5-4-4-3 3" />
-    </svg>
-  );
-}
-
-function MenuIcon(props: JSX.IntrinsicAttributes & SVGProps<SVGSVGElement>) {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <line x1="4" x2="20" y1="12" y2="12" />
-      <line x1="4" x2="20" y1="6" y2="6" />
-      <line x1="4" x2="20" y1="18" y2="18" />
-    </svg>
-  );
-}
-
-function Package2Icon(
-  props: JSX.IntrinsicAttributes & SVGProps<SVGSVGElement>,
-) {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M3 9h18v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V9Z" />
-      <path d="m3 9 2.45-4.9A2 2 0 0 1 7.24 3h9.52a2 2 0 0 1 1.8 1.1L21 9" />
-      <path d="M12 3v6" />
-    </svg>
-  );
-}
-
-function PackageIcon(props: JSX.IntrinsicAttributes & SVGProps<SVGSVGElement>) {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="m7.5 4.27 9 5.15" />
-      <path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z" />
-      <path d="m3.3 7 8.7 5 8.7-5" />
-      <path d="M12 22V12" />
-    </svg>
-  );
-}
-
-function SearchIcon(props: JSX.IntrinsicAttributes & SVGProps<SVGSVGElement>) {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <circle cx="11" cy="11" r="8" />
-      <path d="m21 21-4.3-4.3" />
-    </svg>
-  );
-}
-
-function SettingsIcon(
-  props: JSX.IntrinsicAttributes & SVGProps<SVGSVGElement>,
-) {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z" />
-      <circle cx="12" cy="12" r="3" />
-    </svg>
-  );
-}
-
-function ShoppingCartIcon(
-  props: JSX.IntrinsicAttributes & SVGProps<SVGSVGElement>,
-) {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <circle cx="8" cy="21" r="1" />
-      <circle cx="19" cy="21" r="1" />
-      <path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12" />
-    </svg>
-  );
-}
-
-function UsersIcon(props: JSX.IntrinsicAttributes & SVGProps<SVGSVGElement>) {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
-      <circle cx="9" cy="7" r="4" />
-      <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
-      <path d="M16 3.13a4 4 0 0 1 0 7.75" />
-    </svg>
-  );
-}
-
-function XIcon(props: JSX.IntrinsicAttributes & SVGProps<SVGSVGElement>) {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M18 6 6 18" />
-      <path d="m6 6 12 12" />
-    </svg>
   );
 }
