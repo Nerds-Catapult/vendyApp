@@ -1,6 +1,5 @@
 "use client";
 
-
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -33,8 +32,14 @@ import {
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import Image from "next/image";
-import { SelectContent, SelectTrigger } from "@radix-ui/react-select";
 import {
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectItem,
+} from "@/components/ui/select"
+  ; import {
   HomeIcon,
   ShoppingCartIcon,
   PackageIcon,
@@ -49,68 +54,72 @@ import {
 
 import {
   ExpectedAsProductTypes,
-  ExpectedAStoreCategory as ProductTypes
- } from "@/app/types/foreignTypes";
+  ExpectedAStoreCategory as ProductTypes,
+} from "@/app/types/foreignTypes";
 
 import { useState, useEffect } from "react";
 export default function Component() {
-
   const [products, setProducts] = useState<ExpectedAsProductTypes[]>([]);
-  const [storeDetails, setStoreDetails] = useState<ExpectedAsProductTypes | null>(null);
+  const [storeDetails, setStoreDetails] =
+    useState<ExpectedAsProductTypes | null>(null);
   const [productCategory, setProductCategory] = useState<ProductTypes[]>([]);
   const [storeId, setStoreId] = useState<number | null>(11);
 
   async function fetchProducts() {
-    const response = await fetch(`https://goose-merry-mollusk.ngrok-free.app/api/products/many/${storeId}`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
+    const response = await fetch(
+      `https://goose-merry-mollusk.ngrok-free.app/api/products/many/${storeId}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
       },
-    });
+    );
     const data = await response.json();
     setProducts(data);
   }
 
   const fetchStoreDetails = async () => {
-    const response = await fetch(`https://goose-merry-mollusk.ngrok-free.app/api/stores/${storeId}`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
+    const response = await fetch(
+      `https://goose-merry-mollusk.ngrok-free.app/api/stores/${storeId}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
       },
-    });
+    );
     const data = await response.json();
     setStoreDetails(data);
-  }
+  };
 
-    const fetchStoreCategories = async () => {
-      try {
-        const response = await fetch(
-          "https://goose-merry-mollusk.ngrok-free.app/api/store-category",
-          {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-            },
+  const fetchStoreCategories = async () => {
+    try {
+      const response = await fetch(
+        "https://goose-merry-mollusk.ngrok-free.app/api/store-category",
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
           },
-        );
-        const data: ProductTypes[] = await response.json();
-        if (data) {
-          setProductCategory(data);
-        }
-      } catch (error) {
-        console.log(error);
+        },
+      );
+      const data: ProductTypes[] = await response.json();
+      if (data) {
+        setProductCategory(data);
       }
-    };
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   useEffect(() => {
     fetchProducts();
     fetchStoreCategories();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   //dynamic products
-
-
 
   return (
     <div className="grid min-h-screen w-full grid-cols-[280px_1fr]">
@@ -253,63 +262,61 @@ export default function Component() {
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                      {products?.length > 0 ? (
-                        products.map((product, index) => {
-                          return (
-                            <TableRow key={index}>
-                              <TableCell>
-                                <Image
-                                  src={product.productImage}
-                                  width="64"
-                                  height="64"
-                                  alt="Product image"
-                                  className="aspect-square rounded-md object-cover"
-                                />
-                              </TableCell>
-                              <TableCell className="font-medium">
-                                {product.productName}
-                              </TableCell>
-                              <TableCell className="hidden md:table-cell">
-                                {product.productDescription}
-                              </TableCell>
-                              <TableCell className="hidden md:table-cell">
-                                ${product.productPrice}
-                              </TableCell>
-                              <TableCell className="hidden md:table-cell">
-                                {product.productStatus}
-                              </TableCell>
-                              <TableCell>
-                                <DropdownMenu>
-                                  <DropdownMenuTrigger asChild>
-                                    <Button
-                                      aria-haspopup="true"
-                                      size="icon"
-                                      variant="ghost"
-                                    >
-                                      <MoveVerticalIcon className="h-4 w-4" />
-                                      <span className="sr-only">
-                                        Toggle menu
-                                      </span>
-                                    </Button>
-                                  </DropdownMenuTrigger>
-                                  <DropdownMenuContent align="end">
-                                    <DropdownMenuItem>Edit</DropdownMenuItem>
-                                    <DropdownMenuItem>Delete</DropdownMenuItem>
-                                    <DropdownMenuItem>
-                                      View Details
-                                    </DropdownMenuItem>
-                                  </DropdownMenuContent>
-                                </DropdownMenu>
-                              </TableCell>
-                            </TableRow>
-                          );
-                        })
-                      ) : (
-                        <span className="w-96 h-24 flex justify-center items-center">
-                          {" "}
-                          No Products found
-                        </span>
-                      )}
+                    {products?.length > 0 ? (
+                      products.map((product, index) => {
+                        return (
+                          <TableRow key={index}>
+                            <TableCell>
+                              <Image
+                                src={product.productImage}
+                                width="64"
+                                height="64"
+                                alt="Product image"
+                                className="aspect-square rounded-md object-cover"
+                              />
+                            </TableCell>
+                            <TableCell className="font-medium">
+                              {product.productName}
+                            </TableCell>
+                            <TableCell className="hidden md:table-cell">
+                              {product.productDescription}
+                            </TableCell>
+                            <TableCell className="hidden md:table-cell">
+                              ${product.productPrice}
+                            </TableCell>
+                            <TableCell className="hidden md:table-cell">
+                              {product.productStatus}
+                            </TableCell>
+                            <TableCell>
+                              <DropdownMenu>
+                                <DropdownMenuTrigger asChild>
+                                  <Button
+                                    aria-haspopup="true"
+                                    size="icon"
+                                    variant="ghost"
+                                  >
+                                    <MoveVerticalIcon className="h-4 w-4" />
+                                    <span className="sr-only">Toggle menu</span>
+                                  </Button>
+                                </DropdownMenuTrigger>
+                                <DropdownMenuContent align="end">
+                                  <DropdownMenuItem>Edit</DropdownMenuItem>
+                                  <DropdownMenuItem>Delete</DropdownMenuItem>
+                                  <DropdownMenuItem>
+                                    View Details
+                                  </DropdownMenuItem>
+                                </DropdownMenuContent>
+                              </DropdownMenu>
+                            </TableCell>
+                          </TableRow>
+                        );
+                      })
+                    ) : (
+                      <span className="w-96 h-24 flex justify-center items-center">
+                        {" "}
+                        No Products found
+                      </span>
+                    )}
                   </TableBody>
                 </Table>
               </div>
@@ -344,6 +351,22 @@ export default function Component() {
                       <div className="grid gap-2">
                         <Label htmlFor="productImage">Image</Label>
                         <Input id="productImage" type="file" />
+                      </div>
+
+                      <div className="grid gap-2">
+                        <Label htmlFor="productCategory">Category</Label>
+                        <Select>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select a category" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {productCategory.map((category, index) => (
+                              <SelectItem key={index} value={category.name}>
+                                {category.name}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
                       </div>
                     </div>
                   </form>
