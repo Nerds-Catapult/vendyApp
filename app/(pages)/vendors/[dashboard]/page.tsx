@@ -33,7 +33,7 @@ import {
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import Image from "next/image";
-
+import { SelectContent, SelectTrigger } from "@radix-ui/react-select";
 import {
   HomeIcon,
   ShoppingCartIcon,
@@ -104,6 +104,7 @@ export default function Component() {
 
   useEffect(() => {
     fetchProducts();
+    fetchStoreCategories();
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
