@@ -110,7 +110,7 @@ export default function Component() {
             className="px-4 py-2 rounded-md hover:bg-muted"
             prefetch={false}
           >
-            Stores
+            {/* Stores */}
           </Link>
           <Link
             href={vendor ? "/auth/vendors/dashboard" : "/auth/vendors/signup"}
