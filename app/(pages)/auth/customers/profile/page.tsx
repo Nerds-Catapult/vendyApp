@@ -142,7 +142,7 @@ export default function Component() {
         </div>
         <div className="md:col-span-2">
           <h2 className="text-lg font-semibold mb-4">Order History</h2>
-          {data?.data.customer.orders ? (
+          {data?.data?.customer?.orders ? (
             <div className="text-muted-foreground text-center">
               No orders yet
             </div>
