@@ -72,18 +72,18 @@ export default function Component() {
     try {
       const { email, password } = formData;
       const response = await fetch(
-        "https://goose-merry-mollusk.ngrok-free.app/api/auth/login",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ email, password }),
+        "http://localhost:4200/api/auth/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
         },
+        body: JSON.stringify({ email, password }),
+      },
       );
       const data: loginHttpResponse = await response.json();
       if (data.httpStatus === 200) {
         Cookies.set("customerToken", data.accessToken);
+        // Cookies.set("customerToken", data.accessToken, {secure:true, sameSite:'Strict', httpOnly: true});
         window.location.href = "/auth/customers/profile";
       } else {
         toast.error(data.message);
@@ -91,6 +91,7 @@ export default function Component() {
       }
     } catch (error) {
       console.log(error);
+      toast.error("An error occured during logging");
     }
   };
   return (
@@ -174,7 +175,7 @@ export default function Component() {
             </div>
             <div className="text-sm">
               <Link
-                href="#"
+                href="/password/reset"
                 className="font-medium text-primary hover:text-primary/90"
                 prefetch={false}
               >
