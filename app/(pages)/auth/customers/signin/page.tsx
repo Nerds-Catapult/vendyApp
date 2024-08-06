@@ -72,13 +72,14 @@ export default function Component() {
     try {
       const { email, password } = formData;
       const response = await fetch(
-        "http://localhost:4200/api/auth/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
+        "https://goose-merry-mollusk.ngrok-free.app/api/auth/login",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ email, password }),
         },
-        body: JSON.stringify({ email, password }),
-      },
       );
       const data: loginHttpResponse = await response.json();
       if (data.httpStatus === 200) {

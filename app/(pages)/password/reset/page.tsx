@@ -15,7 +15,7 @@ export default function Component() {
     e.preventDefault();
     try {
       const response = await fetch(
-        "http://localhost:4200/api/password-reset/request",
+        "https://goose-merry-mollusk.ngrok-free.app//api/password-reset/request",
         {
           method: "POST",
           headers: {
@@ -46,14 +46,10 @@ export default function Component() {
             <Label htmlFor="email">Email</Label>
             <Input id="email" type="email" placeholder="m@example.com" required />
           </div>
-          <div className="space-y-2">
-            <Label htmlFor="password">New Password</Label>
-            <Input id="password" type="password" required />
-          </div>
         </CardContent>
         <CardFooter>
           <Button type="submit" className="w-full" onSubmit={handleSubmit}>
-            Reset Password
+            Send Reset Email
           </Button>
         </CardFooter>
       </Card>

@@ -79,16 +79,13 @@ export default function Component() {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
-    fetch(
-      "http://localhost:4200/api/customers",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
+    fetch("https://goose-merry-mollusk.ngrok-free.app/api/customers", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
       },
-    )
+      body: JSON.stringify(formData),
+    })
       .then((response) => response.json())
       .then((data) => {
         if (data.httpStatus === 201) {
