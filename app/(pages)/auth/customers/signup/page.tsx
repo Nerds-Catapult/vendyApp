@@ -12,14 +12,25 @@ import { ValidationAuthProps } from "@/app/types/foreignTypes";
 
 export default function Component() {
   const [loading, setLoading] = useState(false);
-  const [authToken, setAuthToken] = useState(Cookies.get("storeToken"));
+  const [authToken, setAuthToken] = useState(Cookies.get("customerToken"));
   const [formData, setFormData] = useState({
-    fullName: "",
+    firstName: "",
+    lastName: "",
     phone: "",
     address: "",
     email: "",
     password: "",
   });
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    e.preventDefault();
+    for (let key in formData) {
+      if (key === e.target.id) {
+        setFormData({ ...formData, [key]: e.target.value });
+      }
+    }
+  };
+
 
   const ValidateAuthToken = async (): Promise<ValidationAuthProps> => {
     return new Promise(async (resolve, reject) => {
@@ -68,20 +79,18 @@ export default function Component() {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
-    fetch(
-      "https://goose-merry-mollusk.ngrok-free.app/api/auth/customers/signup",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
+    fetch("https://goose-merry-mollusk.ngrok-free.app/api/customers", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
       },
-    )
+      body: JSON.stringify(formData),
+    })
       .then((response) => response.json())
       .then((data) => {
-        if (data.statusCode === 201) {
-          Cookies.set("customerToken", data.data.token);
+        if (data.httpStatus === 201) {
+          Cookies.set("customerToken", data.token);
+          // Cookies.set("customerToken", data.token, {secure:true, sameSite:'Strict', httpOnly: true});
           window.location.href = "/auth/customers/profile";
         } else {
           setLoading(false);
@@ -119,19 +128,40 @@ export default function Component() {
         >
           <div>
             <Label
-              htmlFor="fullName"
+              htmlFor="firstName"
               className="block text-sm font-medium text-muted-foreground"
             >
-              Full Name
+              First Name
             </Label>
             <div className="mt-1">
               <Input
-                id="fullName"
-                name="fullName"
+                id="firstName"
+                name="firstName"
                 type="text"
                 autoComplete="off"
                 required
                 className="block w-full appearance-none rounded-md border border-input bg-background px-3 py-2 placeholder-muted-foreground shadow-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary sm:text-sm focus-visible:ring-primary focus-visible:ring-1 focus-visible:ring-offset-0"
+                onChange={handleChange}
+              />
+              <span></span>
+            </div>
+          </div>
+          <div>
+            <Label
+              htmlFor="lastName"
+              className="block text-sm font-medium text-muted-foreground"
+            >
+              Last Name
+            </Label>
+            <div className="mt-1">
+              <Input
+                id="lastName"
+                name="lastName"
+                type="text"
+                autoComplete="off"
+                required
+                className="block w-full appearance-none rounded-md border border-input bg-background px-3 py-2 placeholder-muted-foreground shadow-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary sm:text-sm focus-visible:ring-primary focus-visible:ring-1 focus-visible:ring-offset-0"
+                onChange={handleChange}
               />
               <span></span>
             </div>
@@ -151,6 +181,7 @@ export default function Component() {
                 autoComplete="off"
                 required
                 className="block w-full appearance-none rounded-md border border-input bg-background px-3 py-2 placeholder-muted-foreground shadow-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary sm:text-sm focus-visible:ring-primary focus-visible:ring-1 focus-visible:ring-offset-primary/20 focus-visible:ring-offset-0"
+                onChange={handleChange}
               />
             </div>
           </div>
@@ -170,6 +201,7 @@ export default function Component() {
                 autoComplete="off"
                 required
                 className="block w-full appearance-none rounded-md border border-input bg-background px-3 py-2 placeholder-muted-foreground shadow-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary sm:text-sm focus-visible:ring-primary focus-visible:ring-1 focus-visible:ring-offset-primary/20 focus-visible:ring-offset-0"
+                onChange={handleChange}
               />
             </div>
           </div>
@@ -188,6 +220,7 @@ export default function Component() {
                 autoComplete="off"
                 required
                 className="block w-full appearance-none rounded-md border border-input bg-background px-3 py-2 placeholder-muted-foreground shadow-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary sm:text-sm focus-visible:ring-primary focus-visible:ring-1 focus-visible:ring-offset-primary/20 focus-visible:ring-offset-0"
+                onChange={handleChange}
               />
             </div>
           </div>
@@ -206,6 +239,7 @@ export default function Component() {
                 autoComplete="off"
                 required
                 className="block w-full appearance-none rounded-md border border-input bg-background px-3 py-2 placeholder-muted-foreground shadow-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary sm:text-sm focus-visible:ring-primary focus-visible:ring-1 focus-visible:ring-offset-primary/20 focus-visible:ring-offset-0"
+                onChange={handleChange}
               />
             </div>
           </div>

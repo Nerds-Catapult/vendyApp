@@ -34,8 +34,10 @@ import { ValidationAuthProps } from "@/app/types/foreignTypes";
 export default function Component() {
   const [vendor, setVendor] = useState<boolean>(false);
   const [storeToken, setStoreToken] = useState(Cookies.get("storeToken"));
+  const [customer, setCustomer] = useState<boolean>(false);
+  const [customerToken, setCustomerToken] = useState(Cookies.get("customerToken"));
 
-  const validateVendorToken = async (): Promise<ValidationAuthProps> => {
+  const validateToken = async (token: string | undefined, tokenType: "vendor" | "customer"): Promise<ValidationAuthProps> => {
     return new Promise(async (resolve, reject) => {
       try {
         const response = await fetch(
@@ -44,7 +46,7 @@ export default function Component() {
             method: "GET",
             headers: {
               "Content-Type": "application/json",
-              Authorization: `Bearer ${storeToken}`,
+              Authorization: `Bearer ${token}`,
             },
           },
         );
@@ -53,7 +55,11 @@ export default function Component() {
         if (data.statusCode === 200) {
           resolve(data);
         } else if (data.statusCode === 401) {
-          Cookies.remove("storeToken");
+          if (tokenType === "vendor") {
+            Cookies.remove("storeToken");
+          } else {
+            Cookies.remove("customerToken");
+          }
         }
       } catch (error) {
         reject("An error occurred while validating the token");
@@ -61,10 +67,24 @@ export default function Component() {
       }
     });
   };
+  
+  const handleLogout = () => {
+    if (customerToken){
+      Cookies.remove("customerToken");
+      setCustomer(false);
+      window.location.href = "/auth/customers/signin";
+    }
+    if (storeToken){
+      Cookies.remove("storeToken");
+      setVendor(false);
+      window.location.href = "/auth/vendors/signin";
+    }
+    toast.success("You have been logged out");
+  };
 
   useEffect(() => {
     if (storeToken) {
-      validateVendorToken()
+      validateToken(storeToken, "vendor")
         .then((data) => {
           if (data.statusCode === 200) {
             setVendor(true);
@@ -74,8 +94,21 @@ export default function Component() {
           toast.error(error);
         });
     }
+
+    if (customerToken) {
+      validateToken(customerToken, "customer")
+        .then((data) => {
+          if (data.statusCode === 200) {
+            setCustomer(true);
+          }
+        })
+        .catch((error) => {
+          toast.error(error);
+        });
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [storeToken]);
+  }, [storeToken, customerToken]);
+
 
   return (
     <header className="sticky top-0 z-40 w-full bg-background border-b">
@@ -111,13 +144,42 @@ export default function Component() {
           >
             Stores
           </Link>
-          <Link
-            href={vendor ? "/auth/vendors/dashboard" : "/auth/vendors/signup"}
-            className="px-4 py-2 rounded-md hover:bg-muted"
-            prefetch={false}
-          >
-            {vendor ? "My store" : "Create Store"}
-          </Link>
+          {customer && !vendor && (
+            <Link
+              href="/auth/customers/profile"
+              className="px-4 py-2 rounded-md hover:bg-muted"
+              prefetch={false}
+            >
+              My Account
+            </Link>
+          )}
+          {!customer && !vendor &&(
+            <Link
+              href="/auth/customers/signin"
+              className="px-4 py-2 rounded-md hover:bg-muted"
+              prefetch={false}
+            >
+              Customer
+            </Link>
+          )}
+          {vendor && (
+            <Link
+              href="/auth/vendors/dashboard"
+              className="px-4 py-2 rounded-md hover:bg-muted"
+              prefetch={false}
+            >
+              My Store
+            </Link>
+          )}
+          {!vendor && !customer && (
+            <Link
+              href="/auth/vendors/signin"
+              className="px-4 py-2 rounded-md hover:bg-muted"
+              prefetch={false}
+            >
+              Create Store
+            </Link>
+          )}
         </nav>
         <div className="ml-auto flex items-center gap-4">
           <Drawer>
@@ -202,6 +264,14 @@ export default function Component() {
               </div>
             </DrawerContent>
           </Drawer>
+          {(vendor || customer) && (
+            <Button
+              onClick={handleLogout}
+              className="px-1 py-1 rounded-md hover:bg-muted-foreground"
+            >
+              Logout
+            </Button>
+          )}
           <Sheet>
             <SheetTrigger asChild>
               <Button
