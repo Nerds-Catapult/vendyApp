@@ -39,6 +39,7 @@ import {
 } from "@/components/ui/table";
 import { JSX, SVGProps } from "react";
 import Image from "next/image";
+import { PlusIcon } from "@/components/ui/Icons";
 
 export default function Component({ params }: { params: { id: number } }) {
   return (
@@ -118,6 +119,21 @@ export default function Component({ params }: { params: { id: number } }) {
                 </Link>
               </TooltipTrigger>
               <TooltipContent side="right">Analytics</TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Link
+                  href="/vendors/products/create"
+                  className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
+                  prefetch={false}
+                >
+                  <PlusIcon className="h-5 w-5" />
+                  <span className="sr-only">Add Product</span>
+                </Link>
+              </TooltipTrigger>
+              <TooltipContent side="right">Add Product</TooltipContent>
             </Tooltip>
           </TooltipProvider>
         </nav>
