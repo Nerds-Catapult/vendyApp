@@ -61,8 +61,6 @@ function MountainIcon(
   );
 }
 
-
-
 function ShoppingCartIcon(
   props: JSX.IntrinsicAttributes & SVGProps<SVGSVGElement>,
 ) {
@@ -105,7 +103,6 @@ function XIcon(props: JSX.IntrinsicAttributes & SVGProps<SVGSVGElement>) {
     </svg>
   );
 }
-
 
 function BellIcon(props: JSX.IntrinsicAttributes & SVGProps<SVGSVGElement>) {
   return (
@@ -298,7 +295,6 @@ function UsersIcon(props: JSX.IntrinsicAttributes & SVGProps<SVGSVGElement>) {
     </svg>
   );
 }
-
 
 export {
   MenuIcon,

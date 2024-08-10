@@ -30,7 +30,7 @@ import { useEffect, useState } from "react";
 import Cookies from "js-cookie";
 import { toast } from "react-hot-toast";
 import { ValidationAuthProps } from "@/app/types/foreignTypes";
-import { Store } from '../../app/types/foreignTypes';
+import { Store } from "../../app/types/foreignTypes";
 
 export default function Component() {
   const [vendor, setVendor] = useState<boolean>(false);

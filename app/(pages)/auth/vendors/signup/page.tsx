@@ -18,7 +18,6 @@ import {
 } from "@/app/types/foreignTypes";
 
 export default function Component() {
-
   const [loading, setLoading] = useState(false);
   const [authToken, setAuthToken] = useState(Cookies.get("storeToken"));
   const [formData, setFormData] = useState({
@@ -217,8 +216,8 @@ export default function Component() {
                     type="password"
                     placeholder="Enter a password"
                     required
-                      onChange={handleChange}
-                      value = {formData.password}
+                    onChange={handleChange}
+                    value={formData.password}
                   />
                 </div>
                 <div>

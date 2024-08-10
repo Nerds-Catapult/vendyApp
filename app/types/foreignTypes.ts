@@ -132,7 +132,6 @@ export interface ExpectedAsCustomerTypes {
   };
 }
 
-
 export interface ExpectedAsProductTypes {
   id: number;
   productName: string;
