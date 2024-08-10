@@ -88,7 +88,7 @@ export default function Component() {
 
   useEffect(() => {
     if (authToken) {
-      setLoading(true)
+      setLoading(true);
       ValidateAuthToken()
         .then((data) => {
           if (data.statusCode === 200) {

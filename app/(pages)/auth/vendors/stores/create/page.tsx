@@ -1,45 +1,45 @@
 "use client";
 
 //TODO: all these auth functions can be state managed by the context api or redux
-import Link from "next/link";
-import { useEffect, useState } from "react";
-import Cookies from "js-cookie";
-import toast from "react-hot-toast";
-import { counties, categories } from "@/constants/constants";
-import LoadingComponent from "@/components/ui/loading";
 import {
   Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
   CardHeader,
   CardTitle,
-  CardDescription,
-  CardContent,
-  CardFooter,
 } from "@/components/ui/card";
-import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import {
   Select,
-  SelectTrigger,
-  SelectValue,
   SelectContent,
   SelectItem,
+  SelectTrigger,
+  SelectValue,
 } from "@/components/ui/select";
+import { counties } from "@/constants/constants";
+import Cookies from "js-cookie";
+import Link from "next/link";
+import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 
-import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 
 import {
-  ValidationAuthProps,
-  checkIfVendorHasStoreReturnsBoolean,
   ExpectedAStoreCategory,
   ExpectedAsCloudinaryResponse,
   ExpectedAsStoreProps,
+  ValidationAuthProps,
+  checkIfVendorHasStoreReturnsBoolean,
 } from "@/app/types/foreignTypes";
 
 export default function CreateStoreComponent() {
-
   const [loading, setLoading] = useState(false);
-  const [storeCategories, setStoreCategories] = useState<ExpectedAStoreCategory[]>([]);
+  const [storeCategories, setStoreCategories] = useState<
+    ExpectedAStoreCategory[]
+  >([]);
   const [authToken, setAuthTokem] = useState(Cookies.get("storeToken"));
   const [fileData, setFileData] = useState<File | null>(null);
   const [formData, setFormData] = useState({
