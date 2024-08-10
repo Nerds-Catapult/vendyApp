@@ -71,6 +71,16 @@ export interface ExpectedAStoreCategory {
 }
 [];
 
+export interface ExpectedAsProductCategory {
+  id: number;
+  name: string;
+  description: string;
+  createdAt: string;
+  updatedAt: string;
+  storeId?: number;
+}
+[];
+
 export interface ExpectedAsCloudinaryResponse {
   public_id: string;
   version: number;

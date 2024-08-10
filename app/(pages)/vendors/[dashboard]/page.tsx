@@ -32,27 +32,28 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Textarea } from "@/components/ui/textarea";
-import LoadingComponent from "@/components/ui/loading";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-
 import {
   ExpectedAsCloudinaryResponse,
   ExpectedAsProductTypes,
+  ExpectedAsStoreProps,
+  ExpectedAsProductCategory,
   ExpectedAStoreCategory as ProductTypes,
 } from "@/app/types/foreignTypes";
 
 import { exportedAsProductProps } from "@/app/types/exportedTypes";
-
 import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
-import e from "express";
+
+
+
 export default function Component() {
   const [products, setProducts] = useState<ExpectedAsProductTypes[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
-  const [storeDetails, setStoreDetails] = useState<[]>([]);
-  const [productCategory, setProductCategory] = useState<ProductTypes[]>([]);
+  const [storeDetails, setStoreDetails] = useState<ExpectedAsStoreProps>();
+  const [productCategory, setProductCategory] = useState<ExpectedAsProductCategory[]>([]);
   const [storeId, setStoreId] = useState<number>(11);
   const [fileData, setFileData] = useState<File | null>(null);
   const router = useRouter();
@@ -78,6 +79,8 @@ export default function Component() {
     const data = await response.json();
     setProducts(data);
   }
+
+  
   type HTMLChanges = React.ChangeEvent<HTMLInputElement> &
     React.ChangeEvent<HTMLTextAreaElement>;
 
@@ -91,14 +94,14 @@ export default function Component() {
         },
       },
     );
-    const data = await response.json();
+    const data: ExpectedAsStoreProps = await response.json();
     setStoreDetails(data);
   };
 
-  const fetchStoreCategories = async () => {
+  const fetchProductCategories = async () => {
     try {
       const response = await fetch(
-        "https://goose-merry-mollusk.ngrok-free.app/api/store-category",
+        "https://goose-merry-mollusk.ngrok-free.app/api/product-category",
         {
           method: "GET",
           headers: {
@@ -106,7 +109,7 @@ export default function Component() {
           },
         },
       );
-      const data: ProductTypes[] = await response.json();
+      const data = await response.json();
       if (data) {
         setProductCategory(data);
       }
@@ -117,7 +120,7 @@ export default function Component() {
 
   useEffect(() => {
     fetchProducts();
-    fetchStoreCategories();
+    fetchProductCategories();
     fetchStoreDetails();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -211,9 +214,11 @@ export default function Component() {
 
   const CreateProduct = async (e: React.FormEvent) => {
     e.preventDefault();
+    setLoading(true);
     const { secure_url, public_id } = await uploadProductImage();
     if (!secure_url || secure_url === "") {
       toast.error("An error occurred while uploading the image");
+      setLoading(false);
     }
     const productData = {
       ...formData,
@@ -231,7 +236,11 @@ export default function Component() {
         },
       );
       const data = await respnse.json();
-      console.log(data);
+      setLoading(false);
+      if (data.ok) {
+        toast.success("Product added successfully");
+        fetchProducts();
+      }
     } catch (error) {
       console.log(error);
       toast.error("An error occurred while adding the product");
@@ -289,7 +298,7 @@ export default function Component() {
               className="rounded-full border w-8 h-8"
             >
               <Image
-                src="/placeholder.svg"
+                src={storeDetails?.storeLogo || ""}
                 width="32"
                 height="32"
                 className="rounded-full"
@@ -344,14 +353,34 @@ export default function Component() {
             <div className="p-6 grid gap-4">
               <form className="grid gap-6" onSubmit={CreateProduct}>
                 {loading ? (
-                  <LoadingComponent />
+                  <div className=" h-[20vh] justify-center flex items-center">
+                    <svg
+                      className="h-12 w-12 animate-spin text-primary"
+                      viewBox="0 0 24 24"
+                    >
+                      <circle
+                        className="opacity-25"
+                        cx="12"
+                        cy="12"
+                        r="10"
+                        stroke="currentColor"
+                        strokeWidth="4"
+                      />
+                      <path
+                        className="opacity-75"
+                        fill="currentColor"
+                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                      />
+                    </svg>
+                  </div>
                 ) : (
                   <div>
                     <div className="grid gap-2">
                       <Label htmlFor="productName">Product Name</Label>
                       <Input
                         id="productName"
-                        name="productName"
+                          name="productName"
+                          required
                         onChange={handleInputChange}
                       />
                     </div>
@@ -359,7 +388,8 @@ export default function Component() {
                       <Label htmlFor="productDescription">Description</Label>
                       <Textarea
                         id="productDescription"
-                        name="productDescription"
+                          name="productDescription"
+                          required
                         onChange={handleInputChange}
                         rows={3}
                       />
@@ -369,7 +399,8 @@ export default function Component() {
                         <Label htmlFor="productPrice">Price</Label>
                         <Input
                           id="productPrice"
-                          name="productPrice"
+                            name="productPrice"
+                            required
                           onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                             setFormData({
                               ...formData,
@@ -381,9 +412,11 @@ export default function Component() {
                     </div>
                     <div className="grid gap-2">
                       <Label htmlFor="category">Category</Label>
-                      <Select onValueChange={handeCategoryChange}>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select store category" />
+                        <Select onValueChange={handeCategoryChange}
+                            required
+                        >
+                        <SelectTrigger aria-required>
+                          <SelectValue placeholder="Select product category" />
                         </SelectTrigger>
                         <SelectContent>
                           {productCategory.map((category) => (
@@ -399,7 +432,8 @@ export default function Component() {
                       <Input
                         id="quantity"
                         name="quantity"
-                        type="number"
+                          type="number"
+                          required
                         onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                           setFormData({
                             ...formData,
@@ -413,7 +447,8 @@ export default function Component() {
                           id="image"
                           name="image"
                           type="file"
-                          accept="image/*"
+                            accept="image/*"
+                            required
                           onChange={handleImageChange}
                         />
                       </div>
