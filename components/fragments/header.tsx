@@ -14,7 +14,7 @@ export default function Component() {
 
   const fetchStores = async (): Promise<ReturnedStorePropsFromserver> => {
     return new Promise((resolve, reject) => {
-      fetch("https://goose-merry-mollusk.ngrok-free.app/api/stores", {
+      fetch("https://vendy-server.onrender.com/api/stores", {
         method: "GET",
         headers: {
           "Content-Type": "application/json",

@@ -27,7 +27,7 @@ export default function Component() {
   const fetchProductCategories = async () => {
     try {
       const response = await fetch(
-        "https://goose-merry-mollusk.ngrok-free.app/api/product-category",
+        "https://vendy-server.onrender.com/api/store-category",
         {
           method: "GET",
           headers: {
@@ -49,7 +49,7 @@ export default function Component() {
   const fetchProducts = async () => {
     try {
       const response = await fetch(
-        "https://goose-merry-mollusk.ngrok-free.app/api/products",
+        "https://vendy-server.onrender.com/api/products",
         {
           method: "GET",
           headers: {

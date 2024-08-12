@@ -25,7 +25,7 @@ export default function Component() {
     return new Promise(async (resolve, reject) => {
       try {
         const response = await fetch(
-          "https://goose-merry-mollusk.ngrok-free.app/api/auth/validate",
+          "https://vendy-server.onrender.com/api/auth/validate",
           {
             method: "GET",
             headers: {
@@ -72,7 +72,7 @@ export default function Component() {
     try {
       const { email, password } = formData;
       const response = await fetch(
-        "https://goose-merry-mollusk.ngrok-free.app/api/auth/login",
+        "https://vendy-server.onrender.com/api/auth/login",
         {
           method: "POST",
           headers: {

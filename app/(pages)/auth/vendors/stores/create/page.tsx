@@ -88,7 +88,7 @@ export default function CreateStoreComponent() {
     return new Promise(async (resolve, reject) => {
       try {
         const response = await fetch(
-          "https://goose-merry-mollusk.ngrok-free.app/api/auth/validate",
+          "https://vendy-server.onrender.com/api/auth/validate",
           {
             method: "GET",
             headers: {
@@ -115,7 +115,7 @@ export default function CreateStoreComponent() {
       return new Promise(async (resolve, reject) => {
         try {
           const response = await fetch(
-            "https://goose-merry-mollusk.ngrok-free.app/api/auth/hasStore",
+            "https://vendy-server.onrender.com/api/auth/hasStore",
             {
               method: "GET",
               headers: {
@@ -174,7 +174,7 @@ export default function CreateStoreComponent() {
   const fetchStoreCategories = async () => {
     try {
       const response = await fetch(
-        "https://goose-merry-mollusk.ngrok-free.app/api/store-category",
+        "https://vendy-server.onrender.com/api/store-category",
         {
           method: "GET",
           headers: {
@@ -203,7 +203,7 @@ export default function CreateStoreComponent() {
     return new Promise(async (resolve, reject) => {
       try {
         const response = await fetch(
-          "https://goose-merry-mollusk.ngrok-free.app/api/image/upload",
+          "https://vendy-server.onrender.com/api/image/upload",
           {
             method: "POST",
             body: formData,
@@ -243,7 +243,7 @@ export default function CreateStoreComponent() {
     return new Promise(async (resolve, reject) => {
       try {
         const response = await fetch(
-          "https://goose-merry-mollusk.ngrok-free.app/api/image/delete",
+          "https://vendy-server.onrender.com/api/image/delete",
           {
             method: "DELETE",
             headers: {
@@ -277,7 +277,7 @@ export default function CreateStoreComponent() {
       };
       try {
         const response = await fetch(
-          "https://goose-merry-mollusk.ngrok-free.app/api/stores",
+          "https://vendy-server.onrender.com/api/stores",
           {
             method: "POST",
             headers: {
