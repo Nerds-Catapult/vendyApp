@@ -30,7 +30,6 @@ import { useEffect, useState } from "react";
 import Cookies from "js-cookie";
 import { toast } from "react-hot-toast";
 import { ValidationAuthProps } from "@/app/types/foreignTypes";
-import { Store } from "../../app/types/foreignTypes";
 
 export default function Component() {
   const [vendor, setVendor] = useState<boolean>(false);
@@ -40,7 +39,7 @@ export default function Component() {
     return new Promise(async (resolve, reject) => {
       try {
         const response = await fetch(
-          "https://goose-merry-mollusk.ngrok-free.app/api/auth/validate",
+          "https://vendy-server.onrender.com/api/auth/validate",
           {
             method: "GET",
             headers: {
@@ -110,7 +109,7 @@ export default function Component() {
             className="px-4 py-2 rounded-md hover:bg-muted"
             prefetch={false}
           >
-            {/* Stores */}
+            Stores
           </Link>
           <Link
             href={vendor ? "/vendors/dashboard" : "/auth/vendors/signup"}
