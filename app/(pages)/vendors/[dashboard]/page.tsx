@@ -47,13 +47,13 @@ import { exportedAsProductProps } from "@/app/types/exportedTypes";
 import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 
-
-
 export default function Component() {
   const [products, setProducts] = useState<ExpectedAsProductTypes[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [storeDetails, setStoreDetails] = useState<ExpectedAsStoreProps>();
-  const [productCategory, setProductCategory] = useState<ExpectedAsProductCategory[]>([]);
+  const [productCategory, setProductCategory] = useState<
+    ExpectedAsProductCategory[]
+  >([]);
   const [storeId, setStoreId] = useState<number>(11);
   const [fileData, setFileData] = useState<File | null>(null);
   const router = useRouter();
@@ -68,7 +68,7 @@ export default function Component() {
 
   async function fetchProducts() {
     const response = await fetch(
-      `https://vendy-server.onrender.com/api/products/many/${storeId}`,
+      `https://goose-merry-mollusk.ngrok-free.app/api/products/many/${storeId}`,
       {
         method: "GET",
         headers: {
@@ -85,7 +85,7 @@ export default function Component() {
 
   const fetchStoreDetails = async () => {
     const response = await fetch(
-      `https://vendy-server.onrender.com/api/stores/${storeId}`,
+      `https://goose-merry-mollusk.ngrok-free.app/api/stores/${storeId}`,
       {
         method: "GET",
         headers: {
@@ -100,7 +100,7 @@ export default function Component() {
   const fetchProductCategories = async () => {
     try {
       const response = await fetch(
-        "https://vendy-server.onrender.com/api/product-category",
+        "https://goose-merry-mollusk.ngrok-free.app/api/product-category",
         {
           method: "GET",
           headers: {
@@ -149,7 +149,7 @@ export default function Component() {
     return new Promise(async (resolve, reject) => {
       try {
         const response = await fetch(
-          "https://vendy-server.onrender.com/api/image/upload",
+          "https://goose-merry-mollusk.ngrok-free.app/api/image/upload",
           {
             method: "POST",
             body: formData,
@@ -190,7 +190,7 @@ export default function Component() {
     return new Promise(async (resolve, reject) => {
       try {
         const response = await fetch(
-          "https://vendy-server.onrender.com/api/image/delete",
+          "https://goose-merry-mollusk.ngrok-free.app/api/image/delete",
           {
             method: "DELETE",
             headers: {
@@ -225,7 +225,7 @@ export default function Component() {
     };
     try {
       const respnse = await fetch(
-        "https://vendy-server.onrender.com/api/products",
+        "https://goose-merry-mollusk.ngrok-free.app/api/products",
         {
           method: "POST",
           headers: {
@@ -378,8 +378,8 @@ export default function Component() {
                       <Label htmlFor="productName">Product Name</Label>
                       <Input
                         id="productName"
-                          name="productName"
-                          required
+                        name="productName"
+                        required
                         onChange={handleInputChange}
                       />
                     </div>
@@ -387,8 +387,8 @@ export default function Component() {
                       <Label htmlFor="productDescription">Description</Label>
                       <Textarea
                         id="productDescription"
-                          name="productDescription"
-                          required
+                        name="productDescription"
+                        required
                         onChange={handleInputChange}
                         rows={3}
                       />
@@ -398,8 +398,8 @@ export default function Component() {
                         <Label htmlFor="productPrice">Price</Label>
                         <Input
                           id="productPrice"
-                            name="productPrice"
-                            required
+                          name="productPrice"
+                          required
                           onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                             setFormData({
                               ...formData,
@@ -411,9 +411,7 @@ export default function Component() {
                     </div>
                     <div className="grid gap-2">
                       <Label htmlFor="category">Category</Label>
-                        <Select onValueChange={handeCategoryChange}
-                            required
-                        >
+                      <Select onValueChange={handeCategoryChange} required>
                         <SelectTrigger aria-required>
                           <SelectValue placeholder="Select product category" />
                         </SelectTrigger>
@@ -431,8 +429,8 @@ export default function Component() {
                       <Input
                         id="quantity"
                         name="quantity"
-                          type="number"
-                          required
+                        type="number"
+                        required
                         onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                           setFormData({
                             ...formData,
@@ -446,8 +444,8 @@ export default function Component() {
                           id="image"
                           name="image"
                           type="file"
-                            accept="image/*"
-                            required
+                          accept="image/*"
+                          required
                           onChange={handleImageChange}
                         />
                       </div>

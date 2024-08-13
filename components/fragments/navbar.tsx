@@ -29,17 +29,47 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import Cookies from "js-cookie";
 import { toast } from "react-hot-toast";
-import { ValidationAuthProps } from "@/app/types/foreignTypes";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  addToCart,
+  removeFromCart,
+  clearCart,
+  updateQuantity,
+} from "@/app/reducers/actions";
+import { RootState } from "@/app/store/store";
+import {
+  ValidationAuthProps,
+  ExpectedAsProductTypes as Product,
+} from "@/app/types/foreignTypes";
+import CartComponent from "./cart";
 
 export default function Component() {
   const [vendor, setVendor] = useState<boolean>(false);
   const [storeToken, setStoreToken] = useState(Cookies.get("storeToken"));
+  const [items, totalItems] = useSelector(
+    (state: RootState) => state.cart.items,
+  );
+
+  const dispatch = useDispatch();
+  const cartItems = useSelector((state: RootState) => state.cart.items);
+
+  const addToCartHandler = (product: Product) => {
+    dispatch(addToCart(product));
+  };
+
+  const removeFromCartHandler = (productId: number) => {
+    dispatch(removeFromCart(productId));
+  };
+
+  const clearCartHandler = () => {
+    dispatch(clearCart());
+  };
 
   const validateVendorToken = async (): Promise<ValidationAuthProps> => {
     return new Promise(async (resolve, reject) => {
       try {
         const response = await fetch(
-          "https://vendy-server.onrender.com/api/auth/validate",
+          "https://goose-merry-mollusk.ngrok-free.app/api/auth/validate",
           {
             method: "GET",
             headers: {
@@ -120,88 +150,7 @@ export default function Component() {
           </Link>
         </nav>
         <div className="ml-auto flex items-center gap-4">
-          <Drawer>
-            <DrawerTrigger asChild>
-              <Button variant="ghost" size="icon" className="rounded-full">
-                <ShoppingCartIcon className="h-6 w-6" />
-                <span className="sr-only">Cart</span>
-              </Button>
-            </DrawerTrigger>
-            <DrawerContent className="w-full max-w-md">
-              <div className="flex flex-col h-full">
-                <div className="flex items-center justify-between border-b p-4">
-                  <h3 className="text-lg font-medium">Your Cart</h3>
-                  <DrawerClose asChild>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="rounded-full"
-                    >
-                      <XIcon className="h-6 w-6" />
-                      <span className="sr-only">Close</span>
-                    </Button>
-                  </DrawerClose>
-                </div>
-                <div className="flex-1 overflow-auto p-4 space-y-4">
-                  <div className="flex items-center gap-4">
-                    <Image
-                      src="/placeholder.svg"
-                      alt="Product Image"
-                      width={80}
-                      height={80}
-                      className="rounded-md"
-                    />
-                    <div className="flex-1">
-                      <h4 className="font-medium">Product Name</h4>
-                      <p className="text-muted-foreground">$19.99</p>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <Button variant="ghost" size="icon">
-                        <MinusIcon className="h-4 w-4" />
-                        <span className="sr-only">Decrease quantity</span>
-                      </Button>
-                      <span>1</span>
-                      <Button variant="ghost" size="icon">
-                        <PlusIcon className="h-4 w-4" />
-                        <span className="sr-only">Increase quantity</span>
-                      </Button>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-4">
-                    <Image
-                      src="/placeholder.svg"
-                      alt="Product Image"
-                      width={80}
-                      height={80}
-                      className="rounded-md"
-                    />
-                    <div className="flex-1">
-                      <h4 className="font-medium">Another Product</h4>
-                      <p className="text-muted-foreground">$29.99</p>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <Button variant="ghost" size="icon">
-                        <MinusIcon className="h-4 w-4" />
-                        <span className="sr-only">Decrease quantity</span>
-                      </Button>
-                      <span>2</span>
-                      <Button variant="ghost" size="icon">
-                        <PlusIcon className="h-4 w-4" />
-                        <span className="sr-only">Increase quantity</span>
-                      </Button>
-                    </div>
-                  </div>
-                </div>
-                <div className="border-t p-4 space-y-2">
-                  <div className="flex items-center justify-between">
-                    <span className="text-muted-foreground">Subtotal</span>
-                    <span className="font-medium">$49.98</span>
-                  </div>
-                  <Button className="w-full">Proceed to Checkout</Button>
-                </div>
-              </div>
-            </DrawerContent>
-          </Drawer>
+          <CartComponent />
           {/* only shown on smaller devices */}
           <Sheet>
             <SheetTrigger asChild>

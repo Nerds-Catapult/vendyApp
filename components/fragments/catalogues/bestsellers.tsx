@@ -13,7 +13,7 @@ const BestSellers = () => {
       setLoading(true);
       try {
         const response = await fetch(
-          "https://vendy-server.onrender.com/api/businesses",
+          "https://goose-merry-mollusk.ngrok-free.app/api/businesses",
           {
             method: "GET",
             headers: {

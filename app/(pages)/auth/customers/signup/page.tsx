@@ -25,7 +25,7 @@ export default function Component() {
     return new Promise(async (resolve, reject) => {
       try {
         const response = await fetch(
-          "https://vendy-server.onrender.com/api/auth/validate",
+          "https://goose-merry-mollusk.ngrok-free.app/api/auth/validate",
           {
             method: "GET",
             headers: {
@@ -68,13 +68,16 @@ export default function Component() {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
-    fetch("https://vendy-server.onrender.com/api/auth/customers/signup", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
+    fetch(
+      "https://goose-merry-mollusk.ngrok-free.app/api/auth/customers/signup",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
       },
-      body: JSON.stringify(formData),
-    })
+    )
       .then((response) => response.json())
       .then((data) => {
         if (data.statusCode === 201) {

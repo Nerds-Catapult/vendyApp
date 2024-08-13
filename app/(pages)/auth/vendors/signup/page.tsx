@@ -39,7 +39,7 @@ export default function Component() {
 
   const validateAuthToken = async (): Promise<ValidationAuthProps> => {
     const response = await fetch(
-      "https://vendy-server.onrender.com/api/auth/validate",
+      "https://goose-merry-mollusk.ngrok-free.app/api/auth/validate",
       {
         method: "GET",
         headers: {
@@ -57,7 +57,7 @@ export default function Component() {
   const checkIfVendorHasStore =
     async (): Promise<checkIfVendorHasStoreReturnsBoolean> => {
       const response = await fetch(
-        "https://vendy-server.onrender.com/api/auth/hasStore",
+        "https://goose-merry-mollusk.ngrok-free.app/api/auth/hasStore",
         {
           method: "GET",
           headers: {
@@ -114,7 +114,7 @@ export default function Component() {
       }
       setLoading(true);
       const response = await fetch(
-        "https://vendy-server.onrender.com/api/vendors",
+        "https://goose-merry-mollusk.ngrok-free.app/api/vendors",
         {
           method: "POST",
           headers: {

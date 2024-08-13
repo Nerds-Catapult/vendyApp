@@ -154,21 +154,3 @@ export interface ExpectedAsProductTypes {
   createdAt: string;
   updatedAt: string;
 }
-/* 
-<div className="flex-shrink-0">
-                <Link href="#" className="group" prefetch={false}>
-                  <div className="relative h-32 w-32 overflow-hidden rounded-full">
-                    <Image
-                      src="/placeholder.svg"
-                      alt="Store 6"
-                      width={128}
-                      height={128}
-                      className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-110"
-                    />
-                  </div>
-                  <div className="mt-2 text-center font-medium">
-                    Kitchen Essentials
-                  </div>
-                </Link>
-              </div>
-*/

@@ -20,7 +20,7 @@ export default function Component() {
     return new Promise(async (resolve, reject) => {
       try {
         const response = await fetch(
-          "https://vendy-server.onrender.com/api/auth/validate",
+          "https://goose-merry-mollusk.ngrok-free.app/api/auth/validate",
           {
             method: "GET",
             headers: {
@@ -45,7 +45,7 @@ export default function Component() {
   const fetchCustomerProfile = async () => {
     setLoading(true);
     const response = await fetch(
-      "https://vendy-server.onrender.com/api/auth/customer",
+      "https://goose-merry-mollusk.ngrok-free.app/api/auth/customer",
       {
         method: "GET",
         headers: {

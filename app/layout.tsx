@@ -1,3 +1,5 @@
+"use client";
+
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
@@ -9,10 +11,8 @@ import Navbar from "@/components/fragments/navbar";
 import Footer from "@/components/fragments/footer";
 import { AuthProvider } from "@/context/auth-context";
 
-export const metadata: Metadata = {
-  title: "Vendy Marketplace",
-  description: "Vendy Marketplace",
-};
+import { store } from "@/app/store/store";
+import { Provider } from "react-redux";
 
 export default function RootLayout({
   children,
@@ -23,10 +23,12 @@ export default function RootLayout({
     <AuthProvider>
       <html lang="en">
         <body className={inter.className}>
-          <Toaster position="top-right" />
-          <Navbar />
-          {children}
-          <Footer />
+          <Provider store={store}>
+            <Toaster position="top-right" />
+            <Navbar />
+            {children}
+            <Footer />
+          </Provider>
         </body>
       </html>
     </AuthProvider>

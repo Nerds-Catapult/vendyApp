@@ -1,2 +1,0 @@
-LIVE_BACKEND_URL="https://vendy-server.onrender.com"
-DEVELOPMENT_BACKEND_URL="https://goose-merry-mollusk.ngrok-free.app"

@@ -16,6 +16,15 @@ import {
   ExpectedAsProductCategory,
   ExpectedAsProductTypes,
 } from "@/app/types/foreignTypes";
+import { RootState } from "@/app/store/store";
+
+import { useDispatch, useSelector } from "react-redux";
+import {
+  addToCart,
+  removeFromCart,
+  clearCart,
+  updateQuantity,
+} from "@/app/reducers/actions";
 
 export default function Component() {
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
@@ -23,11 +32,26 @@ export default function Component() {
   const [products, setProducts] = useState<ExpectedAsProductTypes[]>([]);
   const [sortBy, setSortBy] = useState<string>("name");
 
+  const dispatch = useDispatch();
+  const cartItems = useSelector((state: RootState) => state.cart);
+
+  const handleAddToCart = (product: ExpectedAsProductTypes) => {
+    dispatch(addToCart(product));
+  };
+
+  const handleRemoveFromCart = (productId: number) => {
+    dispatch(removeFromCart(productId));
+  };
+
+  const handleClearCart = () => {
+    dispatch(clearCart());
+  };
+
   // Fetch product categories
   const fetchProductCategories = async () => {
     try {
       const response = await fetch(
-        "https://vendy-server.onrender.com/api/store-category",
+        "https://goose-merry-mollusk.ngrok-free.app/api/store-category",
         {
           method: "GET",
           headers: {
@@ -49,7 +73,7 @@ export default function Component() {
   const fetchProducts = async () => {
     try {
       const response = await fetch(
-        "https://vendy-server.onrender.com/api/products",
+        "https://goose-merry-mollusk.ngrok-free.app/api/products",
         {
           method: "GET",
           headers: {
@@ -164,7 +188,12 @@ export default function Component() {
                   <span className="text-primary font-bold">
                     ${product.productPrice.toFixed(2)}
                   </span>
-                  <Button>Add to Cart</Button>
+                  <Button
+                    onClick={() => handleAddToCart(product)}
+                    className="px-4 py-2"
+                  >
+                    Add to Cart
+                  </Button>
                 </div>
               </div>
             ))
