@@ -5,31 +5,54 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/co
 import { ShoppingCart } from 'lucide-react';
 import { RootState } from '@/app/store/store';
 import { removeFromCart, updateQuantity } from '@/app/reducers/actions';
+import Image from 'next/image';
+import Link from 'next/link';
 
-const CartItem = ({ item, onUpdateQuantity, onRemove }: any) => (
+interface CartItemProps {
+    item: {
+        id: number;
+        productName: string;
+        productImage: string;
+        productPrice: number;
+        quantity: number;
+    };
+    onUpdateQuantity: (id: number, quantity: number) => void;
+    onRemove: (id: number) => void;
+}
+
+const CartItem: React.FC<CartItemProps> = ({ item, onUpdateQuantity, onRemove }) => (
     <div className="flex justify-between items-center py-2">
-        <div>
-            <p className="font-medium">{item.name}</p>
-            <div className="flex items-center mt-1">
-                <button
-                    onClick={() => onUpdateQuantity(item.id, Math.max(1, item.quantity - 1))}
-                    className="px-2 py-1 bg-gray-200 rounded-l"
-                >
-                    -
-                </button>
-                <span className="px-2 py-1 bg-gray-100">{item.quantity}</span>
-                <button
-                    onClick={() => onUpdateQuantity(item.id, item.quantity + 1)}
-                    className="px-2 py-1 bg-gray-200 rounded-r"
-                >
-                    +
-                </button>
-                <button onClick={() => onRemove(item.id)} className="ml-2 text-red-500">
-                    Remove
-                </button>
+        <div className="flex items-center">
+            <Image
+                src={item.productImage}
+                alt={item.productName}
+                width={64}
+                height={64}
+                className="w-16 h-16 object-cover mr-4 rounded"
+            />
+            <div>
+                <p className="font-medium">{item.productName}</p>
+                <div className="flex items-center mt-1">
+                    <button
+                        onClick={() => onUpdateQuantity(item.id, Math.max(1, item.quantity - 1))}
+                        className="px-2 py-1 bg-gray-200 rounded-l"
+                    >
+                        -
+                    </button>
+                    <span className="px-2 py-1 bg-gray-100">{item.quantity}</span>
+                    <button
+                        onClick={() => onUpdateQuantity(item.id, item.quantity + 1)}
+                        className="px-2 py-1 bg-gray-200 rounded-r"
+                    >
+                        +
+                    </button>
+                    <button onClick={() => onRemove(item.id)} className="ml-2 text-red-500">
+                        Remove
+                    </button>
+                </div>
             </div>
         </div>
-        <p className="font-medium">${(item.price * item.quantity).toFixed(2)}</p>
+        <p className="font-medium">${(item.productPrice * item.quantity).toFixed(2)}</p>
     </div>
 );
 
@@ -39,6 +62,7 @@ export default function CartComponent() {
     const { items, totalItems } = useSelector((state: RootState) => state.cart);
 
     const totalPrice = items.reduce((sum, item) => sum + item.productPrice * item.quantity, 0);
+    const isCartEmpty = items.length === 0;
 
     const handleUpdateQuantity = (productId: number, quantity: number) => {
         dispatch(updateQuantity(productId, quantity));
@@ -79,7 +103,14 @@ export default function CartComponent() {
                             <p className="font-semibold">${totalPrice.toFixed(2)}</p>
                         </div>
                     </div>
-                    <Button className="w-full mt-6">Checkout</Button>
+                    <Link
+                        href={isCartEmpty ? '#' : '/checkout'}
+                        className={`block w-full mt-6 ${isCartEmpty ? 'pointer-events-none' : ''}`}
+                    >
+                        <Button className="w-full" disabled={isCartEmpty}>
+                            Checkout
+                        </Button>
+                    </Link>
                 </div>
             </SheetContent>
         </Sheet>
