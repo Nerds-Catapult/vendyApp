@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { expectedBusinessInterface, expectedBusiness } from '@/app/types/index';
 import Image from 'next/image';
+import Link from 'next/link';
 
 const BestSellers = () => {
     const [loading, setLoading] = useState<boolean>(false);
@@ -57,8 +58,8 @@ const BestSellers = () => {
                                     <p className="text-gray-600">{business.address}</p>
                                     <p className="text-gray-600">{business.county}</p>
                                 </div>
-                                <a
-                                    href={`/business/${business.id}`}
+                                <Link
+                                    href={`/stores/profile/${business.id}`}
                                     className="text-blue-500 hover:text-blue-600 transition duration-300"
                                 >
                                     <svg
@@ -75,7 +76,7 @@ const BestSellers = () => {
                                             d="M9 5l7 7-7 7"
                                         />
                                     </svg>
-                                </a>
+                                </Link>
                             </div>
                         </div>
                     ))}

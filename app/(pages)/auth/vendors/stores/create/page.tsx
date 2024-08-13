@@ -1,6 +1,5 @@
 'use client';
 
-//TODO: all these auth functions can be state managed by the context api or redux
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -114,6 +113,8 @@ export default function CreateStoreComponent() {
         });
     };
 
+
+
     useEffect(() => {
         setLoading(true);
         if (authToken) {
@@ -145,6 +146,12 @@ export default function CreateStoreComponent() {
             Cookies.remove('storeToken');
             window.location.href = '/auth/vendors/login';
         }
+
+        setTimeout(() => {
+            setLoading(false);
+            Cookies.remove('storeToken');
+            window.location.href = '/auth/vendors/login';
+        }, 60000);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [, authToken]);
 
@@ -205,6 +212,8 @@ export default function CreateStoreComponent() {
             }
         });
     };
+
+
 
     const invokeImageDelete = async (publicId: string): Promise<ExpectedAsCloudinaryResponse> => {
         return new Promise(async (resolve, reject) => {

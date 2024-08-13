@@ -68,7 +68,7 @@ export default function Component() {
                                     .filter((store, index) => index < 10)
                                     .map((store, index) => (
                                         <div key={index} className="flex-shrink-0">
-                                            <Link href={`/store/${store.id}`} className="group" prefetch={false}>
+                                            <Link href={`/stores/${store?.id}`} className="group" prefetch={false}>
                                                 <div className="relative h-32 w-32 overflow-hidden rounded-full">
                                                     <Image
                                                         src={store.storeLogo}

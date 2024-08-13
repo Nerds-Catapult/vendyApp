@@ -17,7 +17,6 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Textarea } from '@/components/ui/textarea';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 import {
     ExpectedAsCloudinaryResponse,
     ExpectedAsProductTypes,
@@ -30,14 +29,13 @@ import { exportedAsProductProps } from '@/app/types/exportedTypes';
 import React, { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 
-export default function Component() {
+export default function Component({params}: any) {
     const [products, setProducts] = useState<ExpectedAsProductTypes[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
     const [storeDetails, setStoreDetails] = useState<ExpectedAsStoreProps>();
     const [productCategory, setProductCategory] = useState<ExpectedAsProductCategory[]>([]);
-    const [storeId, setStoreId] = useState<number>(11);
+    const [storeId, setStoreId] = useState<number>(params.storeid);
     const [fileData, setFileData] = useState<File | null>(null);
-    const router = useRouter();
     const [formData, setFormData] = useState<exportedAsProductProps>({
         productName: '',
         productDescription: '',
