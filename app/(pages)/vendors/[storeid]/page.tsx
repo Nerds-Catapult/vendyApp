@@ -17,12 +17,15 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Textarea } from '@/components/ui/textarea';
 import Image from 'next/image';
 import Link from 'next/link';
+import Cookies from 'js-cookie';
 import {
     ExpectedAsCloudinaryResponse,
     ExpectedAsProductTypes,
     ExpectedAsStoreProps,
     ExpectedAsProductCategory,
     ExpectedAStoreCategory as ProductTypes,
+    ValidationAuthProps,
+    checkIfVendorHasStoreReturnsBoolean,
 } from '@/app/types/foreignTypes';
 
 import { exportedAsProductProps } from '@/app/types/exportedTypes';
@@ -35,6 +38,7 @@ export default function Component({params}: any) {
     const [storeDetails, setStoreDetails] = useState<ExpectedAsStoreProps>();
     const [productCategory, setProductCategory] = useState<ExpectedAsProductCategory[]>([]);
     const [storeId, setStoreId] = useState<number>(params.storeid);
+        const [authToken, setAuthTokem] = useState(Cookies.get('storeToken'));
     const [fileData, setFileData] = useState<File | null>(null);
     const [formData, setFormData] = useState<exportedAsProductProps>({
         productName: '',
@@ -44,6 +48,53 @@ export default function Component({params}: any) {
         categoryName: '',
         storeId: storeId,
     });
+
+
+        const ValidateAuthToken = async (): Promise<ValidationAuthProps> => {
+            return new Promise(async (resolve, reject) => {
+                try {
+                    const response = await fetch('https://goose-merry-mollusk.ngrok-free.app/api/auth/validate', {
+                        method: 'GET',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            Authorization: `Bearer ${authToken}`,
+                        },
+                    });
+                    const data: ValidationAuthProps = await response.json();
+                    if (data) {
+                        resolve(data);
+                    } else {
+                        reject('An error occurred while validating the token');
+                    }
+                } catch (error) {
+                    reject('An error occurred while validating the token');
+                    console.log(error);
+                }
+            });
+        };
+    
+      const checkIfVendorHasStore = async (): Promise<checkIfVendorHasStoreReturnsBoolean> => {
+          return new Promise(async (resolve, reject) => {
+              try {
+                  const response = await fetch('https://goose-merry-mollusk.ngrok-free.app/api/auth/hasStore', {
+                      method: 'GET',
+                      headers: {
+                          'Content-Type': 'application/json',
+                          Authorization: `Bearer ${authToken}`,
+                      },
+                  });
+                  const data: checkIfVendorHasStoreReturnsBoolean = await response.json();
+                  if (data.hasStore === true) {
+                      resolve(data);
+                  } else {
+                      reject('You do not have a store yet, please create one');
+                  }
+              } catch (error) {
+                  reject('An error occurred while checking if vendor has store');
+              }
+          });
+      };
+
 
     async function fetchProducts() {
         const response = await fetch(`https://goose-merry-mollusk.ngrok-free.app/api/products/many/${storeId}`, {
@@ -90,6 +141,37 @@ export default function Component({params}: any) {
         fetchProducts();
         fetchProductCategories();
         fetchStoreDetails();
+          if (authToken) {
+              ValidateAuthToken()
+                  .then((data) => {
+                      if (data.statusCode === 200) {
+                          checkIfVendorHasStore()
+                              .then((data) => {
+                                  if (data.hasStore) {
+                                      //   window.location.href = '/vendors/dashboard';
+                                      return
+                                  }
+                              })
+                              .catch((error) => {
+                                  toast.error(error);
+                                  setLoading(false);
+                              });
+                      } else {
+                          toast.success('session expired, please login again');
+                          Cookies.remove('storeToken');
+                          window.location.href = '/auth/vendors/signup';
+                      }
+                  })
+                  .catch((error) => {
+                      console.log(error);
+                      toast.error('An error occurred while validating the token');
+                      setLoading(false);
+                  });
+          } else {
+              Cookies.remove('storeToken');
+              window.location.href = '/auth/vendors/signup';
+          }
+
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
@@ -401,7 +483,7 @@ export default function Component({params}: any) {
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
-                                {products.map((product) => (
+                                {products?.map((product) => (
                                     <TableRow key={product.id}>
                                         <TableCell>
                                             <Image

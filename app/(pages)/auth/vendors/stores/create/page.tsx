@@ -24,7 +24,7 @@ import {
 export default function CreateStoreComponent() {
     const [loading, setLoading] = useState(false);
     const [storeCategories, setStoreCategories] = useState<ExpectedAStoreCategory[]>([]);
-    const [authToken, setAuthTokem] = useState(Cookies.get('storeToken'));
+    const [authToken, setAuthToken] = useState(Cookies.get('storeToken'));
     const [fileData, setFileData] = useState<File | null>(null);
     const [formData, setFormData] = useState({
         storeName: '',
@@ -124,7 +124,7 @@ export default function CreateStoreComponent() {
                         checkIfVendorHasStore()
                             .then((data) => {
                                 if (data.hasStore) {
-                                    window.location.href = '/vendors/dashboard';
+                                    window.location.href = `/vendors/${data.storeId}`;
                                 }
                             })
                             .catch((error) => {
@@ -144,14 +144,9 @@ export default function CreateStoreComponent() {
                 });
         } else {
             Cookies.remove('storeToken');
-            window.location.href = '/auth/vendors/login';
+            window.location.href = '/auth/vendors/signup';
         }
 
-        setTimeout(() => {
-            setLoading(false);
-            Cookies.remove('storeToken');
-            window.location.href = '/auth/vendors/login';
-        }, 60000);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [, authToken]);
 
