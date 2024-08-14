@@ -19,7 +19,6 @@ export default function Component() {
     const [sortBy, setSortBy] = useState<string>('name');
 
     const dispatch = useDispatch();
-    const cartItems = useSelector((state: RootState) => state.cart);
 
     const handleAddToCart = (product: ExpectedAsProductTypes) => {
         dispatch(addToCart(product));

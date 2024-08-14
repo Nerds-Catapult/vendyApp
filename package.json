@@ -29,6 +29,7 @@
         "clsx": "^2.1.1",
         "cookies": "^0.9.1",
         "cookies-next": "^4.2.1",
+        "embla-carousel-react": "^8.1.8",
         "express": "^4.19.2",
         "js-cookie": "^3.0.5",
         "lucide-react": "^0.401.0",

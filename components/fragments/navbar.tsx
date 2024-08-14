@@ -14,13 +14,42 @@ import { toast } from 'react-hot-toast';
 import { useDispatch, useSelector } from 'react-redux';
 import { addToCart, removeFromCart, clearCart, updateQuantity } from '@/app/reducers/actions';
 import { RootState } from '@/app/store/store';
-import { ValidationAuthProps, ExpectedAsProductTypes as Product } from '@/app/types/foreignTypes';
+import {
+    ValidationAuthProps,
+    ExpectedAsProductTypes as Product,
+    checkIfVendorHasStoreReturnsBoolean
+} from '@/app/types/foreignTypes';
 import CartComponent from './cart';
+
+
 
 export default function Component() {
     const [vendor, setVendor] = useState<boolean>(false);
     const [storeToken, setStoreToken] = useState(Cookies.get('storeToken'));
     const [items, totalItems] = useSelector((state: RootState) => state.cart.items);
+    const [storeId, setStoreId] = useState<number>();
+
+         const checkIfVendorHasStore = async (): Promise<checkIfVendorHasStoreReturnsBoolean> => {
+             return new Promise(async (resolve, reject) => {
+                 try {
+                     const response = await fetch('https://goose-merry-mollusk.ngrok-free.app/api/auth/hasStore', {
+                         method: 'GET',
+                         headers: {
+                             'Content-Type': 'application/json',
+                             Authorization: `Bearer ${storeToken}`,
+                         },
+                     });
+                     const data: checkIfVendorHasStoreReturnsBoolean = await response.json();
+                     if (data.hasStore === true) {
+                         resolve(data);
+                     } else {
+                         reject('You do not have a store yet, please create one');
+                     }
+                 } catch (error) {
+                     reject('An error occurred while checking if vendor has store');
+                 }
+             });
+         };
 
     const dispatch = useDispatch();
     const cartItems = useSelector((state: RootState) => state.cart.items);
@@ -37,37 +66,14 @@ export default function Component() {
         dispatch(clearCart());
     };
 
-    const validateVendorToken = async (): Promise<ValidationAuthProps> => {
-        return new Promise(async (resolve, reject) => {
-            try {
-                const response = await fetch('https://goose-merry-mollusk.ngrok-free.app/api/auth/validate', {
-                    method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        Authorization: `Bearer ${storeToken}`,
-                    },
-                });
-                const data: ValidationAuthProps = await response.json();
-                console.log(data);
-                if (data.statusCode === 200) {
-                    resolve(data);
-                } else if (data.statusCode === 401) {
-                    Cookies.remove('storeToken');
-                }
-            } catch (error) {
-                reject('An error occurred while validating the token');
-                console.log(error);
-            }
-        });
-    };
+
 
     useEffect(() => {
         if (storeToken) {
-            validateVendorToken()
+            checkIfVendorHasStore()
                 .then((data) => {
-                    if (data.statusCode === 200) {
-                        setVendor(true);
-                    }
+                    setVendor(true);
+                    setStoreId(data.storeId);
                 })
                 .catch((error) => {
                     toast.error(error);
@@ -103,7 +109,7 @@ export default function Component() {
                         Stores
                     </Link>
                     <Link
-                        href={vendor ? '/vendors/dashboard' : '/auth/vendors/signup'}
+                        href={vendor ? `/vendors/${storeId}` : '/auth/vendors/signup'}
                         className="px-4 py-2 rounded-md hover:bg-muted"
                         prefetch={false}
                     >
@@ -138,7 +144,7 @@ export default function Component() {
                                         Stores List
                                     </Link>
                                     <Link
-                                        href={vendor ? '/auth/vendors/dashboard' : '/auth/vendors/signup'}
+                                        href={vendor ? `/vendors/${storeId}` : '/auth/vendors/signup'}
                                         className="px-4 py-2 rounded-md hover:bg-muted"
                                         prefetch={false}
                                     >

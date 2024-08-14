@@ -1,6 +1,5 @@
 'use client';
 
-//TODO: all these auth functions can be state managed by the context api or redux
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -25,7 +24,7 @@ import {
 export default function CreateStoreComponent() {
     const [loading, setLoading] = useState(false);
     const [storeCategories, setStoreCategories] = useState<ExpectedAStoreCategory[]>([]);
-    const [authToken, setAuthTokem] = useState(Cookies.get('storeToken'));
+    const [authToken, setAuthToken] = useState(Cookies.get('storeToken'));
     const [fileData, setFileData] = useState<File | null>(null);
     const [formData, setFormData] = useState({
         storeName: '',
@@ -114,6 +113,8 @@ export default function CreateStoreComponent() {
         });
     };
 
+
+
     useEffect(() => {
         setLoading(true);
         if (authToken) {
@@ -123,7 +124,7 @@ export default function CreateStoreComponent() {
                         checkIfVendorHasStore()
                             .then((data) => {
                                 if (data.hasStore) {
-                                    window.location.href = '/vendors/dashboard';
+                                    window.location.href = `/vendors/${data.storeId}`;
                                 }
                             })
                             .catch((error) => {
@@ -143,8 +144,9 @@ export default function CreateStoreComponent() {
                 });
         } else {
             Cookies.remove('storeToken');
-            window.location.href = '/auth/vendors/login';
+            window.location.href = '/auth/vendors/signup';
         }
+
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [, authToken]);
 
@@ -205,6 +207,8 @@ export default function CreateStoreComponent() {
             }
         });
     };
+
+
 
     const invokeImageDelete = async (publicId: string): Promise<ExpectedAsCloudinaryResponse> => {
         return new Promise(async (resolve, reject) => {

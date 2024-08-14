@@ -153,4 +153,5 @@ export interface ExpectedAsProductTypes {
     storeId: number;
     createdAt: string;
     updatedAt: string;
+    featured? : boolean;
 }
