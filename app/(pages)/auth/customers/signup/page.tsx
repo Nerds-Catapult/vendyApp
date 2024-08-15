@@ -24,7 +24,7 @@ export default function Component() {
     const ValidateAuthToken = async (): Promise<ValidationAuthProps> => {
         return new Promise(async (resolve, reject) => {
             try {
-                const response = await fetch('https://goose-merry-mollusk.ngrok-free.app/api/auth/validate', {
+                const response = await fetch('https://vendy-server.onrender.com/api/auth/validate', {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
@@ -65,7 +65,7 @@ export default function Component() {
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         setLoading(true);
-        fetch('https://goose-merry-mollusk.ngrok-free.app/api/auth/customers/signup', {
+        fetch('https://vendy-server.onrender.com/api/auth/customers/signup', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

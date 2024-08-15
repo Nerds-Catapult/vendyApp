@@ -71,7 +71,7 @@ export default function CreateStoreComponent() {
 
     const validateAuthToken = async (): Promise<ValidationAuthProps> => {
         try {
-            const response = await fetch('https://goose-merry-mollusk.ngrok-free.app/api/auth/validate', {
+            const response = await fetch('https://vendy-server.onrender.com/api/auth/validate', {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -91,7 +91,7 @@ export default function CreateStoreComponent() {
 
     const checkIfVendorHasStore = async (): Promise<checkIfVendorHasStoreReturnsBoolean> => {
         try {
-            const response = await fetch('https://goose-merry-mollusk.ngrok-free.app/api/auth/hasStore', {
+            const response = await fetch('https://vendy-server.onrender.com/api/auth/hasStore', {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -109,12 +109,9 @@ export default function CreateStoreComponent() {
         }
     };
 
-
-
-
     const fetchStoreCategories = async () => {
         try {
-            const response = await fetch('https://goose-merry-mollusk.ngrok-free.app/api/store-category', {
+            const response = await fetch('https://vendy-server.onrender.com/api/store-category', {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -138,7 +135,7 @@ export default function CreateStoreComponent() {
         formData.append('file', file);
         return new Promise(async (resolve, reject) => {
             try {
-                const response = await fetch('https://goose-merry-mollusk.ngrok-free.app/api/image/upload', {
+                const response = await fetch('https://vendy-server.onrender.com/api/image/upload', {
                     method: 'POST',
                     body: formData,
                 });
@@ -175,7 +172,7 @@ export default function CreateStoreComponent() {
     const invokeImageDelete = async (publicId: string): Promise<ExpectedAsCloudinaryResponse> => {
         return new Promise(async (resolve, reject) => {
             try {
-                const response = await fetch('https://goose-merry-mollusk.ngrok-free.app/api/image/delete', {
+                const response = await fetch('https://vendy-server.onrender.com/api/image/delete', {
                     method: 'DELETE',
                     headers: {
                         'Content-Type': 'application/json',
@@ -206,7 +203,7 @@ export default function CreateStoreComponent() {
                 storeLogo: secure_url,
             };
             try {
-                const response = await fetch('https://goose-merry-mollusk.ngrok-free.app/api/stores', {
+                const response = await fetch('https://vendy-server.onrender.com/api/stores', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',

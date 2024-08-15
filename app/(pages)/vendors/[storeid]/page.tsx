@@ -53,7 +53,7 @@ export default function Component({params}: any) {
         const ValidateAuthToken = async (): Promise<ValidationAuthProps> => {
             return new Promise(async (resolve, reject) => {
                 try {
-                    const response = await fetch('https://goose-merry-mollusk.ngrok-free.app/api/auth/validate', {
+                    const response = await fetch('https://vendy-server.onrender.com/api/auth/validate', {
                         method: 'GET',
                         headers: {
                             'Content-Type': 'application/json',
@@ -72,32 +72,32 @@ export default function Component({params}: any) {
                 }
             });
         };
-    
-      const checkIfVendorHasStore = async (): Promise<checkIfVendorHasStoreReturnsBoolean> => {
-          return new Promise(async (resolve, reject) => {
-              try {
-                  const response = await fetch('https://goose-merry-mollusk.ngrok-free.app/api/auth/hasStore', {
-                      method: 'GET',
-                      headers: {
-                          'Content-Type': 'application/json',
-                          Authorization: `Bearer ${authToken}`,
-                      },
-                  });
-                  const data: checkIfVendorHasStoreReturnsBoolean = await response.json();
-                  if (data.hasStore === true) {
-                      resolve(data);
-                  } else {
-                      reject('You do not have a store yet, please create one');
-                  }
-              } catch (error) {
-                  reject('An error occurred while checking if vendor has store');
-              }
-          });
-      };
+
+        const checkIfVendorHasStore = async (): Promise<checkIfVendorHasStoreReturnsBoolean> => {
+            return new Promise(async (resolve, reject) => {
+                try {
+                    const response = await fetch('https://vendy-server.onrender.com/api/auth/hasStore', {
+                        method: 'GET',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            Authorization: `Bearer ${authToken}`,
+                        },
+                    });
+                    const data: checkIfVendorHasStoreReturnsBoolean = await response.json();
+                    if (data.hasStore === true) {
+                        resolve(data);
+                    } else {
+                        reject('You do not have a store yet, please create one');
+                    }
+                } catch (error) {
+                    reject('An error occurred while checking if vendor has store');
+                }
+            });
+        };
 
 
     async function fetchProducts() {
-        const response = await fetch(`https://goose-merry-mollusk.ngrok-free.app/api/products/many/${storeId}`, {
+        const response = await fetch(`https://vendy-server.onrender.com/api/products/many/${storeId}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -110,7 +110,7 @@ export default function Component({params}: any) {
     type HTMLChanges = React.ChangeEvent<HTMLInputElement> & React.ChangeEvent<HTMLTextAreaElement>;
 
     const fetchStoreDetails = async () => {
-        const response = await fetch(`https://goose-merry-mollusk.ngrok-free.app/api/stores/${storeId}`, {
+        const response = await fetch(`https://vendy-server.onrender.com/api/stores/${storeId}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -122,7 +122,7 @@ export default function Component({params}: any) {
 
     const fetchProductCategories = async () => {
         try {
-            const response = await fetch('https://goose-merry-mollusk.ngrok-free.app/api/product-category', {
+            const response = await fetch('https://vendy-server.onrender.com/api/product-category', {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -141,36 +141,36 @@ export default function Component({params}: any) {
         fetchProducts();
         fetchProductCategories();
         fetchStoreDetails();
-          if (authToken) {
-              ValidateAuthToken()
-                  .then((data) => {
-                      if (data.statusCode === 200) {
-                          checkIfVendorHasStore()
-                              .then((data) => {
-                                  if (data.hasStore) {
-                                      //   window.location.href = '/vendors/dashboard';
-                                      return
-                                  }
-                              })
-                              .catch((error) => {
-                                  toast.error(error);
-                                  setLoading(false);
-                              });
-                      } else {
-                          toast.success('session expired, please login again');
-                          Cookies.remove('storeToken');
-                          window.location.href = '/auth/vendors/signup';
-                      }
-                  })
-                  .catch((error) => {
-                      console.log(error);
-                      toast.error('An error occurred while validating the token');
-                      setLoading(false);
-                  });
-          } else {
-              Cookies.remove('storeToken');
-              window.location.href = '/auth/vendors/signup';
-          }
+        if (authToken) {
+            ValidateAuthToken()
+                .then((data) => {
+                    if (data.statusCode === 200) {
+                        checkIfVendorHasStore()
+                            .then((data) => {
+                                if (data.hasStore) {
+                                    //   window.location.href = '/vendors/dashboard';
+                                    return;
+                                }
+                            })
+                            .catch((error) => {
+                                toast.error(error);
+                                setLoading(false);
+                            });
+                    } else {
+                        toast.success('session expired, please login again');
+                        Cookies.remove('storeToken');
+                        window.location.href = '/auth/vendors/signup';
+                    }
+                })
+                .catch((error) => {
+                    console.log(error);
+                    toast.error('An error occurred while validating the token');
+                    setLoading(false);
+                });
+        } else {
+            Cookies.remove('storeToken');
+            window.location.href = '/auth/vendors/signup';
+        }
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
@@ -197,7 +197,7 @@ export default function Component({params}: any) {
         formData.append('file', file);
         return new Promise(async (resolve, reject) => {
             try {
-                const response = await fetch('https://goose-merry-mollusk.ngrok-free.app/api/image/upload', {
+                const response = await fetch('https://vendy-server.onrender.com/api/image/upload', {
                     method: 'POST',
                     body: formData,
                 });
@@ -232,7 +232,7 @@ export default function Component({params}: any) {
     const invokeImageDelete = async (publicId: string): Promise<ExpectedAsCloudinaryResponse> => {
         return new Promise(async (resolve, reject) => {
             try {
-                const response = await fetch('https://goose-merry-mollusk.ngrok-free.app/api/image/delete', {
+                const response = await fetch('https://vendy-server.onrender.com/api/image/delete', {
                     method: 'DELETE',
                     headers: {
                         'Content-Type': 'application/json',
@@ -264,7 +264,7 @@ export default function Component({params}: any) {
             productImage: secure_url,
         };
         try {
-            const respnse = await fetch('https://goose-merry-mollusk.ngrok-free.app/api/products', {
+            const respnse = await fetch('https://vendy-server.onrender.com/api/products', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
