@@ -68,87 +68,49 @@ export default function CreateStoreComponent() {
         });
     };
 
-    const ValidateAuthToken = async (): Promise<ValidationAuthProps> => {
-        return new Promise(async (resolve, reject) => {
-            try {
-                const response = await fetch('https://goose-merry-mollusk.ngrok-free.app/api/auth/validate', {
-                    method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        Authorization: `Bearer ${authToken}`,
-                    },
-                });
-                const data: ValidationAuthProps = await response.json();
-                if (data) {
-                    resolve(data);
-                } else {
-                    reject('An error occurred while validating the token');
-                }
-            } catch (error) {
-                reject('An error occurred while validating the token');
-                console.log(error);
+
+    const validateAuthToken = async (): Promise<ValidationAuthProps> => {
+        try {
+            const response = await fetch('https://goose-merry-mollusk.ngrok-free.app/api/auth/validate', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${authToken}`,
+                },
+            });
+            const data: ValidationAuthProps = await response.json();
+            if (data) {
+                return data;
             }
-        });
+            throw new Error('An error occurred while validating the token');
+        } catch (error) {
+            console.log(error);
+            throw new Error('An error occurred while validating the token');
+        }
     };
 
     const checkIfVendorHasStore = async (): Promise<checkIfVendorHasStoreReturnsBoolean> => {
-        return new Promise(async (resolve, reject) => {
-            try {
-                const response = await fetch('https://goose-merry-mollusk.ngrok-free.app/api/auth/hasStore', {
-                    method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        Authorization: `Bearer ${authToken}`,
-                    },
-                });
-                const data: checkIfVendorHasStoreReturnsBoolean = await response.json();
-                if (data.hasStore === true) {
-                    resolve(data);
-                } else {
-                    reject('You do not have a store yet, please create one');
-                }
-            } catch (error) {
-                reject('An error occurred while checking if vendor has store');
+        try {
+            const response = await fetch('https://goose-merry-mollusk.ngrok-free.app/api/auth/hasStore', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${authToken}`,
+                },
+            });
+            const data: checkIfVendorHasStoreReturnsBoolean = await response.json();
+            if (data.hasStore) {
+                return data;
+            } else {
+                return data;
             }
-        });
+        } catch (error) {
+            throw new Error('An error occurred while checking if vendor has store');
+        }
     };
 
 
 
-    useEffect(() => {
-        setLoading(true);
-        if (authToken) {
-            ValidateAuthToken()
-                .then((data) => {
-                    if (data.statusCode === 200) {
-                        checkIfVendorHasStore()
-                            .then((data) => {
-                                if (data.hasStore) {
-                                    window.location.href = `/vendors/${data.storeId}`;
-                                }
-                            })
-                            .catch((error) => {
-                                toast.error(error);
-                                setLoading(false);
-                            });
-                    } else {
-                        toast.success('session expired, please login again');
-                        Cookies.remove('storeToken');
-                        window.location.href = '/auth/vendors/signup';
-                    }
-                })
-                .catch((error) => {
-                    console.log(error);
-                    toast.error('An error occurred while validating the token');
-                    setLoading(false);
-                });
-        } else {
-            Cookies.remove('storeToken');
-            window.location.href = '/auth/vendors/signup';
-        }
-
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [, authToken]);
 
     const fetchStoreCategories = async () => {
         try {
@@ -279,6 +241,9 @@ export default function CreateStoreComponent() {
                 <CardHeader>
                     <CardTitle className="text-2xl">Create Your Store</CardTitle>
                     <CardDescription>Fill out the form below to register your ecommerce store.</CardDescription>
+                    <Link href="/auth/vendors/signup">
+                        <span className="text-sm text-blue-500 underline">Back to Vendor login</span>
+                    </Link>
                 </CardHeader>
                 <CardContent>
                     {loading ? ( //TODO: Add a loading spinner
@@ -295,7 +260,6 @@ export default function CreateStoreComponent() {
                                         onChange={handleInputChange}
                                     />
                                 </div>
-
                                 <div className="space-y-2">
                                     <Label htmlFor="categoryName">Store Category</Label>
                                     <Select onValueChange={handeCategoryChange}>
@@ -355,6 +319,16 @@ export default function CreateStoreComponent() {
                                 </div>
 
                                 <div className="space-y-2">
+                                    <Label htmlFor="nationalid">national ID</Label>
+                                    <Input
+                                        name="nationalid"
+                                        id="nationalid"
+                                        type="tel"
+                                        placeholder="Enter Vendor national id"
+                                        onChange={handleInputChange}
+                                    />
+                                </div>
+                                <div className="space-y-2">
                                     <Label htmlFor="storeAddress">Store Address</Label>
                                     <Input
                                         name="storeAddress"
@@ -364,7 +338,6 @@ export default function CreateStoreComponent() {
                                         onChange={handleInputChange}
                                     />
                                 </div>
-
                                 <div className="space-y-2">
                                     <Label htmlFor="county">County</Label>
                                     <Select onValueChange={handleCountyChange}>
