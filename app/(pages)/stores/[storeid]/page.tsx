@@ -21,7 +21,7 @@ export default function Page({ params }: any) {
     };
 
     async function fetchProducts() {
-        const response = await fetch(`https://goose-merry-mollusk.ngrok-free.app/api/products/many/${storeId}`, {
+        const response = await fetch(`https://vendy-server.onrender.com/api/products/many/${storeId}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
