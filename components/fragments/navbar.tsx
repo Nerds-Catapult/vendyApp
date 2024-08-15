@@ -27,7 +27,57 @@ export default function Component() {
     const [vendor, setVendor] = useState<boolean>(false);
     const [storeToken, setStoreToken] = useState(Cookies.get('storeToken'));
     const [items, totalItems] = useSelector((state: RootState) => state.cart.items);
+
     const [storeId, setStoreId] = useState<number>();
+
+    const validateAuthToken = async (): Promise<ValidationAuthProps> => {
+        try {
+            const response = await fetch('https://goose-merry-mollusk.ngrok-free.app/api/auth/validate', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${storeToken}`,
+                },
+            });
+            const data: ValidationAuthProps = await response.json();
+            if (data) {
+                return data;
+            }
+            throw new Error('An error occurred while validating the token');
+        } catch (error) {
+            console.log(error);
+            throw new Error('An error occurred while validating the token');
+        }
+    };
+
+    useEffect(() => {
+        const handleAuth = async () => {
+            if (storeToken) {
+                try {
+                    const authData = await validateAuthToken();
+                    if (authData.statusCode === 200) {
+                        const storeData = await checkIfVendorHasStore();
+                        if (storeData.hasStore) {
+                            console.log('Vendor has store');
+                            setVendor(true);
+                            setStoreId(storeData.storeId);
+                        }
+                    } else {
+                        console.log('Token is invalid');
+                        Cookies.remove('storeToken');
+                    }
+                } catch (error) {
+                    console.error(error);
+                    Cookies.remove('storeToken');
+                }
+            } else {
+                return null;
+            }
+        };
+
+        handleAuth();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [storeToken]);
 
          const checkIfVendorHasStore = async (): Promise<checkIfVendorHasStoreReturnsBoolean> => {
              return new Promise(async (resolve, reject) => {
@@ -42,8 +92,6 @@ export default function Component() {
                      const data: checkIfVendorHasStoreReturnsBoolean = await response.json();
                      if (data.hasStore === true) {
                          resolve(data);
-                     } else {
-                         reject('You do not have a store yet, please create one');
                      }
                  } catch (error) {
                      reject('An error occurred while checking if vendor has store');
@@ -51,6 +99,12 @@ export default function Component() {
              });
          };
 
+    useEffect(() => {
+        if (storeToken) {
+            
+        }
+    }, [storeToken]);
+    
     const dispatch = useDispatch();
     const cartItems = useSelector((state: RootState) => state.cart.items);
 

@@ -75,9 +75,7 @@ export default function Component() {
                         const storeData = await checkIfVendorHasStore();
                         if (storeData.hasStore) {
                             console.log('Vendor has store');
-                            window.location.href = `/vendors/dashboard/${storeData.storeId}`;
-                        } else {
-                            window.location.href = '/auth/vendors/stores/create';
+                            window.location.href = `/vendors/${storeData.storeId}`;
                         }
                     } else {
                         setLoading(false);
